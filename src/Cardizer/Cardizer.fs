@@ -41,13 +41,13 @@ let private getLast sum =
         10 - (sum % 10) |> string
 
 let private digitsToCard sum digits =
-    digits
-    |> List.fold (fun r n3 -> r + (string n3)) String.Empty
-    |> (+) (getLast sum)
+    let numbers = 
+       digits
+        |> List.fold (fun r n3 -> r + (string n3)) String.Empty
+    numbers + getLast sum
+    
 
 let generateVisa () =
     let digits, sum = getVisaNumbers [ 4 ] 8 0
 
     digitsToCard sum digits
-
-
