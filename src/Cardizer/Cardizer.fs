@@ -34,18 +34,11 @@ let rec private getVisaNumbers digits sum i =
         let n = nextDigit ()
         getVisaNumbers (digits @ [ n ]) (sum + (getVisaSum n i)) (i + 1)
 
-let private getLast sum =
-    if sum % 10 = 0 then
-        "0"
-    else
-        10 - (sum % 10) |> string
+let inline private checkDigit sum = ((sum / 10 + 1) * 10 - sum) % 10
 
 let private digitsToCard sum digits =
-    let numbers = 
-       digits
-        |> List.fold (fun r n3 -> r + (string n3)) String.Empty
-    numbers + getLast sum
-    
+    digits @ [ checkDigit sum ]
+    |> List.fold (fun r n -> r + (string n)) String.Empty
 
 let generateVisa () =
     let digits, sum = getVisaNumbers [ 4 ] 8 0
