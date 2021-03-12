@@ -1,8 +1,8 @@
 module Tests
 
-open System
 open Xunit
 
+// https://rosettacode.org/wiki/Luhn_test_of_credit_card_numbers#F.23
 let luhn (s: string) =
     let rec g r c =
         function
@@ -18,9 +18,3 @@ let ``Should generate valid Visa`` () =
     let visa = Cardizer.generateVisa ()
     Assert.StartsWith("4", visa)
     Assert.True(luhn visa)
-
-// [<Fact>]
-// let ``Should generate valid MasterCard`` () =
-//     let masterCard = Cardizer.generateMasterCard ()
-//     Assert.StartsWith("5", masterCard)
-//     Assert.True(luhn masterCard)
