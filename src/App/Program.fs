@@ -1,6 +1,6 @@
 open System
 
 [<EntryPoint>]
-let main argv =
-    Cardizer.generateVisa () |> printfn "Visa: %s"
+let main _ =
+    Dedge.Cardizer.generateVisa () |> printfn "Visa: %s"
     0 // return an integer exit code

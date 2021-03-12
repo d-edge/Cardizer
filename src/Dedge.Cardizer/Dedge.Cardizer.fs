@@ -1,4 +1,4 @@
-﻿module Cardizer
+﻿module Dedge.Cardizer
 
 open System
 open System.Threading

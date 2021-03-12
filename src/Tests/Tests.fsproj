@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cardizer\Cardizer.fsproj" />
+    <ProjectReference Include="..\Dedge.Cardizer\Dedge.Cardizer.fsproj" />
   </ItemGroup>
 
 </Project>
