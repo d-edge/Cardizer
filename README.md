@@ -7,7 +7,7 @@ A functional minimalist credit card randomizer to test application.
 ## Features
 
 * Easy to use
-* Easy to etend
+* Easy to extend
 * Thread safe
 * Check with the Luhn's algorithm
 * Support for Visa credit card
