@@ -13,6 +13,7 @@ Keep in mind that all credit card numbers generated with Cardizer are completely
 * Thread safe
 * Check with the Luhn's algorithm
 * Support for Visa credit card
+* Support for MasterCard credit card
 
 ## Getting Started
 
