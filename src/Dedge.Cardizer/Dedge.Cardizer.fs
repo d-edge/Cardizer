@@ -44,3 +44,8 @@ let generateVisa () =
     let sum, digits = getNumbers [ 4 ] 8 14
 
     digitsToCard sum digits
+
+let generateDiscover () =
+    let sum, digits = getNumbers [ 6; 0; 1; 1 ] 6 11
+
+    digitsToCard sum digits

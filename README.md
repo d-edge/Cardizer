@@ -11,6 +11,7 @@ A functional minimalist credit card randomizer to test application.
 * Thread safe
 * Check with the Luhn's algorithm
 * Support for Visa credit card
+* Support for Discover credit card
 
 ## Getting Started
 

@@ -15,6 +15,12 @@ let luhn (s: string) =
 
 [<Fact>]
 let ``Should generate valid Visa`` () =
-    let visa = Dedge.Cardizer.generateVisa ()
-    Assert.StartsWith("4", visa)
-    Assert.True(luhn visa)
+    let card = Dedge.Cardizer.generateVisa ()
+    Assert.StartsWith("4", card)
+    Assert.True(luhn card)
+
+[<Fact>]
+let ``Should generate valid Discover`` () =
+    let card = Dedge.Cardizer.generateDiscover ()
+    Assert.StartsWith("6011", card)
+    Assert.True(luhn card)
