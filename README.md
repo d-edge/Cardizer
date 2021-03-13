@@ -4,6 +4,8 @@
 
 A functional minimalist credit card randomizer to test application.
 
+Keep in mind that all credit card numbers generated with Cardizer are completely random and do not hold any real life value.
+
 ## Features
 
 * Easy to use
