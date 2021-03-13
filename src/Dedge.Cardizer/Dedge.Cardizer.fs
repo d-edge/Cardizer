@@ -20,12 +20,12 @@ let private next =
 
 let private nextDigit () = next 10
 
-let private sumDigit n length =
+let private getNumber n =
     let n2 = n * 2
+    if n2 > 9 then n2 - 9 else n2
 
-    if length % 2 = 0 then n
-    else if n2 > 9 then n2 - 9
-    else n2
+let private sumDigit n length =
+    if length % 2 = 0 then n else getNumber n
 
 let rec private getNumbers digits sum length =
     if length = 0 then
@@ -42,5 +42,12 @@ let private digitsToCard sum digits =
 
 let generateVisa () =
     let sum, digits = getNumbers [ 4 ] 8 14
+
+    digitsToCard sum digits
+
+let generateJcb () =
+    let third = next 7 + 2
+    let fourth = next 2 + 8 
+    let sum, digits = getNumbers [ 3; 5; third; fourth] (11 + (getNumber third) + fourth) 11
 
     digitsToCard sum digits
