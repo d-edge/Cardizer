@@ -1,8 +1,47 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+     <!-- General -->
+    <AssemblyName>Dedge.Cardizer</AssemblyName>
+    <Description>A functional minimalist credit card randomizer to test application.</Description>
+    <Copyright>Copyright 2020 D-EDGE</Copyright>
+    <Authors>D-EDGE and contributors</Authors>
+    <NeutralLanguage>en-GB</NeutralLanguage>
+
+    <!-- Build settings -->
     <TargetFramework>net5.0</TargetFramework>
+    <DebugType>portable</DebugType>
+    <OutputType>Library</OutputType>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+
+    <!-- NuGet settings -->
+    <PackageId>Dedge.Cardizer</PackageId>
+    <PackageTags>Dedge;Cardizer;Credit;Payment;Card;Number;Visa;Generator;Randomizer;Random;Test</PackageTags>
+    <PackageReleaseNotes>https://raw.githubusercontent.com/d-edge/cardizer/main/RELEASE_NOTES.md</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/d-edge/cardizer</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>cardizer-64x64.png</PackageIcon>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/d-edge/cardizer</RepositoryUrl>
+
+    <!-- SourceLink settings -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <NoWarn>FS2003;FS0044</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../cardizer-64x64.png">
+      <Pack>true</Pack>
+      <PackagePath>$(PackageIconUrl)</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="Dedge.Cardizer.fs" />
