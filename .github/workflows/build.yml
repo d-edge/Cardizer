@@ -13,7 +13,7 @@ env:
   # Project name to pack and publish
   PROJECT_NAME: Dedge.Cardizer
   # GitHub Packages Feed settings
-  GITHUB_FEED: https://nuget.pkg.github.com/cardizer/
+  GITHUB_FEED: https://nuget.pkg.github.com/d-edge/
   GITHUB_USER: aloisdg
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   # Official NuGet Feed settings
