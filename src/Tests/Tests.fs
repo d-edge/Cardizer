@@ -18,3 +18,9 @@ let ``Should generate valid Visa`` () =
     let visa = Dedge.Cardizer.generateVisa ()
     Assert.StartsWith("4", visa)
     Assert.True(luhn visa)
+
+[<Fact>]
+let ``Should generate valid MasterCard`` () =
+    let masterCard = Dedge.Cardizer.generateMasterCard ()
+    Assert.StartsWith("5", masterCard)
+    Assert.True(luhn masterCard)
