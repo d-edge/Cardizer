@@ -33,11 +33,10 @@ let private getNumbers state length =
 
 let inline private checkDigit sum = ((sum / 10 + 1) * 10 - sum) % 10
 
-let private digitsToCard sum digits =
-    digits @ [ checkDigit sum ]
+let private generateCard prefixes state length =
+    let numbers, sum = getNumbers state length
+
+    (prefixes @ numbers @ [ checkDigit sum ])
     |> List.fold (fun r n -> r + (string n)) String.Empty
 
-let generateVisa () =
-    let digits, sum = getNumbers 8 14
-
-    digitsToCard sum (4 :: digits)
+let generateVisa () = generateCard [ 4 ] 8 14
