@@ -15,7 +15,8 @@ let luhn (s: string) =
 
 [<Fact>]
 let ``Should generate valid Visa`` () =
-    let visa = Dedge.Cardizer.generateVisa ()
-    Assert.StartsWith("4", visa)
-    Assert.Equal(16, visa.Length)
-    Assert.True(luhn visa, visa + " is not a valid card.")
+    let card = Dedge.Cardizer.generateVisa ()
+    Assert.StartsWith("4", card)
+    Assert.Equal(16, card.Length)
+    Assert.True(luhn card, card + " is not a valid card.")
+    
