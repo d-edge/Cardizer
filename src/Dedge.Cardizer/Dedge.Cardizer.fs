@@ -24,11 +24,10 @@ let private getNumber n =
     let n2 = n * 2
     if n2 > 9 then n2 - 9 else n2
 
-let private sumDigit n i =
-    if i % 2 = 0 then n else getNumber n
+let private sumDigit n i = if i % 2 = 0 then n else getNumber n
 
 let private getNumbers state length =
-    [ 0 .. length - 1 ]
+    [ length .. -1 .. 1 ]
     |> List.map (fun i -> (i, nextDigit ()))
     |> List.mapFold (fun sum (i, n) -> (n, sum + (sumDigit n i))) state
 
