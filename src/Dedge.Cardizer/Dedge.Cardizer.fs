@@ -20,23 +20,24 @@ let private next =
 
 let private nextDigit () = next 10
 
+let applySnd f (a, b) = a, f b
+
 let private getNumber n =
     let n2 = n * 2
     if n2 > 9 then n2 - 9 else n2
 
-let private sumDigit n i = if i % 2 = 0 then n else getNumber n
-
-let private getNumbers state length =
-    [ length .. -1 .. 1 ]
-    |> List.map (fun i -> (i, nextDigit ()))
-    |> List.mapFold (fun sum (i, n) -> (n, sum + (sumDigit n i))) state
+let private sumDigit i n = if i % 2 = 0 then n else getNumber n
 
 let inline private checkDigit sum = ((sum / 10 + 1) * 10 - sum) % 10
 
-let private generateCard prefixes state length =
-    let numbers, sum = getNumbers state length
+let private getNumbers state length =
+    [ length .. -1 .. 1 ]
+    |> List.map (fun i -> i, nextDigit ())
+    |> List.mapFold (fun sum (i, n) -> n, sum + sumDigit i n) state
+    |> applySnd (checkDigit >> string)
 
-    (prefixes @ numbers @ [ checkDigit sum ])
-    |> List.fold (fun r n -> r + (string n)) String.Empty
+let private generateCard prefixes state length =
+    getNumbers state length
+    |> fun (numbers, sum) -> (prefixes @ numbers |> String.Concat) + sum
 
 let generateVisa () = generateCard [ 4 ] 8 14
