@@ -19,4 +19,16 @@ let ``Should generate valid Visa`` () =
     Assert.StartsWith("4", card)
     Assert.Equal(16, card.Length)
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
-    
+
+[<Fact>]
+let ``Should generate valid Verve`` () =
+    let card = Dedge.Cardizer.generateVerve ()
+    let start = card.Substring(0, 6) |> int
+
+    let prefixInRange =
+        start >= 506099 && start <= 506198
+        || start >= 650002 && start <= 650027
+
+    Assert.True(prefixInRange, $"The credit card should not start with {start}.")
+    Assert.True(card.Length = 16 || card.Length = 19, $"The credit card should have a length of 16 or 19 but has {card.Length}.")
+    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
