@@ -42,6 +42,24 @@ let private generateCard prefixes state length =
 
 let generateVisa () = generateCard [ 4 ] 8 14
 
+let generateVerve () =
+    let nextInRange start stop = next (stop - start + 1) + start
+    let charToInt c = int c - 48
+    let numberToSeq n = n |> string |> Seq.map charToInt
+    let length = 9 + 3 * next 2
+
+    let prefix =
+        [ [ 506099; 506198 ]
+          [ 650002; 650027 ] ].[next 2]
+
+    let prefixes, state =
+        nextInRange prefix.[0] prefix.[1]
+        |> numberToSeq
+        |> Seq.mapi (fun i n -> length + i, n)
+        |> Seq.mapFold (fun s (i, n) -> n, s + sumDigit i n) 0
+
+    generateCard (Seq.toList prefixes) state length
+
 let generateMir () =
     let fourth = next 5
     generateCard [ 2; 2; 0; fourth ] (6 + fourth) 11
