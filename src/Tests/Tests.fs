@@ -27,3 +27,25 @@ let ``Should generate valid Jcb`` () =
     Assert.Contains(string card.[2], "2345678")
     Assert.Contains(string card.[3], "89")
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
+
+[<Fact>]
+let ``Should generate valid Amex`` () =
+    let card = Dedge.Cardizer.generateAmex ()
+    Assert.StartsWith("3", card)
+    Assert.Equal(15, card.Length)
+    Assert.Contains(string card.[1], "47")
+    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
+
+[<Fact>]
+let ``Should generate valid Discover`` () =
+    let card = Dedge.Cardizer.generateDiscover ()
+    Assert.StartsWith("6011", card)
+    Assert.Equal(16, card.Length)
+    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
+
+[<Fact>]
+let ``Should generate valid MasterCard`` () =
+    let card = Dedge.Cardizer.generateMasterCard ()
+    Assert.StartsWith("5", card)
+    Assert.Equal(16, card.Length)
+    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
