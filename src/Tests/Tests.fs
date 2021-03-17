@@ -26,3 +26,9 @@ let ``Should generate valid Discover`` () =
     Assert.StartsWith("6011", card)
     Assert.Equal(16, card.Length)
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
+
+let ``Should generate valid MasterCard`` () =
+    let card = Dedge.Cardizer.generateMasterCard ()
+    Assert.StartsWith("5", card)
+    Assert.Equal(16, card.Length)
+    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
