@@ -41,3 +41,5 @@ let private generateCard prefixes state length =
     |> fun (numbers, sum) -> (prefixes @ numbers |> String.Concat) + sum
 
 let generateVisa () = generateCard [ 4 ] 8 14
+
+let generateDiscover () = generateCard [ 6; 0; 1; 1 ] 6 11
