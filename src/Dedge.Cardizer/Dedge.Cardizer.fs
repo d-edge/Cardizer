@@ -20,7 +20,7 @@ let private next =
 
 let private nextDigit () = next 10
 
-let applySnd f (a, b) = a, f b
+let private applySnd f (a, b) = a, f b
 
 let private getNumber n =
     let n2 = n * 2
