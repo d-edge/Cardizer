@@ -2,5 +2,9 @@ open System
 
 [<EntryPoint>]
 let main _ =
-    Dedge.Cardizer.generateVisa () |> printfn "Visa: %s"
-    0 // return an integer exit code
+    Dedge.Cardizer.generateVisa () |> printfn "Visa:\t\t%s"
+    Dedge.Cardizer.generateJcb () |> printfn "Jcb:\t\t%s"
+    Dedge.Cardizer.generateAmex () |> printfn "Amex:\t\t%s"
+    Dedge.Cardizer.generateDiscover () |> printfn "Discover:\t%s"
+    Dedge.Cardizer.generateMasterCard () |> printfn "MasterCard:\t%s"
+    0
