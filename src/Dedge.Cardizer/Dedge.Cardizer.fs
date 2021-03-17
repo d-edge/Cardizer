@@ -42,6 +42,11 @@ let private generateCard prefixes state length =
 
 let generateVisa () = generateCard [ 4 ] 8 14
 
+let generateJcb () =
+    let third = next 7 + 2
+    let fourth = next 2 + 8
+    generateCard [ 3; 5; third; fourth ] (11 + (getNumber third) + fourth) 11
+
 let generateAmex () =
     let a, b = if next 2 = 0 then 4, 8 else 7, 5
     generateCard [ 3; a ] (3 + b) 12

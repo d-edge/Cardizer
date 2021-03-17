@@ -21,6 +21,14 @@ let ``Should generate valid Visa`` () =
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
 
 [<Fact>]
+let ``Should generate valid Jcb`` () =
+    let card = Dedge.Cardizer.generateJcb ()
+    Assert.StartsWith("35", card)
+    Assert.Contains(string card.[2], "2345678")
+    Assert.Contains(string card.[3], "89")
+    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
+
+[<Fact>]
 let ``Should generate valid Amex`` () =
     let card = Dedge.Cardizer.generateAmex ()
     Assert.StartsWith("3", card)
