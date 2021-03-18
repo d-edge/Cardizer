@@ -17,7 +17,7 @@ let luhn (s: string) =
 let ``Should generate valid Visa`` () =
     let card = Dedge.Cardizer.generateVisa ()
     Assert.StartsWith("4", card)
-    Assert.Equal(16, card.Length)
+    Assert.True(card.Length = 16 || card.Length = 19, $"The credit card should have a length of 16 or 19 but has {card.Length}.")
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
 
 [<Fact>]
