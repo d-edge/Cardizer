@@ -40,7 +40,7 @@ let private generateCard prefixes state length =
     getNumbers state length
     |> fun (numbers, sum) -> (prefixes @ numbers |> String.Concat) + sum
 
-let generateVisa () = generateCard [ 4 ] 8 14
+let generateVisa () = generateCard [ 4 ] 8 (11 + 3 * next 2)
 
 let generateVerve () =
     let nextInRange start stop = next (stop - start + 1) + start
@@ -77,4 +77,4 @@ let generateDiscover () = generateCard [ 6; 0; 1; 1 ] 6 11
 
 let generateMasterCard () =
     let second = next 4 + 1
-    generateCard [ 5 ; second ] (1 + second) 13
+    generateCard [ 5; second ] (1 + second) 13
