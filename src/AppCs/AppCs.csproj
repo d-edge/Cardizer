@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dedge.Cardizer" Version="0.1.0-alpha" />
+    <ProjectReference Include="..\Dedge.Cardizer\Dedge.Cardizer.fsproj" />
   </ItemGroup>
 
 </Project>
