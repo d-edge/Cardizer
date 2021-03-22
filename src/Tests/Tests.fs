@@ -1,6 +1,7 @@
 module Tests
 
 open Xunit
+open Dedge.Cardizer
 
 // https://rosettacode.org/wiki/Luhn_test_of_credit_card_numbers#F.23
 let luhn (s: string) =
@@ -14,15 +15,23 @@ let luhn (s: string) =
     (g 0 0 s.Length) % 10 = 0
 
 [<Fact>]
-let ``Should generate valid Visa`` () =
-    let card = Dedge.Cardizer.generateVisa ()
+let ``Should generate valid Visa 13`` () =
+    let card = constructVisa VisaLengthOptions.Thirteen
     Assert.StartsWith("4", card)
-    Assert.True(card.Length = 13 || card.Length = 16, $"The credit card should have a length of 16 or 19 but has {card.Length}.")
+    Assert.True(card.Length = 13, $"The credit card should have a length of 13 but has {card.Length}.")
+    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
+
+
+[<Fact>]
+let ``Should generate valid Visa 16`` () =
+    let card = constructVisa VisaLengthOptions.Sixteen
+    Assert.StartsWith("4", card)
+    Assert.True(card.Length = 16, $"The credit card should have a length of 16 but has {card.Length}.")
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
 
 [<Fact>]
 let ``Should generate valid Verve`` () =
-    let card = Dedge.Cardizer.generateVerve ()
+    let card = generateVerve ()
     let start = card.Substring(0, 6) |> int
 
     let prefixInRange =
@@ -35,7 +44,7 @@ let ``Should generate valid Verve`` () =
 
 [<Fact>]
 let ``Should generate valid Mir`` () =
-    let card = Dedge.Cardizer.generateMir ()
+    let card = generateMir ()
     Assert.StartsWith("220", card)
     Assert.InRange(card.[3], '0', '4')
     Assert.Equal(16, card.Length)
@@ -43,30 +52,31 @@ let ``Should generate valid Mir`` () =
 
 [<Fact>]
 let ``Should generate valid Jcb`` () =
-    let card = Dedge.Cardizer.generateJcb ()
+    let card = generateJcb ()
     Assert.StartsWith("35", card)
     Assert.Contains(string card.[2], "2345678")
     Assert.Contains(string card.[3], "89")
+    Assert.Equal(16, card.Length)
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
 
 [<Fact>]
 let ``Should generate valid Amex`` () =
-    let card = Dedge.Cardizer.generateAmex ()
+    let card = generateAmex ()
     Assert.StartsWith("3", card)
-    Assert.Equal(15, card.Length)
     Assert.Contains(string card.[1], "47")
+    Assert.Equal(15, card.Length)
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
 
 [<Fact>]
 let ``Should generate valid Discover`` () =
-    let card = Dedge.Cardizer.generateDiscover ()
+    let card = generateDiscover ()
     Assert.StartsWith("6011", card)
     Assert.Equal(16, card.Length)
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
 
 [<Fact>]
 let ``Should generate valid MasterCard`` () =
-    let card = Dedge.Cardizer.generateMasterCard ()
+    let card = generateMasterCard ()
     Assert.StartsWith("5", card)
     Assert.Equal(16, card.Length)
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
