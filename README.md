@@ -4,6 +4,8 @@
 
 A functional minimalist credit card randomizer to test application.
 
+Keep in mind that all credit card numbers generated with Cardizer are completely random and do not hold any real life value.
+
 ## Features
 
 * Easy to use
@@ -11,6 +13,10 @@ A functional minimalist credit card randomizer to test application.
 * Thread safe
 * Check with the Luhn's algorithm
 * Support for Visa credit card
+* Support for Jcb credit card
+* Support for Amex credit card
+* Support for Discover credit card
+* Support for MasterCard credit card
 
 ## Getting Started
 
