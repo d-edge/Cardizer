@@ -1,12 +1,12 @@
 ﻿using System;
-
+using Dedge;
 namespace AppCs
 {
     class Program
     {
         static void Main(string[] args)
         {
-            var card = Dedge.Cardizer.generateVisa();
+            var card = Cardizer.GenerateVisa();
             Console.WriteLine(card);
         }
     }
