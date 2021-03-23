@@ -32,11 +32,10 @@ Next create a .net application and use Dedge.Cardizer:
 
 ```fsharp
 open System
-open Dedge
 
 [<EntryPoint>]
 let main _ =
-    Cardizer.NextVisa () |> printfn "Visa: %s"
+    Dedge.Cardizer.NextVisa () |> printfn "Visa: %s"
     0
 ```
 
@@ -45,7 +44,7 @@ or in C#:
 ```csharp
 static void Main(string[] args)
 {
-    var card = Dedge.Cardizer.generateVisa();
+    var card = Dedge.Cardizer.NextVisa();
     Console.WriteLine(card);
 }
 ```
