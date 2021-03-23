@@ -6,7 +6,7 @@ namespace AppCs
     {
         static void Main(string[] args)
         {
-            var card = Cardizer.GenerateVisa();
+            var card = Cardizer.NextVisa();
             Console.WriteLine(card);
         }
     }
