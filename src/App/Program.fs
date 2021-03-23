@@ -2,11 +2,11 @@ open Dedge
 
 [<EntryPoint>]
 let main _ =
-    Cardizer.GenerateAmex () |> printfn "Amex:\t\t%s"
-    Cardizer.GenerateDiscover () |> printfn "Discover:\t%s"
-    Cardizer.GenerateJcb () |> printfn "Jcb:\t\t%s"
-    Cardizer.GenerateMasterCard () |> printfn "MasterCard:\t%s"
-    Cardizer.GenerateMir () |> printfn "Mir:\t\t%s"
-    Cardizer.GenerateVerve () |> printfn "Verve:\t\t%s"
-    Cardizer.GenerateVisa () |> printfn "Visa:\t\t%s"
+    Cardizer.NextAmex () |> printfn "Amex:\t\t%s"
+    Cardizer.NextDiscover () |> printfn "Discover:\t%s"
+    Cardizer.NextJcb () |> printfn "Jcb:\t\t%s"
+    Cardizer.NextMasterCard () |> printfn "MasterCard:\t%s"
+    Cardizer.NextMir () |> printfn "Mir:\t\t%s"
+    Cardizer.NextVerve () |> printfn "Verve:\t\t%s"
+    Cardizer.NextVisa () |> printfn "Visa:\t\t%s"
     0
