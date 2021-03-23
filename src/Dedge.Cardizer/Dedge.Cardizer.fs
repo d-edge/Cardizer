@@ -220,6 +220,17 @@ type Cardizer =
 
         Cardizer.generateCard prefixes state length
 
+    /// <summary>Returns a random Amex number.</summary>
+    /// <returns>Random Amex number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextAmex"/> method.
+    /// <code>
+    /// void PrintAmex()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextAmex());
+    /// }
+    /// </code>
+    /// </example>
     static member NextAmex() =
         let a, b =
             if Cardizer.next 2 = 0 then
@@ -257,6 +268,17 @@ type Cardizer =
 
         Cardizer.generateCard prefixes state length
 
+    /// <summary>Returns a random MasterCard number.</summary>
+    /// <returns>Random MasterCard number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextMasterCard"/> method.
+    /// <code>
+    /// void PrintMasterCard()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextMasterCard());
+    /// }
+    /// </code>
+    /// </example>
     static member NextMasterCard() =
         let second = Cardizer.next 4 + 1
         Cardizer.generateCard [ 5; second ] (1 + second) 16
