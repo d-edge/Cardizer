@@ -6,8 +6,15 @@ open System.Runtime.InteropServices
 
 type VisaLengthOptions =
     | Random = 0
-    | Thirteen = 1
-    | Sixteen = 2
+    | Thirteen = 13
+    | Sixteen = 16
+
+type JcbLengthOptions =
+    | Random = 0
+    | Sixteen = 16
+    | Seventeen = 17
+    | Eightteen = 18
+    | Nineteen = 19
 
 type Cardizer =
 
@@ -25,6 +32,12 @@ type Cardizer =
                         Random(seed)))
 
         fun n -> localGenerator.Value.Next(n)
+
+    /// <summary>Returns a random integer within a given range.</summary>
+    /// <param name="low">The (inclusive) low value of the range</param>
+    /// <param name="high">The (inclusive) high value of the range</param>
+    /// <returns>Random integer within a ginven range</returns>
+    static member nextInRange low high = Cardizer.next (high - low + 1) + low
 
     static member private applySnd f (a, b) = a, f b
 
@@ -60,7 +73,7 @@ type Cardizer =
         |> fun (numbers, sum) -> (prefixes @ numbers |> String.Concat) + sum
 
     /// <summary>Returns a random Visa number that is of the given available length.</summary>
-    /// <param name="visaLengthOption">Credit card's length (default is randomized between 13 and 16)</param>
+    /// <param name="visaLengthOption">Credit card's length (default is randomized between 13 or 16)</param>
     /// <returns>Random Visa number</returns>
     /// <example>
     /// This sample shows how to call the <see cref="NextVisa"/> method.
@@ -69,14 +82,11 @@ type Cardizer =
     /// {
     ///    Console.WriteLine(Cardizer.NextVisa()); // randomized between 13 or 16
     ///    Console.WriteLine(Cardizer.NextVisa(VisaLengthOptions.Random)); // randomized between 13 or 16
-    ///    Console.WriteLine(Cardizer.NextVisa(VisaLengthOptions.Thirteen));
     ///    Console.WriteLine(Cardizer.NextVisa(VisaLengthOptions.Sixteen));
     /// }
     /// </code>
     /// </example>
-    static member NextVisa
-        ([<Optional; DefaultParameterValue(VisaLengthOptions.Random)>] visaLengthOption: VisaLengthOptions)
-        =
+    static member NextVisa([<Optional; DefaultParameterValue(VisaLengthOptions.Random)>] visaLengthOption) =
         let (sum, length) =
             match visaLengthOption with
             | VisaLengthOptions.Thirteen -> 4, 13
@@ -90,9 +100,6 @@ type Cardizer =
         Cardizer.generateCard [ 4 ] sum length
 
     static member NextVerve() =
-        let nextInRange start stop =
-            Cardizer.next (stop - start + 1) + start
-
         let charToInt c = int c - 48
         let numberToSeq n = n |> string |> Seq.map charToInt
         let length = 16 + 3 * Cardizer.next 2
@@ -104,7 +111,7 @@ type Cardizer =
         let shift = (length + 1) % 2
 
         let prefixes, state =
-            nextInRange prefix.[0] prefix.[1]
+            Cardizer.nextInRange prefix.[0] prefix.[1]
             |> numberToSeq
             |> Seq.toList
             |> Cardizer.sumFold shift 0
@@ -115,10 +122,36 @@ type Cardizer =
         let fourth = Cardizer.next 5
         Cardizer.generateCard [ 2; 2; 0; fourth ] (6 + fourth) 16
 
-    static member NextJcb() =
-        let third = Cardizer.next 7 + 2
-        let fourth = Cardizer.next 2 + 8
-        Cardizer.generateCard [ 3; 5; third; fourth ] (11 + (Cardizer.getNumber third) + fourth) 16
+    /// <summary>Returns a random Jcb number that is of the given available length.</summary>
+    /// <param name="jcbLengthOption">Credit card's length (default is randomized between 16 and 19)</param>
+    /// <returns>Random Jcb number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextJcb"/> method.
+    /// <code>
+    /// void PrintJcb()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextJcb()); // randomized between 16 and 19
+    ///    Console.WriteLine(Cardizer.NextJcb(JcbLengthOptions.Random)); // randomized between 16 and 19
+    ///    Console.WriteLine(Cardizer.NextJcb(JcbLengthOptions.Sixteen));
+    /// }
+    /// </code>
+    /// </example>
+    static member NextJcb([<Optional; DefaultParameterValue(JcbLengthOptions.Random)>] jcbLengthOption) =
+        let third = Cardizer.nextInRange 2 8
+        let fourth = Cardizer.nextInRange 8 9
+
+        let length =
+            match jcbLengthOption with
+            | JcbLengthOptions.Random -> Cardizer.nextInRange 16 19
+            | _ -> int jcbLengthOption
+
+        let shift = (length + 1) % 2
+
+        let prefixes, state =
+            [ 3; 5; third; fourth ]
+            |> Cardizer.sumFold shift 0
+
+        Cardizer.generateCard prefixes state length
 
     static member NextAmex() =
         let a, b =

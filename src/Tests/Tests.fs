@@ -3,13 +3,15 @@ module Tests
 open Xunit
 open Dedge
 
+let inline charToInt c = int c - 48
+
 // https://rosettacode.org/wiki/Luhn_test_of_credit_card_numbers#F.23
 let luhn (s: string) =
     let rec g r c =
         function
         | 0 -> r
         | i ->
-            let d = ((int s.[i - 1]) - 48) <<< c
+            let d = (charToInt s.[i - 1]) <<< c
             g (r + if d < 10 then d else d - 9) (1 - c) (i - 1)
 
     (g 0 0 s.Length) % 10 = 0
@@ -56,16 +58,21 @@ let ``Should generate valid Mir`` () =
     let card = Cardizer.NextMir()
     Assert.StartsWith("220", card)
     Assert.InRange(card.[3], '0', '4')
-    Assert.Equal(16, card.Length)
+    Assert.InRange(card.Length, 16, 19)
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
 
-[<Fact>]
-let ``Should generate valid Jcb`` () =
-    let card = Cardizer.NextJcb()
+[<Theory>]
+[<InlineData(JcbLengthOptions.Sixteen, 16, 16)>]
+[<InlineData(JcbLengthOptions.Seventeen, 17, 17)>]
+[<InlineData(JcbLengthOptions.Eightteen, 18, 18)>]
+[<InlineData(JcbLengthOptions.Nineteen, 19, 19)>]
+[<InlineData(JcbLengthOptions.Random, 16, 19)>]
+let ``Should generate valid Jcb`` length low high =
+    let card = Cardizer.NextJcb length
     Assert.StartsWith("35", card)
-    Assert.Contains(string card.[2], "2345678")
-    Assert.Contains(string card.[3], "89")
-    Assert.Equal(16, card.Length)
+    Assert.InRange(charToInt card.[2], 2, 8)
+    Assert.InRange(charToInt card.[3], 8, 9)
+    Assert.InRange(card.Length, low, high)
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
 
 [<Fact>]
@@ -80,7 +87,7 @@ let ``Should generate valid Amex`` () =
 let ``Should generate valid Discover`` () =
     let card = Cardizer.NextDiscover()
     Assert.StartsWith("6011", card)
-    Assert.Equal(16, card.Length)
+    Assert.InRange(card.Length, 16, 19)
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
 
 [<Fact>]
