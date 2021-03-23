@@ -16,6 +16,11 @@ type VisaLengthOptions =
     | Thirteen = 13
     | Sixteen = 16
 
+type VerveLengthOptions =
+    | Random = 0
+    | Sixteen = 16
+    | Nineteen = 19
+
 type JcbLengthOptions =
     | Random = 0
     | Sixteen = 16
@@ -120,10 +125,27 @@ type Cardizer =
 
         Cardizer.generateCard [ 4 ] sum length
 
-    static member NextVerve() =
+    /// <summary>Returns a random Verve number that is of the given available length.</summary>
+    /// <param name="verveLengthOption">Credit card's length (default is randomized between 16 or 19)</param>
+    /// <returns>Random Verve number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextVerve"/> method.
+    /// <code>
+    /// void PrintVerve()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextVerve()); // randomized between 16 or 19
+    ///    Console.WriteLine(Cardizer.NextVerve(VerveLengthOptions.Random)); // randomized between 16 or 19
+    ///    Console.WriteLine(Cardizer.NextVerve(VerveLengthOptions.Sixteen));
+    /// }
+    /// </code>
+    /// </example>
+    static member NextVerve([<Optional; DefaultParameterValue(VerveLengthOptions.Random)>] verveLengthOption) =
         let charToInt c = int c - 48
         let numberToSeq n = n |> string |> Seq.map charToInt
-        let length = 16 + 3 * Cardizer.next 2
+        let length =
+            match verveLengthOption with
+            | VerveLengthOptions.Random -> 16 + 3 * Cardizer.next 2
+            | _ -> int verveLengthOption
 
         let prefix =
             [ [ 506099; 506198 ]

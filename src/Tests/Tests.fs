@@ -16,28 +16,23 @@ let luhn (s: string) =
 
     (g 0 0 s.Length) % 10 = 0
 
-[<Fact>]
-let ``Should generate valid Visa 13`` () =
-    let card =
-        Cardizer.NextVisa VisaLengthOptions.Thirteen
+[<Theory>]
+[<InlineData(VisaLengthOptions.Thirteen, 13, 13)>]
+[<InlineData(VisaLengthOptions.Sixteen, 16, 16)>]
+[<InlineData(VisaLengthOptions.Random, 13, 16)>]
+let ``Should generate valid Visa`` length a b =
+    let card = Cardizer.NextVisa length
 
     Assert.StartsWith("4", card)
-    Assert.True(card.Length = 13, $"The credit card should have a length of 13 but has {card.Length}.")
+    Assert.True(card.Length = a || card.Length = b, $"The credit card should have a length of 16 but has {card.Length}.")
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
 
-
-[<Fact>]
-let ``Should generate valid Visa 16`` () =
-    let card =
-        Cardizer.NextVisa VisaLengthOptions.Sixteen
-
-    Assert.StartsWith("4", card)
-    Assert.True(card.Length = 16, $"The credit card should have a length of 16 but has {card.Length}.")
-    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
-
-[<Fact>]
-let ``Should generate valid Verve`` () =
-    let card = Cardizer.NextVerve()
+[<Theory>]
+[<InlineData(VerveLengthOptions.Sixteen, 16, 16)>]
+[<InlineData(VerveLengthOptions.Nineteen, 19, 19)>]
+[<InlineData(VerveLengthOptions.Random, 16, 19)>]
+let ``Should generate valid Verve`` length a b =
+    let card = Cardizer.NextVerve length
     let start = card.Substring(0, 6) |> int
 
     let prefixInRange =
@@ -47,7 +42,7 @@ let ``Should generate valid Verve`` () =
     Assert.True(prefixInRange, $"The credit card should not start with {start}.")
 
     Assert.True(
-        card.Length = 16 || card.Length = 19,
+        card.Length = a || card.Length = b,
         $"The credit card should have a length of 16 or 19 but has {card.Length}."
     )
 
@@ -89,11 +84,11 @@ let ``Should generate valid Amex`` () =
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
 
 [<Theory>]
-[<InlineData(JcbLengthOptions.Sixteen, 16, 16)>]
-[<InlineData(JcbLengthOptions.Seventeen, 17, 17)>]
-[<InlineData(JcbLengthOptions.Eightteen, 18, 18)>]
-[<InlineData(JcbLengthOptions.Nineteen, 19, 19)>]
-[<InlineData(JcbLengthOptions.Random, 16, 19)>]
+[<InlineData(DiscoverLengthOptions.Sixteen, 16, 16)>]
+[<InlineData(DiscoverLengthOptions.Seventeen, 17, 17)>]
+[<InlineData(DiscoverLengthOptions.Eightteen, 18, 18)>]
+[<InlineData(DiscoverLengthOptions.Nineteen, 19, 19)>]
+[<InlineData(DiscoverLengthOptions.Random, 16, 19)>]
 let ``Should generate valid Discover`` length low high =
     let card = Cardizer.NextDiscover length
     Assert.StartsWith("6011", card)
