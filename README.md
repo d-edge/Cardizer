@@ -40,6 +40,16 @@ let main _ =
     0
 ```
 
+or in C#:
+
+```csharp
+static void Main(string[] args)
+{
+    var card = Dedge.Cardizer.generateVisa();
+    Console.WriteLine(card);
+}
+```
+
 output:
 
     Visa: 4127540509730813
@@ -48,7 +58,7 @@ Of course the credit card value is going to be randomized.
 
 ## Sample applications
 
-There is a sample application which can be found in the [`App`](https://github.com/d-edge/Cardizer/tree/main/src/App) folder.
+There is a F# sample application which can be found in the [`App`](https://github.com/d-edge/Cardizer/tree/main/src/App) folder and a C# sample application which can be found in the [`AppCs`](https://github.com/d-edge/Cardizer/tree/main/src/AppCs) folder.
 
 ## Contributing
 
