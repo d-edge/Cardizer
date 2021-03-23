@@ -32,10 +32,11 @@ Next create a .net application and use Dedge.Cardizer:
 
 ```fsharp
 open System
+open Dedge
 
 [<EntryPoint>]
 let main _ =
-    Dedge.Cardizer.generateVisa () |> printfn "Visa: %s"
+    Cardizer.NextVisa () |> printfn "Visa: %s"
     0
 ```
 
@@ -63,13 +64,13 @@ There is a F# sample application which can be found in the [`App`](https://githu
 
 Help and feedback is always welcome and pull requests get accepted.
 
-- First open an issue to discuss your changes
-- After your change has been formally approved please submit your PR **against the develop branch**
-- Please follow the code convention by examining existing code
-- Add/modify the `README.md` as required
-- Add/modify unit tests as required
-- Please document your changes in the upcoming release notes in `RELEASE_NOTES.md`
-- PRs can only be approved and merged when all checks succeed (builds on Windows, MacOs and Linux)
+* First open an issue to discuss your changes
+* After your change has been formally approved please submit your PR **against the develop branch**
+* Please follow the code convention by examining existing code
+* Add/modify the `README.md` as required
+* Add/modify unit tests as required
+* Please document your changes in the upcoming release notes in `RELEASE_NOTES.md`
+* PRs can only be approved and merged when all checks succeed (builds on Windows, MacOs and Linux)
 
 ## License
 

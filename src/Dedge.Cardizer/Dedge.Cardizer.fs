@@ -28,7 +28,7 @@ type Cardizer =
 
     static member private applySnd f (a, b) = a, f b
 
-    static member getNumber n =
+    static member private getNumber n =
         let n2 = n * 2
         if n2 > 9 then n2 - 9 else n2
 
@@ -59,12 +59,24 @@ type Cardizer =
         |> Cardizer.applySnd (Cardizer.checkDigit >> string)
         |> fun (numbers, sum) -> (prefixes @ numbers |> String.Concat) + sum
 
-    /// <summary>Generate a random visa credit card</summary>
-    /// <param name="visaLengthOption">Credit card's length (default is randomize between 13 and 16)</param>
-    /// <returns>Visa's digits</returns>
-    static member GenerateVisa
+    /// <summary>Returns a random Visa number that is of the given available length.</summary>
+    /// <param name="visaLengthOption">Credit card's length (default is randomized between 13 and 16)</param>
+    /// <returns>Random Visa number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextVisa"/> method.
+    /// <code>
+    /// void PrintVisa()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextVisa()); // randomized between 13 or 16
+    ///    Console.WriteLine(Cardizer.NextVisa(VisaLengthOptions.Random)); // randomized between 13 or 16
+    ///    Console.WriteLine(Cardizer.NextVisa(VisaLengthOptions.Thirteen));
+    ///    Console.WriteLine(Cardizer.NextVisa(VisaLengthOptions.Sixteen));
+    /// }
+    /// </code>
+    /// </example>
+    static member NextVisa
         ([<Optional; DefaultParameterValue(VisaLengthOptions.Random)>] visaLengthOption: VisaLengthOptions)
-        : string =
+        =
         let (sum, length) =
             match visaLengthOption with
             | VisaLengthOptions.Thirteen -> 4, 13
@@ -77,7 +89,7 @@ type Cardizer =
 
         Cardizer.generateCard [ 4 ] sum length
 
-    static member GenerateVerve() =
+    static member NextVerve() =
         let nextInRange start stop =
             Cardizer.next (stop - start + 1) + start
 
@@ -99,16 +111,16 @@ type Cardizer =
 
         Cardizer.generateCard prefixes state length
 
-    static member GenerateMir() =
+    static member NextMir() =
         let fourth = Cardizer.next 5
         Cardizer.generateCard [ 2; 2; 0; fourth ] (6 + fourth) 16
 
-    static member GenerateJcb() =
+    static member NextJcb() =
         let third = Cardizer.next 7 + 2
         let fourth = Cardizer.next 2 + 8
         Cardizer.generateCard [ 3; 5; third; fourth ] (11 + (Cardizer.getNumber third) + fourth) 16
 
-    static member GenerateAmex() =
+    static member NextAmex() =
         let a, b =
             if Cardizer.next 2 = 0 then
                 4, 8
@@ -117,9 +129,9 @@ type Cardizer =
 
         Cardizer.generateCard [ 3; a ] (3 + b) 15
 
-    static member GenerateDiscover() =
+    static member NextDiscover() =
         Cardizer.generateCard [ 6; 0; 1; 1 ] 6 16
 
-    static member GenerateMasterCard() =
+    static member NextMasterCard() =
         let second = Cardizer.next 4 + 1
         Cardizer.generateCard [ 5; second ] (1 + second) 16
