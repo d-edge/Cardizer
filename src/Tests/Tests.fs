@@ -53,12 +53,17 @@ let ``Should generate valid Verve`` () =
 
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
 
-[<Fact>]
-let ``Should generate valid Mir`` () =
-    let card = Cardizer.NextMir()
+[<Theory>]
+[<InlineData(MirLengthOptions.Sixteen, 16, 16)>]
+[<InlineData(MirLengthOptions.Seventeen, 17, 17)>]
+[<InlineData(MirLengthOptions.Eightteen, 18, 18)>]
+[<InlineData(MirLengthOptions.Nineteen, 19, 19)>]
+[<InlineData(MirLengthOptions.Random, 16, 19)>]
+let ``Should generate valid Mir`` length low high =
+    let card = Cardizer.NextMir length
     Assert.StartsWith("220", card)
     Assert.InRange(card.[3], '0', '4')
-    Assert.InRange(card.Length, 16, 19)
+    Assert.InRange(card.Length, low, high)
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
 
 [<Theory>]
@@ -83,11 +88,16 @@ let ``Should generate valid Amex`` () =
     Assert.Equal(15, card.Length)
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
 
-[<Fact>]
-let ``Should generate valid Discover`` () =
-    let card = Cardizer.NextDiscover()
+[<Theory>]
+[<InlineData(JcbLengthOptions.Sixteen, 16, 16)>]
+[<InlineData(JcbLengthOptions.Seventeen, 17, 17)>]
+[<InlineData(JcbLengthOptions.Eightteen, 18, 18)>]
+[<InlineData(JcbLengthOptions.Nineteen, 19, 19)>]
+[<InlineData(JcbLengthOptions.Random, 16, 19)>]
+let ``Should generate valid Discover`` length low high =
+    let card = Cardizer.NextDiscover length
     Assert.StartsWith("6011", card)
-    Assert.InRange(card.Length, 16, 19)
+    Assert.InRange(card.Length, low, high)
     Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
 
 [<Fact>]

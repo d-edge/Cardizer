@@ -4,12 +4,33 @@ open System
 open System.Threading
 open System.Runtime.InteropServices
 
+type LengthOptions =
+    | Random = 0
+    | Sixteen = 16
+    | Seventeen = 17
+    | Eightteen = 18
+    | Nineteen = 19
+
 type VisaLengthOptions =
     | Random = 0
     | Thirteen = 13
     | Sixteen = 16
 
 type JcbLengthOptions =
+    | Random = 0
+    | Sixteen = 16
+    | Seventeen = 17
+    | Eightteen = 18
+    | Nineteen = 19
+
+type MirLengthOptions =
+    | Random = 0
+    | Sixteen = 16
+    | Seventeen = 17
+    | Eightteen = 18
+    | Nineteen = 19
+
+type DiscoverLengthOptions =
     | Random = 0
     | Sixteen = 16
     | Seventeen = 17
@@ -118,9 +139,33 @@ type Cardizer =
 
         Cardizer.generateCard prefixes state length
 
-    static member NextMir() =
-        let fourth = Cardizer.next 5
-        Cardizer.generateCard [ 2; 2; 0; fourth ] (6 + fourth) 16
+    /// <summary>Returns a random Mir number that is of the given available length.</summary>
+    /// <param name="mirLengthOption">Credit card's length (default is randomized between 16 and 19)</param>
+    /// <returns>Random Mir number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextMir"/> method.
+    /// <code>
+    /// void PrintMir()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextMir()); // randomized between 16 and 19
+    ///    Console.WriteLine(Cardizer.NextMir(MirLengthOptions.Random)); // randomized between 16 and 19
+    ///    Console.WriteLine(Cardizer.NextMir(MirLengthOptions.Sixteen));
+    /// }
+    /// </code>
+    /// </example>
+    static member NextMir([<Optional; DefaultParameterValue(MirLengthOptions.Random)>] mirLengthOption) =
+        let length =
+            match mirLengthOption with
+            | MirLengthOptions.Random -> Cardizer.nextInRange 16 19
+            | _ -> int mirLengthOption
+
+        let shift = (length + 1) % 2
+
+        let prefixes, state =
+            [ 2; 2; 0; Cardizer.next 5 ]
+            |> Cardizer.sumFold shift 0
+
+        Cardizer.generateCard prefixes state length
 
     /// <summary>Returns a random Jcb number that is of the given available length.</summary>
     /// <param name="jcbLengthOption">Credit card's length (default is randomized between 16 and 19)</param>
@@ -137,9 +182,6 @@ type Cardizer =
     /// </code>
     /// </example>
     static member NextJcb([<Optional; DefaultParameterValue(JcbLengthOptions.Random)>] jcbLengthOption) =
-        let third = Cardizer.nextInRange 2 8
-        let fourth = Cardizer.nextInRange 8 9
-
         let length =
             match jcbLengthOption with
             | JcbLengthOptions.Random -> Cardizer.nextInRange 16 19
@@ -148,7 +190,10 @@ type Cardizer =
         let shift = (length + 1) % 2
 
         let prefixes, state =
-            [ 3; 5; third; fourth ]
+            [ 3
+              5
+              Cardizer.nextInRange 2 8
+              Cardizer.nextInRange 8 9 ]
             |> Cardizer.sumFold shift 0
 
         Cardizer.generateCard prefixes state length
@@ -162,8 +207,33 @@ type Cardizer =
 
         Cardizer.generateCard [ 3; a ] (3 + b) 15
 
-    static member NextDiscover() =
-        Cardizer.generateCard [ 6; 0; 1; 1 ] 6 16
+    /// <summary>Returns a random Discover number that is of the given available length.</summary>
+    /// <param name="discoverLengthOption">Credit card's length (default is randomized between 16 and 19)</param>
+    /// <returns>Random Discover number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextDiscover"/> method.
+    /// <code>
+    /// void PrintDiscover()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextDiscover()); // randomized between 16 and 19
+    ///    Console.WriteLine(Cardizer.NextDiscover(DiscoverLengthOptions.Random)); // randomized between 16 and 19
+    ///    Console.WriteLine(Cardizer.NextDiscover(DiscoverLengthOptions.Sixteen));
+    /// }
+    /// </code>
+    /// </example>
+    static member NextDiscover([<Optional; DefaultParameterValue(DiscoverLengthOptions.Random)>] discoverLengthOption) =
+        let length =
+            match discoverLengthOption with
+            | DiscoverLengthOptions.Random -> Cardizer.nextInRange 16 19
+            | _ -> int discoverLengthOption
+
+        let shift = (length + 1) % 2
+
+        let prefixes, state =
+            [ 6; 0; 1; 1 ]
+            |> Cardizer.sumFold shift 0
+
+        Cardizer.generateCard prefixes state length
 
     static member NextMasterCard() =
         let second = Cardizer.next 4 + 1
