@@ -1,6 +1,9 @@
 module Tests
 
 open Xunit
+// note: we may want to move to expecto instead
+open FsUnit
+open FsUnit.Xunit
 open Dedge
 
 // https://rosettacode.org/wiki/Luhn_test_of_credit_card_numbers#F.23
@@ -19,19 +22,18 @@ let ``Should generate valid Visa 13`` () =
     let card =
         Cardizer.NextVisa VisaLengthOptions.Thirteen
 
-    Assert.StartsWith("4", card)
-    Assert.True(card.Length = 13, $"The credit card should have a length of 13 but has {card.Length}.")
-    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
-
+    card |> should startWith "4"
+    card |> should haveLength 13
+    card |> luhn |> should be True
 
 [<Fact>]
 let ``Should generate valid Visa 16`` () =
     let card =
         Cardizer.NextVisa VisaLengthOptions.Sixteen
 
-    Assert.StartsWith("4", card)
-    Assert.True(card.Length = 16, $"The credit card should have a length of 16 but has {card.Length}.")
-    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
+    card |> should startWith "4"
+    card |> should haveLength 16
+    card |> luhn |> should be True
 
 [<Fact>]
 let ``Should generate valid Verve`` () =
@@ -42,50 +44,50 @@ let ``Should generate valid Verve`` () =
         start >= 506099 && start <= 506198
         || start >= 650002 && start <= 650027
 
-    Assert.True(prefixInRange, $"The credit card should not start with {start}.")
-
-    Assert.True(
-        card.Length = 16 || card.Length = 19,
-        $"The credit card should have a length of 16 or 19 but has {card.Length}."
-    )
-
-    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
+    prefixInRange |> should be True
+    [ card.Length ] |> should be (subsetOf [ 16; 19 ]) // note: is there a better way for a is b or c?
+    card |> luhn |> should be True
 
 [<Fact>]
 let ``Should generate valid Mir`` () =
     let card = Cardizer.NextMir()
-    Assert.StartsWith("220", card)
-    Assert.InRange(card.[3], '0', '4')
-    Assert.Equal(16, card.Length)
-    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
+
+    card |> should startWith "220"
+    card.[3] |> should be (inRange '0' '4')
+    card |> should haveLength 16
+    card |> luhn |> should be True
 
 [<Fact>]
 let ``Should generate valid Jcb`` () =
     let card = Cardizer.NextJcb()
-    Assert.StartsWith("35", card)
-    Assert.Contains(string card.[2], "2345678")
-    Assert.Contains(string card.[3], "89")
-    Assert.Equal(16, card.Length)
-    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
+
+    card |> should startWith "35"
+    card.[2] |> should be (inRange '2' '8')
+    card.[3] |> should be (inRange '8' '9')
+    card |> should haveLength 16
+    card |> luhn |> should be True
 
 [<Fact>]
 let ``Should generate valid Amex`` () =
     let card = Cardizer.NextAmex()
-    Assert.StartsWith("3", card)
-    Assert.Contains(string card.[1], "47")
-    Assert.Equal(15, card.Length)
-    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
+
+    card |> should startWith "3"
+    [ card.[1] ] |> should be (subsetOf [ '4'; '7' ]) // note: is there a better way for a is b or c?
+    card |> should haveLength 15
+    card |> luhn |> should be True
 
 [<Fact>]
 let ``Should generate valid Discover`` () =
     let card = Cardizer.NextDiscover()
-    Assert.StartsWith("6011", card)
-    Assert.Equal(16, card.Length)
-    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
+    
+    card |> should startWith "6011"
+    card |> should haveLength 16
+    card |> luhn |> should be True
 
 [<Fact>]
 let ``Should generate valid MasterCard`` () =
     let card = Cardizer.NextMasterCard()
-    Assert.StartsWith("5", card)
-    Assert.Equal(16, card.Length)
-    Assert.True(luhn card, $"The credit card number {card} failed the Luhn Check.")
+
+    card |> should startWith "5"
+    card |> should haveLength 16
+    card |> luhn |> should be True
