@@ -93,8 +93,12 @@ type Cardizer =
         let nextInRange start stop =
             Cardizer.next (stop - start + 1) + start
 
-        let charToInt c = int c - 48
-        let numberToSeq n = n |> string |> Seq.map charToInt
+        let numberToSeq number =
+            let rec loop n list =
+                if n <= 0 then list
+                else loop (n / 10) (n % 10 :: list)
+            loop number []
+
         let length = 16 + 3 * Cardizer.next 2
 
         let prefix =
@@ -106,7 +110,6 @@ type Cardizer =
         let prefixes, state =
             nextInRange prefix.[0] prefix.[1]
             |> numberToSeq
-            |> Seq.toList
             |> Cardizer.sumFold shift 0
 
         Cardizer.generateCard prefixes state length
