@@ -63,7 +63,7 @@ type Cardizer =
     /// <param name="low">The (inclusive) low value of the range</param>
     /// <param name="high">The (inclusive) high value of the range</param>
     /// <returns>Random integer within a ginven range</returns>
-    static member nextInRange low high = Cardizer.next (high - low + 1) + low
+    static member private nextInRange low high = Cardizer.next (high - low + 1) + low
 
     static member private applySnd f (a, b) = a, f b
 
