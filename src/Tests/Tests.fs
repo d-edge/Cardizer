@@ -115,3 +115,11 @@ let ``Should generate valid MasterCard`` () =
     card |> should startWith "5"
     card |> should haveLength 16
     card |> luhn |> should be LuhnCheck
+
+[<Fact>]
+let ``Should generate valid Uatp`` () =
+    let card = Cardizer.NextUatp()
+
+    card |> should startWith "1"
+    card |> should haveLength 15
+    card |> luhn |> should be LuhnCheck

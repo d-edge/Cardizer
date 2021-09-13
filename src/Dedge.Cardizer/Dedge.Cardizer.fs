@@ -293,3 +293,22 @@ type Cardizer =
     static member NextMasterCard() =
         let second = Cardizer.next 4 + 1
         Cardizer.generateCard [ 5; second ] (1 + second) 16
+
+
+    /// <summary>Returns a random Uatp number.</summary>
+    /// <returns>Random Uatp number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextUatp"/> method.
+    /// <code>
+    /// void PrintUatp()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextUatp());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextUatp () =
+        let prefixes = [ 1 ]
+        let checksum = 1
+        let length = 15
+        Cardizer.generateCard prefixes checksum length
+        
