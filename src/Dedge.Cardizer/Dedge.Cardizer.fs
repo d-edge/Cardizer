@@ -63,41 +63,40 @@ type Cardizer =
     /// <param name="low">The (inclusive) low value of the range</param>
     /// <param name="high">The (inclusive) high value of the range</param>
     /// <returns>Random integer within a ginven range</returns>
-    static member private nextInRange low high = Cardizer.next (high - low + 1) + low
+    static member private NextInRange low high = Cardizer.next (high - low + 1) + low
 
-    static member private getNumber n =
+    static member private GetNumber n =
         let n2 = n * 2
         if n2 > 9 then n2 - 9 else n2
 
-    static member private sumDigit i n = if i then n else Cardizer.getNumber n
+    static member inline private CheckDigit sum = ((sum / 10 + 1) * 10 - sum) % 10
 
-    static member inline private checkDigit sum = ((sum / 10 + 1) * 10 - sum) % 10
-
-    static member private nextUniquePersonalIdentifiers n =
+    static member private NextUniquePersonalIdentifiers n =
         { 1 .. n } |> Seq.map (fun _ -> Cardizer.next 10)
 
-    static member private sumFold length state digits =
+    static member private ReverseSum (digits: seq<int>): int =
         digits
-        |> Seq.mapi (fun i n -> (length + i) % 2 = 0, n)
-        |> Seq.mapFold (fun sum (isEven, n) -> n, sum + Cardizer.sumDigit isEven n) state
+        |> Seq.rev
+        |> Seq.mapi (fun i n -> i % 2 = 0, n)
+        |> Seq.sumBy (fun (isEven, n) ->  if isEven then Cardizer.GetNumber n else n)
+        |> Cardizer.CheckDigit
 
-    static member private assemble prefixes (numbers, sum) =
+    static member private AppendSum digits =
         seq {
-            yield! prefixes
-            yield! numbers
-            yield Cardizer.checkDigit sum
+            yield! digits
+            yield Cardizer.ReverseSum digits
         }
 
-    static member private generateCard (prefixes: seq<int>) state cardLen =
+    static member private GenerateCard (prefixes: seq<int>) cardLen =
         let checksumLen = 1
         let prefixesLen = Seq.length prefixes
         let generateLen = cardLen - prefixesLen - checksumLen
-        let shift = (cardLen - (prefixesLen % 2 - 1)) % 2
 
         generateLen
-        |> Cardizer.nextUniquePersonalIdentifiers
-        |> Cardizer.sumFold shift state
-        |> Cardizer.assemble prefixes
+        |> Cardizer.NextUniquePersonalIdentifiers
+        |> Seq.toList
+        |> Seq.append prefixes
+        |> Cardizer.AppendSum
         |> String.Concat
 
     /// <summary>Returns a random Visa number that is of the given available length.</summary>
@@ -115,17 +114,17 @@ type Cardizer =
     /// </code>
     /// </example>
     static member NextVisa([<Optional; DefaultParameterValue(VisaLengthOptions.Random)>] visaLengthOption) =
-        let (sum, length) =
+        let length =
             match visaLengthOption with
-            | VisaLengthOptions.Thirteen -> 4, 13
-            | VisaLengthOptions.Sixteen -> 8, 16
+            | VisaLengthOptions.Thirteen -> 13
+            | VisaLengthOptions.Sixteen -> 16
             | _ ->
                 if Cardizer.next 2 = 0 then
-                    4, 13
+                    13
                 else
-                    8, 16
+                    16
 
-        Cardizer.generateCard [ 4 ] sum length
+        Cardizer.GenerateCard [ 4 ] length
 
     /// <summary>Returns a random Verve number that is of the given available length.</summary>
     /// <param name="verveLengthOption">Credit card's length (default is randomized between 16 or 19)</param>
@@ -142,9 +141,6 @@ type Cardizer =
     /// </code>
     /// </example>
     static member NextVerve([<Optional; DefaultParameterValue(VerveLengthOptions.Random)>] verveLengthOption) =
-        let nextInRange start stop =
-            Cardizer.next (stop - start + 1) + start
-
         let numberToSeq number =
             let rec loop n list =
                 if n <= 0 then
@@ -163,14 +159,11 @@ type Cardizer =
             [ [ 506099; 506198 ]
               [ 650002; 650027 ] ].[Cardizer.next 2]
 
-        let shift = (length + 1) % 2
-
-        let prefixes, state =
-            Cardizer.nextInRange prefix.[0] prefix.[1]
+        let prefixes =
+            Cardizer.NextInRange prefix.[0] prefix.[1]
             |> numberToSeq
-            |> Cardizer.sumFold shift 0
 
-        Cardizer.generateCard prefixes state length
+        Cardizer.GenerateCard prefixes length
 
     /// <summary>Returns a random Mir number that is of the given available length.</summary>
     /// <param name="mirLengthOption">Credit card's length (default is randomized between 16 and 19)</param>
@@ -189,16 +182,12 @@ type Cardizer =
     static member NextMir([<Optional; DefaultParameterValue(MirLengthOptions.Random)>] mirLengthOption) =
         let length =
             match mirLengthOption with
-            | MirLengthOptions.Random -> Cardizer.nextInRange 16 19
+            | MirLengthOptions.Random -> Cardizer.NextInRange 16 19
             | _ -> int mirLengthOption
 
-        let shift = (length + 1) % 2
+        let prefixes = [ 2; 2; 0; Cardizer.next 5 ]
 
-        let prefixes, state =
-            [ 2; 2; 0; Cardizer.next 5 ]
-            |> Cardizer.sumFold shift 0
-
-        Cardizer.generateCard prefixes state length
+        Cardizer.GenerateCard prefixes length
 
     /// <summary>Returns a random Jcb number that is of the given available length.</summary>
     /// <param name="jcbLengthOption">Credit card's length (default is randomized between 16 and 19)</param>
@@ -217,19 +206,16 @@ type Cardizer =
     static member NextJcb([<Optional; DefaultParameterValue(JcbLengthOptions.Random)>] jcbLengthOption) =
         let length =
             match jcbLengthOption with
-            | JcbLengthOptions.Random -> Cardizer.nextInRange 16 19
+            | JcbLengthOptions.Random -> Cardizer.NextInRange 16 19
             | _ -> int jcbLengthOption
 
-        let shift = (length + 1) % 2
-
-        let prefixes, state =
+        let prefixes =
             [ 3
               5
-              Cardizer.nextInRange 2 8
-              Cardizer.nextInRange 8 9 ]
-            |> Cardizer.sumFold shift 0
+              Cardizer.NextInRange 2 8
+              Cardizer.NextInRange 8 9 ]
 
-        Cardizer.generateCard prefixes state length
+        Cardizer.GenerateCard prefixes length
 
     /// <summary>Returns a random Amex number.</summary>
     /// <returns>Random Amex number</returns>
@@ -243,13 +229,13 @@ type Cardizer =
     /// </code>
     /// </example>
     static member NextAmex() =
-        let a, b =
+        let second =
             if Cardizer.next 2 = 0 then
-                4, 8
+                4
             else
-                7, 5
+                7
 
-        Cardizer.generateCard [ 3; a ] (3 + b) 15
+        Cardizer.GenerateCard [3; second] 15
 
     /// <summary>Returns a random Discover number that is of the given available length.</summary>
     /// <param name="discoverLengthOption">Credit card's length (default is randomized between 16 and 19)</param>
@@ -268,16 +254,10 @@ type Cardizer =
     static member NextDiscover([<Optional; DefaultParameterValue(DiscoverLengthOptions.Random)>] discoverLengthOption) =
         let length =
             match discoverLengthOption with
-            | DiscoverLengthOptions.Random -> Cardizer.nextInRange 16 19
+            | DiscoverLengthOptions.Random -> Cardizer.NextInRange 16 19
             | _ -> int discoverLengthOption
 
-        let shift = (length + 1) % 2
-
-        let prefixes, state =
-            [ 6; 0; 1; 1 ]
-            |> Cardizer.sumFold shift 0
-
-        Cardizer.generateCard prefixes state length
+        Cardizer.GenerateCard [ 6; 0; 1; 1 ] length
 
     /// <summary>Returns a random MasterCard number.</summary>
     /// <returns>Random MasterCard number</returns>
@@ -292,7 +272,7 @@ type Cardizer =
     /// </example>
     static member NextMasterCard() =
         let second = Cardizer.next 4 + 1
-        Cardizer.generateCard [ 5; second ] (1 + second) 16
+        Cardizer.GenerateCard [ 5; second ] 16
 
 
     /// <summary>Returns a random Uatp number.</summary>
@@ -307,8 +287,5 @@ type Cardizer =
     /// </code>
     /// </example>
     static member NextUatp () =
-        let prefixes = [ 1 ]
-        let checksum = 1
-        let length = 15
-        Cardizer.generateCard prefixes checksum length
+        Cardizer.GenerateCard [1] 15
         
