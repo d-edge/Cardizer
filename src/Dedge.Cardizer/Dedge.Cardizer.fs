@@ -279,4 +279,25 @@ type Cardizer =
     /// </example>
     static member NextUatp () =
         Cardizer.GenerateCard [1] 15
-        
+
+    /// <summary>Returns a random RuPay number.</summary>
+    /// <returns>Random RuPay number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextRuPay"/> method.
+    /// <code>
+    /// void PrintRuPay()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextRuPay());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextRuPay() =
+        let prefix =
+            [ [ 6;0 ]
+              [ 6;5;2 ] 
+              [ 8;1 ]
+              [ 8;2 ]
+              [ 5;0;8 ]
+              ].[Cardizer.next 2]
+
+        Cardizer.GenerateCard prefix 16        
