@@ -123,3 +123,14 @@ let ``Should generate valid Uatp`` () =
     card |> should startWith "1"
     card |> should haveLength 15
     card |> luhn |> should be LuhnCheck
+
+[<Theory>]
+[<InlineData(InterPaymentLengthOptions.Sixteen, 16)>]
+[<InlineData(InterPaymentLengthOptions.Seventeen, 17)>]
+[<InlineData(InterPaymentLengthOptions.Eightteen, 18)>]
+[<InlineData(InterPaymentLengthOptions.Nineteen, 19)>]
+let ``Should generate valid InterPayment`` length expectedLength =
+    let card = Cardizer.NextInterPayment length
+    card |> should startWith "636"
+    card |> should haveLength expectedLength
+    card |> luhn |> should be LuhnCheck

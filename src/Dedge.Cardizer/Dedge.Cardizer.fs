@@ -42,6 +42,13 @@ type DiscoverLengthOptions =
     | Eightteen = 18
     | Nineteen = 19
 
+type InterPaymentLengthOptions =
+    | Random = 0
+    | Sixteen = 16
+    | Seventeen = 17
+    | Eightteen = 18
+    | Nineteen = 19
+
 type Cardizer =
 
     // original snippet by @tpetricek
@@ -279,4 +286,22 @@ type Cardizer =
     /// </example>
     static member NextUatp () =
         Cardizer.GenerateCard [1] 15
-        
+
+    /// <summary>Returns a random InterPayment number.</summary>
+    /// <returns>Random InterPayment number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextInterPayment"/> method.
+    /// <code>
+    /// void PrintInterPayment()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextInterPayment());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextInterPayment([<Optional; DefaultParameterValue(InterPaymentLengthOptions.Random)>] interPaymentLengthOption) =
+        let length =
+            match interPaymentLengthOption with
+            | InterPaymentLengthOptions.Random -> Cardizer.NextInRange 16 19
+            | _ -> int interPaymentLengthOption
+
+        Cardizer.GenerateCard [6;3;6] length
