@@ -116,13 +116,9 @@ type Cardizer =
     static member NextVisa([<Optional; DefaultParameterValue(VisaLengthOptions.Random)>] visaLengthOption) =
         let length =
             match visaLengthOption with
-            | VisaLengthOptions.Thirteen -> 13
-            | VisaLengthOptions.Sixteen -> 16
-            | _ ->
-                if Cardizer.next 2 = 0 then
-                    13
-                else
-                    16
+            | VisaLengthOptions.Random -> if Cardizer.next 2 = 0 then 13 else 16
+            | _ -> int visaLengthOption
+                
 
         Cardizer.GenerateCard [ 4 ] length
 
@@ -229,12 +225,7 @@ type Cardizer =
     /// </code>
     /// </example>
     static member NextAmex() =
-        let second =
-            if Cardizer.next 2 = 0 then
-                4
-            else
-                7
-
+        let second = if Cardizer.next 2 = 0 then 4 else 7
         Cardizer.GenerateCard [3; second] 15
 
     /// <summary>Returns a random Discover number that is of the given available length.</summary>
