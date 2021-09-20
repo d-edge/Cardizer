@@ -123,3 +123,10 @@ let ``Should generate valid Uatp`` () =
     card |> should startWith "1"
     card |> should haveLength 15
     card |> luhn |> should be LuhnCheck
+
+[<Fact>]
+let ``Should generate valid Tunion`` () =
+    let card = Cardizer.NextTunion()
+    card |> should startWith "31"
+    card |> should haveLength 19
+    card |> luhn |> should be LuhnCheck
