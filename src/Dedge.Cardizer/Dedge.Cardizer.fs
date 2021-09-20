@@ -42,6 +42,17 @@ type DiscoverLengthOptions =
     | Eightteen = 18
     | Nineteen = 19
 
+type MaestroLengthOptions =
+    | Random = 0
+    | Twelve = 12
+    | Thirteen = 13
+    | Fourteen = 14
+    | Fifteen = 15
+    | Sixteen = 16
+    | Seventeen = 17
+    | Eightteen = 18
+    | Nineteen = 19
+
 type Cardizer =
 
     // original snippet by @tpetricek
@@ -279,4 +290,34 @@ type Cardizer =
     /// </example>
     static member NextUatp () =
         Cardizer.GenerateCard [1] 15
-        
+
+    /// <summary>Returns a random Maestro number.</summary>
+    /// <returns>Random Maestro number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextMaestro"/> method.
+    /// <code>
+    /// void PrintMaestro()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextMaestro());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextMaestro([<Optional; DefaultParameterValue(MaestroLengthOptions.Random)>] maestroLengthOption) =
+        let length =
+            match maestroLengthOption with
+            | MaestroLengthOptions.Random -> Cardizer.NextInRange 12 19
+            | _ -> int maestroLengthOption
+
+        let prefix =
+            [   [ 5;0;1;8 ]
+                [ 5;0;2;0 ] 
+                [ 5;0;3;8 ]
+                [ 5;8;9;3 ]
+                [ 6;3;0;4 ]
+                [ 6;7;5;9 ]
+                [ 6;7;6;1 ]
+                [ 6;7;6;2 ]
+                [ 6;7;6;3 ]
+                ].[Cardizer.next 2]
+
+        Cardizer.GenerateCard prefix length
