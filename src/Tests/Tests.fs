@@ -123,3 +123,19 @@ let ``Should generate valid Uatp`` () =
     card |> should startWith "1"
     card |> should haveLength 15
     card |> luhn |> should be LuhnCheck
+
+
+[<Theory>]
+[<InlineData(DinersLengthOptions.Fourteen, 14)>]
+[<InlineData(DinersLengthOptions.Fifteen, 15)>]
+[<InlineData(DinersLengthOptions.Sixteen, 16)>]
+[<InlineData(DinersLengthOptions.Seventeen, 17)>]
+[<InlineData(DinersLengthOptions.Eightteen, 18)>]
+[<InlineData(DinersLengthOptions.Nineteen, 19)>]
+let ``Should generate valid Diners`` length expectedLength =
+    let card = Cardizer.NextDiners length
+    let start = card.Substring(0, 2) |> int
+    let prefixInRange = start = 36 || start = 54 
+    prefixInRange |> should be True
+    card |> should haveLength expectedLength
+    card |> luhn |> should be LuhnCheck

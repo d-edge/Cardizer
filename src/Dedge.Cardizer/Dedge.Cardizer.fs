@@ -42,6 +42,15 @@ type DiscoverLengthOptions =
     | Eightteen = 18
     | Nineteen = 19
 
+type DinersLengthOptions =
+    | Random = 0
+    | Fourteen = 14
+    | Fifteen = 15
+    | Sixteen = 16
+    | Seventeen = 17
+    | Eightteen = 18
+    | Nineteen = 19
+
 type Cardizer =
 
     // original snippet by @tpetricek
@@ -279,4 +288,27 @@ type Cardizer =
     /// </example>
     static member NextUatp () =
         Cardizer.GenerateCard [1] 15
-        
+
+    /// <summary>Returns a random Diners number.</summary>
+    /// <returns>Random Diners number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextDiners"/> method.
+    /// <code>
+    /// void PrintDiners()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextDiners());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextDiners([<Optional; DefaultParameterValue(DinersLengthOptions.Random)>] dinersLengthOption) =
+        let length =
+            match dinersLengthOption with
+            | DinersLengthOptions.Random -> Cardizer.NextInRange 14 19
+            | _ -> int dinersLengthOption
+
+        let prefix =
+            [ [ 3;6 ]
+              [5;4 ] 
+            ].[Cardizer.next 2]
+
+        Cardizer.GenerateCard prefix length        
