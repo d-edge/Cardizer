@@ -123,3 +123,11 @@ let ``Should generate valid Uatp`` () =
     card |> should startWith "1"
     card |> should haveLength 15
     card |> luhn |> should be LuhnCheck
+
+[<Fact>]
+let ``Should generate valid Dankort`` () =
+    let card = Cardizer.NextDankort()
+
+    card |> should startWith "5019"
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck

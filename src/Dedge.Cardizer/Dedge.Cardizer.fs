@@ -279,4 +279,18 @@ type Cardizer =
     /// </example>
     static member NextUatp () =
         Cardizer.GenerateCard [1] 15
-        
+    
+    /// <summary>Returns a random Dankort number.</summary>
+    /// <returns>Random Dankort number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextDankort"/> method.
+    /// <code>
+    /// void PrintDankort()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextDankort());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextDankort() =
+        let prefix = [ 5;0;1;9 ]
+        Cardizer.GenerateCard prefix 16
