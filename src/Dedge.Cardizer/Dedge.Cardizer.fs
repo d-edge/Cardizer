@@ -1,4 +1,4 @@
-﻿namespace Dedge
+namespace Dedge
 
 open System
 open System.Threading
@@ -36,6 +36,13 @@ type MirLengthOptions =
     | Nineteen = 19
 
 type DiscoverLengthOptions =
+    | Random = 0
+    | Sixteen = 16
+    | Seventeen = 17
+    | Eightteen = 18
+    | Nineteen = 19
+
+type UnionPaytLengthOptions =
     | Random = 0
     | Sixteen = 16
     | Seventeen = 17
@@ -280,6 +287,26 @@ type Cardizer =
     static member NextUatp () =
         Cardizer.GenerateCard [1] 15
 
+    /// <summary>Returns a random UnionPay number.</summary>
+    /// <returns>Random UnionPay number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextUnionPay"/> method.
+    /// <code>
+    /// void PrintUnionPay()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextUnionPay());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextUnionPay([<Optional; DefaultParameterValue(UnionPaytLengthOptions.Random)>] unionPayLengthOption) =
+        let length =
+            match unionPayLengthOption with
+            | UnionPaytLengthOptions.Random -> Cardizer.NextInRange 16 19
+            | _ -> int unionPayLengthOption
+
+        let prefix = [ 6;2 ] 
+        Cardizer.GenerateCard prefix length
+
     /// <summary>Returns a random Tunion number.</summary>
     /// <returns>Random Tunion number</returns>
     /// <example>
@@ -292,7 +319,4 @@ type Cardizer =
     /// </code>
     /// </example>
     static member NextTunion() =
-        let prefix = [ 3;1 ] 
-
-        Cardizer.GenerateCard prefix 19
-        
+        Cardizer.GenerateCard [ 3; 1 ] 19

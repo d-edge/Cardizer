@@ -124,6 +124,16 @@ let ``Should generate valid Uatp`` () =
     card |> should haveLength 15
     card |> luhn |> should be LuhnCheck
 
+[<Theory>]
+[<InlineData(UnionPaytLengthOptions.Sixteen, 16)>]
+[<InlineData(UnionPaytLengthOptions.Seventeen, 17)>]
+[<InlineData(UnionPaytLengthOptions.Eightteen, 18)>]
+[<InlineData(UnionPaytLengthOptions.Nineteen, 19)>]
+let ``Should generate valid UnionPay`` length expectedLength =
+    let card = Cardizer.NextUnionPay length
+    card |> should startWith "62"
+    card |> should haveLength expectedLength
+
 [<Fact>]
 let ``Should generate valid Tunion`` () =
     let card = Cardizer.NextTunion()
