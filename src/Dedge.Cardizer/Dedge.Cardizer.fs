@@ -1,4 +1,4 @@
-﻿namespace Dedge
+namespace Dedge
 
 open System
 open System.Threading
@@ -306,3 +306,17 @@ type Cardizer =
 
         let prefix = [ 6;2 ] 
         Cardizer.GenerateCard prefix length
+
+    /// <summary>Returns a random Tunion number.</summary>
+    /// <returns>Random Tunion number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextTunion"/> method.
+    /// <code>
+    /// void PrintTunion()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextTunion());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextTunion() =
+        Cardizer.GenerateCard [ 3; 1 ] 19

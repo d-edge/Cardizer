@@ -133,4 +133,10 @@ let ``Should generate valid UnionPay`` length expectedLength =
     let card = Cardizer.NextUnionPay length
     card |> should startWith "62"
     card |> should haveLength expectedLength
+
+[<Fact>]
+let ``Should generate valid Tunion`` () =
+    let card = Cardizer.NextTunion()
+    card |> should startWith "31"
+    card |> should haveLength 19
     card |> luhn |> should be LuhnCheck
