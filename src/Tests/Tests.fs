@@ -124,6 +124,22 @@ let ``Should generate valid Uatp`` () =
     card |> should haveLength 15
     card |> luhn |> should be LuhnCheck
 
+[<Fact>]
+let ``Should generate valid Dankort`` () =
+    let card = Cardizer.NextDankort false
+
+    card |> should startWith "5019"
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
+
+    let card = Cardizer.NextDankort true
+    let start = card.Substring(0, 4) |> int
+    let prefix = start = 4571 || start = 5019
+
+    prefix |> should be True
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
+
 [<Theory>]
 [<InlineData(InterPaymentLengthOptions.Sixteen, 16)>]
 [<InlineData(InterPaymentLengthOptions.Seventeen, 17)>]

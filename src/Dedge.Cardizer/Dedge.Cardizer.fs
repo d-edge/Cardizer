@@ -293,6 +293,30 @@ type Cardizer =
     /// </example>
     static member NextUatp () =
         Cardizer.GenerateCard [1] 15
+    
+    /// <summary>Returns a random Dankort number.</summary>
+    /// <returns>Random Dankort number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextDankort"/> method.
+    /// <code>
+    /// void PrintDankort()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextDankort());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextDankort([<Optional; DefaultParameterValue(true)>]  acceptCoBranded: bool) =
+        let prefixDankort = [ 5; 0; 1; 9 ]
+        let prefixDankortVisaCobranded = [ 4; 5; 7; 1 ]
+
+        if acceptCoBranded 
+        then 
+            let prefix =
+                [ prefixDankort
+                  prefixDankortVisaCobranded ].[Cardizer.next 2]
+            Cardizer.GenerateCard prefix 16 
+        else 
+            Cardizer.GenerateCard prefixDankort 16
 
     /// <summary>Returns a random InterPayment number.</summary>
     /// <returns>Random InterPayment number</returns>
