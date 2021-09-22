@@ -148,14 +148,8 @@ let ``Should generate valid DinersClubUsAndCanada``  =
     card |> luhn |> should be LuhnCheck
 
 
-[<Theory>]
-[<InlineData(DinersClubInternationalLengthOptions.Fourteen, 14)>]
-[<InlineData(DinersClubInternationalLengthOptions.Fifteen, 15)>]
-[<InlineData(DinersClubInternationalLengthOptions.Sixteen, 16)>]
-[<InlineData(DinersClubInternationalLengthOptions.Seventeen, 17)>]
-[<InlineData(DinersClubInternationalLengthOptions.Eightteen, 18)>]
-[<InlineData(DinersClubInternationalLengthOptions.Nineteen, 19)>]
-let ``Should generate valid Diners`` length expectedLength =
+[<Fact>]
+let ``Should generate valid Diners``  =
     let card = Cardizer.NextDinersClub()
     let start = card.ToString().Substring(0, 2) |> int
     let prefixInRange = start = 36 || start = 54 
