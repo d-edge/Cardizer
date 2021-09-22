@@ -318,6 +318,6 @@ type Cardizer =
                 [ 6;7;6;1 ]
                 [ 6;7;6;2 ]
                 [ 6;7;6;3 ]
-                ].[Cardizer.next 2]
+                ].[Cardizer.next 9]
 
         Cardizer.GenerateCard prefix length
