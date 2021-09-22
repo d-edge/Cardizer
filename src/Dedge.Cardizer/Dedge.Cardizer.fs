@@ -291,6 +291,14 @@ type Cardizer =
     /// }
     /// </code>
     /// </example>
-    static member NextDankort() =
-        let prefix = [ 5;0;1;9 ]
-        Cardizer.GenerateCard prefix 16
+    static member NextDankort([<Optional; DefaultParameterValue(true)>]  acceptCoBranded: bool) =
+        let prefixDankort = [ 5;0;1;9 ]
+
+        let prefixDankortVisaCobranded = [ 4;5;7;1 ]
+
+        if acceptCoBranded 
+        then 
+            let merge = prefixDankort @ prefixDankortVisaCobranded |> List.distinct
+            Cardizer.GenerateCard merge 16 
+        else 
+            Cardizer.GenerateCard prefixDankort 16
