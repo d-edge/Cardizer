@@ -1,4 +1,4 @@
-namespace Dedge
+﻿namespace Dedge
 
 open System
 open System.Threading
@@ -323,16 +323,16 @@ type Cardizer =
             | _ -> int maestroLengthOption
 
         let prefix =
-            [ [ 5;0;1;8 ]
-                [ 5;0;2;0 ] 
-                [ 5;0;3;8 ]
-                [ 5;8;9;3 ]
-                [ 6;3;0;4 ]
-                [ 6;7;5;9 ]
-                [ 6;7;6;1 ]
-                [ 6;7;6;2 ]
-                [ 6;7;6;3 ]
-                ].[Cardizer.next 9]
+            [
+                [ 5; 0; 1; 8 ]
+                [ 5; 0; 2; 0 ] 
+                [ 5; 0; 3; 8 ]
+                [ 5; 8; 9; 3 ]
+                [ 6; 3; 0; 4 ]
+                [ 6; 7; 5; 9 ]
+                [ 6; 7; 6; 1 ]
+                [ 6; 7; 6; 2 ]
+                [ 6; 7; 6; 3 ]].[Cardizer.next 9]
 
         Cardizer.GenerateCard prefix length
     
@@ -349,16 +349,15 @@ type Cardizer =
     /// </example>
     static member NextDankort([<Optional; DefaultParameterValue(true)>]  acceptCoBranded: bool) =
         let prefixDankort = [ 5; 0; 1; 9 ]
-        let prefixDankortVisaCobranded = [ 4; 5; 7; 1 ]
-
-        if acceptCoBranded 
-        then 
-            let prefix =
+        let prefixVisaCobranded = [ 4; 5; 7; 1 ]
+        let prefix =
+            if acceptCoBranded
+            then
                 [ prefixDankort
-                  prefixDankortVisaCobranded ].[Cardizer.next 2]
-            Cardizer.GenerateCard prefix 16 
-        else 
-            Cardizer.GenerateCard prefixDankort 16
+                  prefixVisaCobranded ].[Cardizer.next 2]
+            else prefixDankort
+         
+        Cardizer.GenerateCard prefix 16 
 
     /// <summary>Returns a random InterPayment number.</summary>
     /// <returns>Random InterPayment number</returns>
