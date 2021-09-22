@@ -291,13 +291,23 @@ type Cardizer =
     /// }
     /// </code>
     /// </example>
-    static member NextRuPay() =
-        let prefix =
+    static member NextRuPay([<Optional; DefaultParameterValue(true)>]  acceptCoBranded: bool) =
+        let prefixRuPay =
             [ [ 6;0 ]
               [ 6;5;2 ] 
               [ 8;1 ]
               [ 8;2 ]
               [ 5;0;8 ]
-              ].[Cardizer.next 2]
+              ]
 
-        Cardizer.GenerateCard prefix 16        
+        let prefixRuPayAndJcbCobranded =
+            [ [ 3;5;3;8 ]
+              [ 3;5;6;1 ]
+              ]
+
+        if acceptCoBranded 
+        then 
+            let merge = prefixRuPay @ prefixRuPayAndJcbCobranded |> List.distinct
+            Cardizer.GenerateCard merge.[Cardizer.next 7] 16 
+        else 
+            Cardizer.GenerateCard prefixRuPay.[Cardizer.next 5] 16

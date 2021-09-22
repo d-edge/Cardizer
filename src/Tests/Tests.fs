@@ -127,12 +127,24 @@ let ``Should generate valid Uatp`` () =
 [<Fact>]
 let ``Should generate valid RuPay`` () =
     let card = Cardizer.NextRuPay()
-    let start = card.Substring(0, 2) |> int
+    let start2digits = card.Substring(0, 2) |> int
+    let start3digits = card.Substring(0, 3) |> int
+    let start4digits = card.Substring(0, 4) |> int
 
-    let prefixInRange =
-        start = 60 || start = 81 || start = 82 || start = 50
-        || start = 65
+    let prefixInRange2digits =
+        start2digits = 60 || start2digits = 81 || start2digits = 82
 
-    prefixInRange |> should be True
+    let prefixInRange3digits =
+        start3digits = 508 || start3digits = 652
+
+
+    let prefixInRange4digits =
+        start4digits = 3538 || start4digits = 3561
+
+    let prefix = prefixInRange2digits || prefixInRange3digits || prefixInRange4digits
+    prefix |> should be True
     card |> should haveLength 16
     card |> luhn |> should be LuhnCheck
+
+ 
+
