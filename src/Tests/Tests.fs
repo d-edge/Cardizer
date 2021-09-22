@@ -126,16 +126,38 @@ let ``Should generate valid Uatp`` () =
 
 
 [<Theory>]
-[<InlineData(DinersLengthOptions.Fourteen, 14)>]
-[<InlineData(DinersLengthOptions.Fifteen, 15)>]
-[<InlineData(DinersLengthOptions.Sixteen, 16)>]
-[<InlineData(DinersLengthOptions.Seventeen, 17)>]
-[<InlineData(DinersLengthOptions.Eightteen, 18)>]
-[<InlineData(DinersLengthOptions.Nineteen, 19)>]
-let ``Should generate valid Diners`` length expectedLength =
-    let card = Cardizer.NextDiners length
+[<InlineData(DinersClubInternationalLengthOptions.Fourteen, 14)>]
+[<InlineData(DinersClubInternationalLengthOptions.Fifteen, 15)>]
+[<InlineData(DinersClubInternationalLengthOptions.Sixteen, 16)>]
+[<InlineData(DinersClubInternationalLengthOptions.Seventeen, 17)>]
+[<InlineData(DinersClubInternationalLengthOptions.Eightteen, 18)>]
+[<InlineData(DinersClubInternationalLengthOptions.Nineteen, 19)>]
+let ``Should generate valid DinersClubInternational`` length expectedLength =
+    let card = Cardizer.NextDinersClubInternational length
     let start = card.Substring(0, 2) |> int
-    let prefixInRange = start = 36 || start = 54 
+    let prefixInRange = start = 36
     prefixInRange |> should be True
     card |> should haveLength expectedLength
+    card |> luhn |> should be LuhnCheck
+
+[<Fact>]
+let ``Should generate valid DinersClubUsAndCanada``  =
+    let card = Cardizer.NextDinersClubUsAndCanada()
+    card |> should startWith "54"
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
+
+
+[<Theory>]
+[<InlineData(DinersClubInternationalLengthOptions.Fourteen, 14)>]
+[<InlineData(DinersClubInternationalLengthOptions.Fifteen, 15)>]
+[<InlineData(DinersClubInternationalLengthOptions.Sixteen, 16)>]
+[<InlineData(DinersClubInternationalLengthOptions.Seventeen, 17)>]
+[<InlineData(DinersClubInternationalLengthOptions.Eightteen, 18)>]
+[<InlineData(DinersClubInternationalLengthOptions.Nineteen, 19)>]
+let ``Should generate valid Diners`` length expectedLength =
+    let card = Cardizer.NextDinersClub()
+    let start = card.ToString().Substring(0, 2) |> int
+    let prefixInRange = start = 36 || start = 54 
+    prefixInRange |> should be True
     card |> luhn |> should be LuhnCheck
