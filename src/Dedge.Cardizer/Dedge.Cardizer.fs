@@ -336,7 +336,5 @@ type Cardizer =
     static member NextDinersClub() =
         let dinersClubUsAndCanadaCard = Cardizer.NextDinersClubUsAndCanada
         let dinersClubInternationalCard = Cardizer.NextDinersClubInternational 
-        let rnd = System.Random()
-        let value = rnd.Next(2)
-        if value = 0 then dinersClubUsAndCanadaCard() else dinersClubInternationalCard()
+        if Cardizer.next 2 = 0 then dinersClubUsAndCanadaCard() else dinersClubInternationalCard()
 
