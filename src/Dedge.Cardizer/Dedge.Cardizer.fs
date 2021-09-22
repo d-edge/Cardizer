@@ -298,7 +298,9 @@ type Cardizer =
 
         if acceptCoBranded 
         then 
-            let merge = prefixDankort @ prefixDankortVisaCobranded |> List.distinct
+            let merge =
+                [ prefixDankort
+                  prefixDankortVisaCobranded ].[Cardizer.next 2]
             Cardizer.GenerateCard merge 16 
         else 
             Cardizer.GenerateCard prefixDankort 16
