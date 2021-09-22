@@ -124,6 +124,29 @@ let ``Should generate valid Uatp`` () =
     card |> should haveLength 15
     card |> luhn |> should be LuhnCheck
 
+[<Theory>]
+[<InlineData(MaestroLengthOptions.Twelve, 12)>]
+[<InlineData(MaestroLengthOptions.Thirteen, 13)>]
+[<InlineData(MaestroLengthOptions.Fourteen, 14)>]
+[<InlineData(MaestroLengthOptions.Fifteen, 15)>]
+[<InlineData(MaestroLengthOptions.Sixteen, 16)>]
+[<InlineData(MaestroLengthOptions.Seventeen, 17)>]
+[<InlineData(MaestroLengthOptions.Eightteen, 18)>]
+[<InlineData(MaestroLengthOptions.Nineteen, 19)>]
+let ``Should generate valid Maestro`` length expectedLength =
+    let card = Cardizer.NextMaestro length
+    [ card.[0] ] |> should  be (subsetOf ['5';'6']) 
+    let start = card.Substring(0, 4) |> int
+
+    let prefixInRange =
+        start = 5018 || start = 5020 || start = 5038 || start = 5893
+        || start = 6304 || start = 6759 || start = 6761 || start = 6762
+        || start = 6763
+
+    prefixInRange |> should be True
+    card |> should haveLength expectedLength
+    card |> luhn |> should be LuhnCheck
+
 [<Fact>]
 let ``Should generate valid Dankort`` () =
     let card = Cardizer.NextDankort false
