@@ -307,7 +307,13 @@ type Cardizer =
 
         if acceptCoBranded 
         then 
-            let merge = prefixRuPay @ prefixRuPayAndJcbCobranded |> List.distinct
-            Cardizer.GenerateCard merge.[Cardizer.next 7] 16 
+            let merge =
+                [ prefixRuPay
+                  prefixRuPayAndJcbCobranded ].[Cardizer.next 2]
+            if merge.Length = 2 
+            then 
+                Cardizer.GenerateCard merge.[Cardizer.next 2] 16 
+            else
+                Cardizer.GenerateCard merge.[Cardizer.next 5] 16 
         else 
             Cardizer.GenerateCard prefixRuPay.[Cardizer.next 5] 16
