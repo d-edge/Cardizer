@@ -1,4 +1,4 @@
-﻿namespace Dedge
+namespace Dedge
 
 open System
 open System.Threading
@@ -48,6 +48,20 @@ type MaestroLengthOptions =
     | Thirteen = 13
     | Fourteen = 14
     | Fifteen = 15
+    | Sixteen = 16
+    | Seventeen = 17
+    | Eightteen = 18
+    | Nineteen = 19
+
+type InterPaymentLengthOptions =
+    | Random = 0
+    | Sixteen = 16
+    | Seventeen = 17
+    | Eightteen = 18
+    | Nineteen = 19
+
+type UnionPaytLengthOptions =
+    | Random = 0
     | Sixteen = 16
     | Seventeen = 17
     | Eightteen = 18
@@ -309,7 +323,7 @@ type Cardizer =
             | _ -> int maestroLengthOption
 
         let prefix =
-            [   [ 5;0;1;8 ]
+            [ [ 5;0;1;8 ]
                 [ 5;0;2;0 ] 
                 [ 5;0;3;8 ]
                 [ 5;8;9;3 ]
@@ -321,3 +335,79 @@ type Cardizer =
                 ].[Cardizer.next 9]
 
         Cardizer.GenerateCard prefix length
+    
+    /// <summary>Returns a random Dankort number.</summary>
+    /// <returns>Random Dankort number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextDankort"/> method.
+    /// <code>
+    /// void PrintDankort()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextDankort());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextDankort([<Optional; DefaultParameterValue(true)>]  acceptCoBranded: bool) =
+        let prefixDankort = [ 5; 0; 1; 9 ]
+        let prefixDankortVisaCobranded = [ 4; 5; 7; 1 ]
+
+        if acceptCoBranded 
+        then 
+            let prefix =
+                [ prefixDankort
+                  prefixDankortVisaCobranded ].[Cardizer.next 2]
+            Cardizer.GenerateCard prefix 16 
+        else 
+            Cardizer.GenerateCard prefixDankort 16
+
+    /// <summary>Returns a random InterPayment number.</summary>
+    /// <returns>Random InterPayment number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextInterPayment"/> method.
+    /// <code>
+    /// void PrintInterPayment()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextInterPayment());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextInterPayment([<Optional; DefaultParameterValue(InterPaymentLengthOptions.Random)>] interPaymentLengthOption) =
+        let length =
+            match interPaymentLengthOption with
+            | InterPaymentLengthOptions.Random -> Cardizer.NextInRange 16 19
+            | _ -> int interPaymentLengthOption
+
+        Cardizer.GenerateCard [ 6; 3; 6 ] length
+
+    /// <summary>Returns a random UnionPay number.</summary>
+    /// <returns>Random UnionPay number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextUnionPay"/> method.
+    /// <code>
+    /// void PrintUnionPay()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextUnionPay());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextUnionPay([<Optional; DefaultParameterValue(UnionPaytLengthOptions.Random)>] unionPayLengthOption) =
+        let length =
+            match unionPayLengthOption with
+            | UnionPaytLengthOptions.Random -> Cardizer.NextInRange 16 19
+            | _ -> int unionPayLengthOption
+
+        Cardizer.GenerateCard [ 6; 2 ] length
+
+    /// <summary>Returns a random Tunion number.</summary>
+    /// <returns>Random Tunion number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextTunion"/> method.
+    /// <code>
+    /// void PrintTunion()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextTunion());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextTunion() =
+        Cardizer.GenerateCard [ 3; 1 ] 19

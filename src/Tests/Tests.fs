@@ -146,3 +146,48 @@ let ``Should generate valid Maestro`` length expectedLength =
     prefixInRange |> should be True
     card |> should haveLength expectedLength
     card |> luhn |> should be LuhnCheck
+
+[<Fact>]
+let ``Should generate valid Dankort`` () =
+    let card = Cardizer.NextDankort false
+
+    card |> should startWith "5019"
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
+
+    let card = Cardizer.NextDankort true
+    let start = card.Substring(0, 4) |> int
+    let prefix = start = 4571 || start = 5019
+
+    prefix |> should be True
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
+
+[<Theory>]
+[<InlineData(InterPaymentLengthOptions.Sixteen, 16)>]
+[<InlineData(InterPaymentLengthOptions.Seventeen, 17)>]
+[<InlineData(InterPaymentLengthOptions.Eightteen, 18)>]
+[<InlineData(InterPaymentLengthOptions.Nineteen, 19)>]
+let ``Should generate valid InterPayment`` length expectedLength =
+    let card = Cardizer.NextInterPayment length
+    card |> should startWith "636"
+    card |> should haveLength expectedLength
+    card |> luhn |> should be LuhnCheck
+
+[<Theory>]
+[<InlineData(UnionPaytLengthOptions.Sixteen, 16)>]
+[<InlineData(UnionPaytLengthOptions.Seventeen, 17)>]
+[<InlineData(UnionPaytLengthOptions.Eightteen, 18)>]
+[<InlineData(UnionPaytLengthOptions.Nineteen, 19)>]
+let ``Should generate valid UnionPay`` length expectedLength =
+    let card = Cardizer.NextUnionPay length
+    card |> should startWith "62"
+    card |> should haveLength expectedLength
+
+[<Fact>]
+let ``Should generate valid Tunion`` () =
+    let card = Cardizer.NextTunion()
+
+    card |> should startWith "31"
+    card |> should haveLength 19
+    card |> luhn |> should be LuhnCheck
