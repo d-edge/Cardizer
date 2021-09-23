@@ -126,10 +126,10 @@ let ``Should generate valid Uatp`` () =
 
 [<Fact>]
 let ``Should generate valid RuPay`` () =
-    let cardNoCobranded = Cardizer.NextRuPay false
+    let cardNotCobranded = Cardizer.NextRuPay false
     let cardCobranded = Cardizer.NextRuPay true
-    let start2digits = cardNoCobranded.Substring(0, 2) |> int
-    let start3digits = cardNoCobranded.Substring(0, 3) |> int
+    let start2digits = cardNotCobranded.Substring(0, 2) |> int
+    let start3digits = cardNotCobranded.Substring(0, 3) |> int
     let start4digits = cardCobranded.Substring(0, 4) |> int
 
     let prefixInRange2digits =
@@ -146,8 +146,10 @@ let ``Should generate valid RuPay`` () =
 
     prefixNotCobranded |> should be True
     prefixCobranded |> should be True
-    cardNoCobranded |> should haveLength 16
-    cardNoCobranded |> luhn |> should be LuhnCheck
+    cardNotCobranded |> should haveLength 16
+    cardNotCobranded |> luhn |> should be LuhnCheck
+    cardCobranded |> should haveLength 16
+    cardCobranded |> luhn |> should be LuhnCheck
 
  
 
