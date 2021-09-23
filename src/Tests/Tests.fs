@@ -149,7 +149,7 @@ let ``Should generate valid DinersClubUsAndCanada``  =
 [<Fact>]
 let ``Should generate valid Diners``  =
     let card = Cardizer.NextDinersClub()
-    let start = card.ToString().Substring(0, 2) |> int
-    let prefixInRange = start = 36 || start = 54 
+    let start = card.Substring(0, 2)
+    let prefixInRange = start = "36" || start = "54" 
     prefixInRange |> should be True
     card |> luhn |> should be LuhnCheck
