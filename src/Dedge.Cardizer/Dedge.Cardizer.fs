@@ -4,13 +4,6 @@ open System
 open System.Threading
 open System.Runtime.InteropServices
 
-type LengthOptions =
-    | Random = 0
-    | Sixteen = 16
-    | Seventeen = 17
-    | Eightteen = 18
-    | Nineteen = 19
-
 type VisaLengthOptions =
     | Random = 0
     | Thirteen = 13
@@ -21,21 +14,18 @@ type VerveLengthOptions =
     | Sixteen = 16
     | Nineteen = 19
 
-type JcbLengthOptions =
+type From12To19 =
     | Random = 0
+    | Twelve = 12
+    | Thirteen = 13
+    | Fourteen = 14
+    | Fifteen = 15
     | Sixteen = 16
     | Seventeen = 17
     | Eightteen = 18
     | Nineteen = 19
 
-type MirLengthOptions =
-    | Random = 0
-    | Sixteen = 16
-    | Seventeen = 17
-    | Eightteen = 18
-    | Nineteen = 19
-
-type DiscoverLengthOptions =
+type From16To19 = 
     | Random = 0
     | Sixteen = 16
     | Seventeen = 17
@@ -184,10 +174,10 @@ type Cardizer =
     /// }
     /// </code>
     /// </example>
-    static member NextMir([<Optional; DefaultParameterValue(MirLengthOptions.Random)>] mirLengthOption) =
+    static member NextMir([<Optional; DefaultParameterValue(From16To19.Random)>] mirLengthOption) =
         let length =
             match mirLengthOption with
-            | MirLengthOptions.Random -> Cardizer.NextInRange 16 19
+            | From16To19.Random -> Cardizer.NextInRange 16 19
             | _ -> int mirLengthOption
 
         let prefixes = [ 2; 2; 0; Cardizer.next 5 ]
@@ -208,10 +198,10 @@ type Cardizer =
     /// }
     /// </code>
     /// </example>
-    static member NextJcb([<Optional; DefaultParameterValue(JcbLengthOptions.Random)>] jcbLengthOption) =
+    static member NextJcb([<Optional; DefaultParameterValue(From16To19.Random)>] jcbLengthOption) =
         let length =
             match jcbLengthOption with
-            | JcbLengthOptions.Random -> Cardizer.NextInRange 16 19
+            | From16To19.Random -> Cardizer.NextInRange 16 19
             | _ -> int jcbLengthOption
 
         let prefixes =
@@ -251,10 +241,10 @@ type Cardizer =
     /// }
     /// </code>
     /// </example>
-    static member NextDiscover([<Optional; DefaultParameterValue(DiscoverLengthOptions.Random)>] discoverLengthOption) =
+    static member NextDiscover([<Optional; DefaultParameterValue(From16To19.Random)>] discoverLengthOption) =
         let length =
             match discoverLengthOption with
-            | DiscoverLengthOptions.Random -> Cardizer.NextInRange 16 19
+            | From16To19.Random -> Cardizer.NextInRange 16 19
             | _ -> int discoverLengthOption
 
         Cardizer.GenerateCard [ 6; 0; 1; 1 ] length
@@ -338,3 +328,108 @@ type Cardizer =
         let dinersClubInternationalCard = Cardizer.NextDinersClubInternational 
         if Cardizer.next 2 = 0 then dinersClubUsAndCanadaCard() else dinersClubInternationalCard()
 
+    /// <summary>Returns a random Maestro number.</summary>
+    /// <returns>Random Maestro number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextMaestro"/> method.
+    /// <code>
+    /// void PrintMaestro()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextMaestro());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextMaestro([<Optional; DefaultParameterValue(From12To19.Random)>] maestroLengthOption) =
+        let length =
+            match maestroLengthOption with
+            | From12To19.Random -> Cardizer.NextInRange 12 19
+            | _ -> int maestroLengthOption
+
+        let prefix =
+            [
+                [ 5; 0; 1; 8 ]
+                [ 5; 0; 2; 0 ] 
+                [ 5; 0; 3; 8 ]
+                [ 5; 8; 9; 3 ]
+                [ 6; 3; 0; 4 ]
+                [ 6; 7; 5; 9 ]
+                [ 6; 7; 6; 1 ]
+                [ 6; 7; 6; 2 ]
+                [ 6; 7; 6; 3 ]].[Cardizer.next 9]
+
+        Cardizer.GenerateCard prefix length
+    
+    /// <summary>Returns a random Dankort number.</summary>
+    /// <returns>Random Dankort number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextDankort"/> method.
+    /// <code>
+    /// void PrintDankort()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextDankort());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextDankort([<Optional; DefaultParameterValue(true)>]  acceptCoBranded: bool) =
+        let prefixDankort = [ 5; 0; 1; 9 ]
+        let prefixVisaCobranded = [ 4; 5; 7; 1 ]
+        let prefix =
+            if acceptCoBranded
+            then
+                [ prefixDankort
+                  prefixVisaCobranded ].[Cardizer.next 2]
+            else prefixDankort
+         
+        Cardizer.GenerateCard prefix 16 
+
+    /// <summary>Returns a random InterPayment number.</summary>
+    /// <returns>Random InterPayment number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextInterPayment"/> method.
+    /// <code>
+    /// void PrintInterPayment()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextInterPayment());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextInterPayment([<Optional; DefaultParameterValue(From16To19.Random)>] interPaymentLengthOption) =
+        let length =
+            match interPaymentLengthOption with
+            | From16To19.Random -> Cardizer.NextInRange 16 19
+            | _ -> int interPaymentLengthOption
+
+        Cardizer.GenerateCard [ 6; 3; 6 ] length
+
+    /// <summary>Returns a random UnionPay number.</summary>
+    /// <returns>Random UnionPay number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextUnionPay"/> method.
+    /// <code>
+    /// void PrintUnionPay()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextUnionPay());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextUnionPay([<Optional; DefaultParameterValue(From16To19.Random)>] unionPayLengthOption) =
+        let length =
+            match unionPayLengthOption with
+            | From16To19.Random -> Cardizer.NextInRange 16 19
+            | _ -> int unionPayLengthOption
+
+        Cardizer.GenerateCard [ 6; 2 ] length
+
+    /// <summary>Returns a random Tunion number.</summary>
+    /// <returns>Random Tunion number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextTunion"/> method.
+    /// <code>
+    /// void PrintTunion()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextTunion());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextTunion() =
+        Cardizer.GenerateCard [ 3; 1 ] 19

@@ -1,8 +1,18 @@
-![Cardizer](https://raw.githubusercontent.com/d-edge/cardizer/main/cardizer.png)
+<br />
 
-# Cardizer
+<p align="center">
+    <img src="https://raw.githubusercontent.com/d-edge/cardizer/main/cardizer.png" alt="cardizer logo" height="140">
+</p>
 
-A functional minimalist credit card randomizer to test application.
+<p align="center">
+    <img src="https://img.shields.io/nuget/vpre/Dedge.Cardizer" alt="version" /> 
+    <img src="https://img.shields.io/nuget/dt/Dedge.Cardizer" alt="download" /> 
+    <img src="https://img.shields.io/github/license/d-edge/Cardizer" alt="license" />
+</p>
+
+<br />
+
+Cardizer is a credit card randomizer to test application.
 
 Keep in mind that all credit card numbers generated with Cardizer are completely random and do not hold any real life value.
 
