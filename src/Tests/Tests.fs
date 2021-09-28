@@ -33,7 +33,6 @@ let LuhnCheck : NHamcrest.IMatcher<obj> =
 [<Theory>]
 [<InlineData(VisaLengthOptions.Thirteen, 13)>]
 [<InlineData(VisaLengthOptions.Sixteen, 16)>]
-// [<InlineData(VisaLengthOptions.Random, 13, 16)>]
 let ``Should generate valid Visa`` length expectedLength =
     let card = Cardizer.NextVisa length
 
@@ -44,7 +43,6 @@ let ``Should generate valid Visa`` length expectedLength =
 [<Theory>]
 [<InlineData(VerveLengthOptions.Sixteen, 16)>]
 [<InlineData(VerveLengthOptions.Nineteen, 19)>]
-// [<InlineData(VerveLengthOptions.Random, 16, 19)>]
 let ``Should generate valid Verve`` length expectedLength =
     let card = Cardizer.NextVerve length
     let start = card.Substring(0, 6) |> int
@@ -58,11 +56,10 @@ let ``Should generate valid Verve`` length expectedLength =
     card |> luhn |> should be LuhnCheck
 
 [<Theory>]
-[<InlineData(MirLengthOptions.Sixteen, 16)>]
-[<InlineData(MirLengthOptions.Seventeen, 17)>]
-[<InlineData(MirLengthOptions.Eightteen, 18)>]
-[<InlineData(MirLengthOptions.Nineteen, 19)>]
-// [<InlineData(MirLengthOptions.Random, 16, 19)>]
+[<InlineData(From16To19.Sixteen, 16)>]
+[<InlineData(From16To19.Seventeen, 17)>]
+[<InlineData(From16To19.Eightteen, 18)>]
+[<InlineData(From16To19.Nineteen, 19)>]
 let ``Should generate valid Mir`` length expectedLength =
     let card = Cardizer.NextMir length
 
@@ -72,11 +69,10 @@ let ``Should generate valid Mir`` length expectedLength =
     card |> luhn |> should be LuhnCheck
 
 [<Theory>]
-[<InlineData(JcbLengthOptions.Sixteen, 16)>]
-[<InlineData(JcbLengthOptions.Seventeen, 17)>]
-[<InlineData(JcbLengthOptions.Eightteen, 18)>]
-[<InlineData(JcbLengthOptions.Nineteen, 19)>]
-// [<InlineData(JcbLengthOptions.Random, 16, 19)>]
+[<InlineData(From16To19.Sixteen, 16)>]
+[<InlineData(From16To19.Seventeen, 17)>]
+[<InlineData(From16To19.Eightteen, 18)>]
+[<InlineData(From16To19.Nineteen, 19)>]
 let ``Should generate valid Jcb`` length expectedLength =
     let card = Cardizer.NextJcb length
 
@@ -96,11 +92,10 @@ let ``Should generate valid Amex`` () =
     card |> luhn |> should be LuhnCheck
 
 [<Theory>]
-[<InlineData(DiscoverLengthOptions.Sixteen, 16)>]
-[<InlineData(DiscoverLengthOptions.Seventeen, 17)>]
-[<InlineData(DiscoverLengthOptions.Eightteen, 18)>]
-[<InlineData(DiscoverLengthOptions.Nineteen, 19)>]
-// [<InlineData(DiscoverLengthOptions.Random, 16, 19)>]
+[<InlineData(From16To19.Sixteen, 16)>]
+[<InlineData(From16To19.Seventeen, 17)>]
+[<InlineData(From16To19.Eightteen, 18)>]
+[<InlineData(From16To19.Nineteen, 19)>]
 let ``Should generate valid Discover`` length expectedLength =
     let card = Cardizer.NextDiscover length
 
@@ -152,4 +147,70 @@ let ``Should generate valid RuPay`` () =
     cardCobranded |> luhn |> should be LuhnCheck
 
  
+[<Theory>]
+[<InlineData(From12To19.Twelve, 12)>]
+[<InlineData(From12To19.Thirteen, 13)>]
+[<InlineData(From12To19.Fourteen, 14)>]
+[<InlineData(From12To19.Fifteen, 15)>]
+[<InlineData(From12To19.Sixteen, 16)>]
+[<InlineData(From12To19.Seventeen, 17)>]
+[<InlineData(From12To19.Eightteen, 18)>]
+[<InlineData(From12To19.Nineteen, 19)>]
+let ``Should generate valid Maestro`` length expectedLength =
+    let card = Cardizer.NextMaestro length
+    [ card.[0] ] |> should  be (subsetOf ['5';'6']) 
+    let start = card.Substring(0, 4) |> int
 
+    let prefixInRange =
+        start = 5018 || start = 5020 || start = 5038 || start = 5893
+        || start = 6304 || start = 6759 || start = 6761 || start = 6762
+        || start = 6763
+
+    prefixInRange |> should be True
+    card |> should haveLength expectedLength
+    card |> luhn |> should be LuhnCheck
+
+[<Fact>]
+let ``Should generate valid Dankort`` () =
+    let card = Cardizer.NextDankort false
+
+    card |> should startWith "5019"
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
+
+    let card = Cardizer.NextDankort true
+    let start = card.Substring(0, 4) |> int
+    let prefix = start = 4571 || start = 5019
+
+    prefix |> should be True
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
+
+[<Theory>]
+[<InlineData(From16To19.Sixteen, 16)>]
+[<InlineData(From16To19.Seventeen, 17)>]
+[<InlineData(From16To19.Eightteen, 18)>]
+[<InlineData(From16To19.Nineteen, 19)>]
+let ``Should generate valid InterPayment`` length expectedLength =
+    let card = Cardizer.NextInterPayment length
+    card |> should startWith "636"
+    card |> should haveLength expectedLength
+    card |> luhn |> should be LuhnCheck
+
+[<Theory>]
+[<InlineData(From16To19.Sixteen, 16)>]
+[<InlineData(From16To19.Seventeen, 17)>]
+[<InlineData(From16To19.Eightteen, 18)>]
+[<InlineData(From16To19.Nineteen, 19)>]
+let ``Should generate valid UnionPay`` length expectedLength =
+    let card = Cardizer.NextUnionPay length
+    card |> should startWith "62"
+    card |> should haveLength expectedLength
+
+[<Fact>]
+let ``Should generate valid Tunion`` () =
+    let card = Cardizer.NextTunion()
+
+    card |> should startWith "31"
+    card |> should haveLength 19
+    card |> luhn |> should be LuhnCheck
