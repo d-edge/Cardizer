@@ -187,6 +187,14 @@ let ``Should generate valid Tunion`` () =
     card |> should haveLength 19
     card |> luhn |> should be LuhnCheck
 
+[<Fact>]
+let ``Should generate valid LankaPay`` () =
+    let card = Cardizer.NextLankaPay()
+
+    card |> should startWith "357111"
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
+
 [<Theory>]
 [<InlineData(From16To19.Sixteen, 16)>]
 [<InlineData(From16To19.Seventeen, 17)>]

@@ -376,6 +376,21 @@ type Cardizer =
     static member NextTunion() =
         Cardizer.GenerateCard [ 3; 1 ] 19
 
+    /// <summary>Returns a random LankaPay number.</summary>
+    /// <returns>Random LankaPay number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextTunion"/> method.
+    /// <code>
+    /// void PrintLankaPay()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextLankaPay());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextLankaPay () =
+        let prefix = [ 3; 5; 7; 1; 1; 1 ]
+        Cardizer.GenerateCard prefix 16
+
     /// <summary>Returns a random Laser number.</summary>
     /// <returns>Random Laser number</returns>
     /// <example>
