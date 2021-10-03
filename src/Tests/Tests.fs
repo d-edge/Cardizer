@@ -186,3 +186,20 @@ let ``Should generate valid Tunion`` () =
     card |> should startWith "31"
     card |> should haveLength 19
     card |> luhn |> should be LuhnCheck
+
+[<Theory>]
+[<InlineData(From16To19.Sixteen, 16)>]
+[<InlineData(From16To19.Seventeen, 17)>]
+[<InlineData(From16To19.Eightteen, 18)>]
+[<InlineData(From16To19.Nineteen, 19)>]
+let ``Should generate valid Laser`` length expectedLength =
+    let card = Cardizer.NextLaser length
+
+    let start = card.Substring(0, 4) |> int
+
+    let prefixInRange =
+        start = 6304 || start = 6706 || start = 6771 || start = 6709
+
+    prefixInRange   |> should be True
+    card            |> should haveLength expectedLength 
+    card            |> luhn |> should be LuhnCheck
