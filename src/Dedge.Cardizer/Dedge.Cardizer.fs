@@ -417,3 +417,25 @@ type Cardizer =
             ].[Cardizer.next 4]
 
         Cardizer.GenerateCard prefix length
+
+    /// <summary>Returns a random InstaPayment number.</summary>
+    /// <returns>Random InstaPayment number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextInstaPayment"/> method.
+    /// <code>
+    /// void PrintInstaPayment()
+    /// {
+    ///     Console.WriteLine(Cardizer.NextInstaPayment());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextInstaPayment () =
+        let prefix = 
+            [
+                [6; 3; 7]
+                [6; 3; 8]
+                [6; 3; 9]
+            ].[Cardizer.next 3]
+
+        Cardizer.GenerateCard prefix 16
+

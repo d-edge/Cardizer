@@ -211,3 +211,17 @@ let ``Should generate valid Laser`` length expectedLength =
     prefixInRange   |> should be True
     card            |> should haveLength expectedLength 
     card            |> luhn |> should be LuhnCheck
+
+[<Fact>]
+let ``Should generate valid InstaPayment`` () =
+    let card = Cardizer.NextInstaPayment()
+
+    let start = card.Substring(0, 3) |> int
+
+    let prefixInRange =
+        start = 637 || start = 638 || start = 639
+
+    prefixInRange   |> should be True
+    card            |> should haveLength 16
+    card            |> luhn |> should be LuhnCheck
+
