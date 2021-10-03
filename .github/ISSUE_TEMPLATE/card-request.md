@@ -16,11 +16,11 @@ I would like to be able to generate randomize valid Dankort card.
 
 | Issuing network | IIN ranges | Active | Length |  Validation |
 | -- | -- | -- | -- | -- |
-| Dankort | 5019 & 4571 (Visa co-branded) | Yes | 16 | Luhn |
+| Dankort | 5019 | Yes | 16 | Luhn |
 
 [source](https://en.wikipedia.org/wiki/Payment_card_number#Issuer_identification_number_%28IIN%29)
 
-<!-- You dont have to implement the card yourself, but if you want to look into, check this how-to guide: https://github.com/d-edge/Cardizer/blob/main/.github/CONTRIBUTING.md#add-a-new-card -->
+If you want to solve this issue, check this [how-to guide]( https://github.com/d-edge/Cardizer/blob/main/.github/CONTRIBUTING.md#add-a-new-card).
 
 Related to [#2](https://github.com/d-edge/Cardizer/issues/2)
 

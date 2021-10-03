@@ -390,3 +390,30 @@ type Cardizer =
     static member NextLankaPay () =
         let prefix = [ 3; 5; 7; 1; 1; 1 ]
         Cardizer.GenerateCard prefix 16
+
+    /// <summary>Returns a random Laser number.</summary>
+    /// <returns>Random Laser number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextLaser"/> method.
+    /// <code>
+    /// void PrintLaser()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextLaser());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextLaser([<Optional; DefaultParameterValue(From16To19.Random)>] laserLengthOption) =
+        let length =
+            match laserLengthOption with
+            | From16To19.Random -> Cardizer.NextInRange 16 19
+            | _ -> int laserLengthOption
+
+        let prefix =
+            [
+                [ 6; 3; 0; 4 ]
+                [ 6; 7; 0; 6 ]
+                [ 6; 7; 7; 1 ]
+                [ 6; 7; 0; 9 ]
+            ].[Cardizer.next 4]
+
+        Cardizer.GenerateCard prefix length
