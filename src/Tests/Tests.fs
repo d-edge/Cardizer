@@ -130,6 +130,8 @@ let ``Should generate valid Uatp`` () =
 let ``Should generate valid DinersClubInternational`` length expectedLength =
     let card = Cardizer.NextDinersClubInternational length
     card |> should startWith "36" 
+    card |> should haveLength expectedLength
+    card |> luhn |> should be LuhnCheck
 
 [<Theory>]
 [<InlineData(From12To19.Twelve, 12)>]
