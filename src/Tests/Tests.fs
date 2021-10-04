@@ -124,19 +124,19 @@ let ``Should generate valid RuPay`` () =
     let cardNotCobranded = Cardizer.NextRuPay false
     let cardCobranded = Cardizer.NextRuPay true
     let start2digits = cardNotCobranded.Substring(0, 2) |> int
-    let start3digits = cardNotCobranded.Substring(0, 3) |> int
-    let start4digits = cardCobranded.Substring(0, 4) |> int
+    let start3digitsNotCobranded = cardNotCobranded.Substring(0, 3) |> int
+    let start3digitsCobranded = cardCobranded.Substring(0, 3) |> int
 
     let prefixInRange2digits =
-        start2digits = 60 || start2digits = 81 || start2digits = 82
+        start2digits = 60 ||  start2digits = 65 || start2digits = 81 || start2digits = 82
 
     let prefixInRange3digits =
-        start3digits = 508 || start3digits = 652
+        start3digitsNotCobranded = 508
 
     let prefixNotCobranded = prefixInRange2digits || prefixInRange3digits
 
     let prefixCobranded =
-        start4digits = 3538 || start4digits = 3561 || prefixNotCobranded
+        start3digitsCobranded = 353 || start3digitsCobranded = 356 || prefixNotCobranded
 
 
     prefixNotCobranded |> should be True

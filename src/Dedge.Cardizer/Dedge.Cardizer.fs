@@ -285,15 +285,15 @@ type Cardizer =
     static member NextRuPay([<Optional; DefaultParameterValue(true)>]  acceptCoBranded: bool) =
         let prefixRuPay =
             [ [ 6;0 ]
-              [ 6;5;2 ] 
+              [ 6;5 ] 
               [ 8;1 ]
               [ 8;2 ]
               [ 5;0;8 ]
               ]
 
         let prefixRuPayAndJcbCobranded =
-            [ [ 3;5;3;8 ]
-              [ 3;5;6;1 ]
+            [ [ 3;5;3 ]
+              [ 3;5;6 ]
               ]
 
         if acceptCoBranded 
