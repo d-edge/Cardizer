@@ -106,8 +106,11 @@ let ``Should generate valid Discover`` length expectedLength =
 [<Fact>]
 let ``Should generate valid MasterCard`` () =
     let card = Cardizer.NextMasterCard()
+    let start = card.Substring(0, 4) |> int
+    let prefixInRange =
+        (start >= 2221 && start <= 2720) || (start >= 5100 && start <= 5599)
 
-    card |> should startWith "5"
+    prefixInRange |> should be True
     card |> should haveLength 16
     card |> luhn |> should be LuhnCheck
 

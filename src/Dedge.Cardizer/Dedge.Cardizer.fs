@@ -52,8 +52,27 @@ type Cardizer =
     /// <summary>Returns a random integer within a given range.</summary>
     /// <param name="low">The (inclusive) low value of the range</param>
     /// <param name="high">The (inclusive) high value of the range</param>
-    /// <returns>Random integer within a ginven range</returns>
+    /// <returns>Random integer within a given range</returns>
     static member private NextInRange low high = Cardizer.next (high - low + 1) + low
+
+    /// <summary>Returns a sequence of each digit of a given number.</summary>
+    /// <param name="number">The number to enumerate</param>
+    /// <returns>A sequence of each digit of a given number</returns>
+    static member private NumberToSeq number =
+        let rec loop n list =
+            if n <= 0 then
+                list
+            else
+                loop (n / 10) (n % 10 :: list)
+
+        loop number []
+
+    /// <summary>Returns a random integer enumerate as sequence within a given range.</summary>
+    /// <param name="low">The (inclusive) low value of the range</param>
+    /// <param name="high">The (inclusive) high value of the range</param>
+    /// <returns>Random integer enumerate as sequence within a given range</returns>
+    static member private NextSeqInRange low high =
+        Cardizer.NextInRange low high |> Cardizer.NumberToSeq
 
     static member private GetNumber n =
         let n2 = n * 2
@@ -127,15 +146,6 @@ type Cardizer =
     /// </code>
     /// </example>
     static member NextVerve([<Optional; DefaultParameterValue(VerveLengthOptions.Random)>] verveLengthOption) =
-        let numberToSeq number =
-            let rec loop n list =
-                if n <= 0 then
-                    list
-                else
-                    loop (n / 10) (n % 10 :: list)
-
-            loop number []
-
         let length =
             match verveLengthOption with
             | VerveLengthOptions.Random -> 16 + 3 * Cardizer.next 2
@@ -147,7 +157,7 @@ type Cardizer =
 
         let prefixes =
             Cardizer.NextInRange prefix.[0] prefix.[1]
-            |> numberToSeq
+            |> Cardizer.NumberToSeq
 
         Cardizer.GenerateCard prefixes length
 
@@ -252,8 +262,12 @@ type Cardizer =
     /// </code>
     /// </example>
     static member NextMasterCard() =
-        let second = Cardizer.next 4 + 1
-        Cardizer.GenerateCard [ 5; second ] 16
+        let prefixes =
+            if Cardizer.next 2 = 0
+            then Cardizer.NextSeqInRange 51 55
+            else Cardizer.NextSeqInRange 2221 2720
+
+        Cardizer.GenerateCard prefixes 16
 
 
     /// <summary>Returns a random Uatp number.</summary>
