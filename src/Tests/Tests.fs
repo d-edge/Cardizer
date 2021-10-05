@@ -132,6 +132,45 @@ let ``Should generate valid Uatp`` () =
     card |> should haveLength 15
     card |> luhn |> should be LuhnCheck
 
+[<Fact>]
+let ``Should generate valid RuPay`` () =
+    let cardNotCobranded = Cardizer.NextRuPay false
+    let cardCobranded = Cardizer.NextRuPay true
+    let start2digits = cardNotCobranded.Substring(0, 2) |> int
+    let start3digitsNotCobranded = cardNotCobranded.Substring(0, 3) |> int
+    let start3digitsCobranded = cardCobranded.Substring(0, 3) |> int
+
+    let prefixInRange2digits =
+        start2digits = 60 ||  start2digits = 65 || start2digits = 81 || start2digits = 82
+
+    let prefixInRange3digits =
+        start3digitsNotCobranded = 508
+
+    let prefixNotCobranded = prefixInRange2digits || prefixInRange3digits
+
+    let prefixCobranded =
+        start3digitsCobranded = 353 || start3digitsCobranded = 356 || prefixNotCobranded
+
+    prefixNotCobranded |> should be True
+    prefixCobranded |> should be True
+    cardNotCobranded |> should haveLength 16
+    cardNotCobranded |> luhn |> should be LuhnCheck
+    cardCobranded |> should haveLength 16
+    cardCobranded |> luhn |> should be LuhnCheck
+
+[<Theory>]
+[<InlineData(DinersClubInternationalLengthOptions.Fourteen, 14)>]
+[<InlineData(DinersClubInternationalLengthOptions.Fifteen, 15)>]
+[<InlineData(DinersClubInternationalLengthOptions.Sixteen, 16)>]
+[<InlineData(DinersClubInternationalLengthOptions.Seventeen, 17)>]
+[<InlineData(DinersClubInternationalLengthOptions.Eightteen, 18)>]
+[<InlineData(DinersClubInternationalLengthOptions.Nineteen, 19)>]
+let ``Should generate valid DinersClubInternational`` length expectedLength =
+    let card = Cardizer.NextDinersClubInternational length
+    card |> should startWith "36" 
+    card |> should haveLength expectedLength
+    card |> luhn |> should be LuhnCheck
+ 
 [<Theory>]
 [<InlineData(From12To19.Twelve, 12)>]
 [<InlineData(From12To19.Thirteen, 13)>]
@@ -162,6 +201,20 @@ let ``Should generate valid Maestro`` length expectedLength =
     card |> luhn |> should be LuhnCheck
 
 [<Fact>]
+let ``Should generate valid DinersClubUsAndCanada``  =
+    let card = Cardizer.NextDinersClubUsAndCanada()
+    card |> should startWith "54"
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
+
+
+[<Fact>]
+let ``Should generate valid Diners``  =
+    let card = Cardizer.NextDinersClub()
+    let start = card.Substring(0, 2)
+    let prefixInRange = start = "36" || start = "54" 
+    prefixInRange |> should be True
+
 let ``Should generate valid Dankort`` () =
     let card = Cardizer.NextDankort false
 
@@ -197,6 +250,7 @@ let ``Should generate valid UnionPay`` length expectedLength =
     let card = Cardizer.NextUnionPay length
     card |> should startWith "62"
     card |> should haveLength expectedLength
+    card |> luhn |> should be LuhnCheck
 
 [<Fact>]
 let ``Should generate valid Tunion`` () =
