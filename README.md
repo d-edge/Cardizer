@@ -74,7 +74,7 @@ There is a F# sample application which can be found in the [`App`](https://githu
 Help and feedback is always welcome and pull requests get accepted.
 
 * First open an issue to discuss your changes
-* After your change has been formally approved please submit your PR **against the develop branch**
+* After your change has been formally approved please submit your PR **against the main branch**
 * Please follow the code convention by examining existing code
 * Add/modify the `README.md` as required
 * Add/modify unit tests as required
