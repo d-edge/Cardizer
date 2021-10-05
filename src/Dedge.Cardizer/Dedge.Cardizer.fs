@@ -264,6 +264,7 @@ type Cardizer =
             | _ -> int discoverLengthOption
 
         let roll = Cardizer.next 4
+
         let prefix =
             if roll = 0 then
                 [ 6; 0; 1; 1 ]
@@ -321,31 +322,26 @@ type Cardizer =
     /// }
     /// </code>
     /// </example>
-    static member NextRuPay([<Optional; DefaultParameterValue(true)>]  acceptCoBranded: bool) =
+    static member NextRuPay([<Optional; DefaultParameterValue(true)>] acceptCoBranded: bool) =
         let prefixRuPay =
             [ [ 6; 0 ]
-              [ 6; 5 ] 
+              [ 6; 5 ]
               [ 8; 1 ]
               [ 8; 2 ]
-              [ 5; 0; 8 ]
-              ]
+              [ 5; 0; 8 ] ]
 
-        let prefixRuPayAndJcbCobranded =
-            [ [ 3; 5; 3 ]
-              [ 3; 5; 6 ]
-              ]
+        let prefixRuPayAndJcbCobranded = [ [ 3; 5; 3 ]; [ 3; 5; 6 ] ]
 
-        if acceptCoBranded 
-        then 
+        if acceptCoBranded then
             let merge =
                 [ prefixRuPay
                   prefixRuPayAndJcbCobranded ].[Cardizer.next 2]
-            if merge.Length = 2 
-            then 
-                Cardizer.GenerateCard merge.[Cardizer.next 2] 16 
+
+            if merge.Length = 2 then
+                Cardizer.GenerateCard merge.[Cardizer.next 2] 16
             else
-                Cardizer.GenerateCard merge.[Cardizer.next 5] 16 
-        else 
+                Cardizer.GenerateCard merge.[Cardizer.next 5] 16
+        else
             Cardizer.GenerateCard prefixRuPay.[Cardizer.next 5] 16
 
     /// <summary>Returns a random DinersClubInternational number.</summary>
@@ -359,12 +355,15 @@ type Cardizer =
     /// }
     /// </code>
     /// </example>
-    static member NextDinersClubInternational([<Optional; DefaultParameterValue(DinersClubInternationalLengthOptions.Random)>] dinersLengthOption) =
+    static member NextDinersClubInternational
+        ([<Optional; DefaultParameterValue(DinersClubInternationalLengthOptions.Random)>] dinersLengthOption)
+        =
         let length =
             match dinersLengthOption with
             | DinersClubInternationalLengthOptions.Random -> Cardizer.NextInRange 14 19
             | _ -> int dinersLengthOption
-        Cardizer.GenerateCard [ 3; 6 ] length        
+
+        Cardizer.GenerateCard [ 3; 6 ] length
 
     /// <summary>Returns a random DinersClubUsAndCanada number.</summary>
     /// <returns>Random DinersClubUsAndCanada number</returns>
@@ -377,8 +376,7 @@ type Cardizer =
     /// }
     /// </code>
     /// </example>
-    static member NextDinersClubUsAndCanada () =
-        Cardizer.GenerateCard [ 5; 4 ] 16
+    static member NextDinersClubUsAndCanada() = Cardizer.GenerateCard [ 5; 4 ] 16
 
     /// <summary>Returns a random DinersClubInternational or DinersClubUsAndCanada number.</summary>
     /// <returns>Random DinersClubInternational or DinersClubUsAndCanada number</returns>
@@ -392,9 +390,10 @@ type Cardizer =
     /// </code>
     /// </example>
     static member NextDinersClub() =
-        if Cardizer.next 2 = 0
-        then Cardizer.NextDinersClubUsAndCanada()
-        else Cardizer.NextDinersClubInternational()
+        if Cardizer.next 2 = 0 then
+            Cardizer.NextDinersClubUsAndCanada()
+        else
+            Cardizer.NextDinersClubInternational()
 
     /// <summary>Returns a random Maestro number.</summary>
     /// <returns>Random Maestro number</returns>
