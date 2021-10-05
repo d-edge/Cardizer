@@ -24,7 +24,7 @@ let luhn (s: string) =
 
 //     matcher.DescribedAs(message)
 
-let LuhnCheck : NHamcrest.IMatcher<obj> =
+let LuhnCheck: NHamcrest.IMatcher<obj> =
     let matcher =
         new NHamcrest.Core.IsEqualMatcher<obj>(true)
 
@@ -98,8 +98,16 @@ let ``Should generate valid Amex`` () =
 [<InlineData(From16To19.Nineteen, 19)>]
 let ``Should generate valid Discover`` length expectedLength =
     let card = Cardizer.NextDiscover length
+    let prefix = card.Substring(0, 6)
+    let start = int prefix
 
-    card |> should startWith "6011"
+    let prefixInRange =
+        prefix.StartsWith "6011"
+        || prefix.StartsWith "65"
+        || (start >= 622126 && start <= 622925)
+        || (start >= 644000 && start <= 649999)
+
+    prefixInRange |> should be True
     card |> should haveLength expectedLength
     card |> luhn |> should be LuhnCheck
 
@@ -107,8 +115,10 @@ let ``Should generate valid Discover`` length expectedLength =
 let ``Should generate valid MasterCard`` () =
     let card = Cardizer.NextMasterCard()
     let start = card.Substring(0, 4) |> int
+
     let prefixInRange =
-        (start >= 2221 && start <= 2720) || (start >= 5100 && start <= 5599)
+        (start >= 2221 && start <= 2720)
+        || (start >= 5100 && start <= 5599)
 
     prefixInRange |> should be True
     card |> should haveLength 16
@@ -131,15 +141,20 @@ let ``Should generate valid RuPay`` () =
     let start3digitsCobranded = cardCobranded.Substring(0, 3) |> int
 
     let prefixInRange2digits =
-        start2digits = 60 ||  start2digits = 65 || start2digits = 81 || start2digits = 82
+        start2digits = 60
+        || start2digits = 65
+        || start2digits = 81
+        || start2digits = 82
 
-    let prefixInRange3digits =
-        start3digitsNotCobranded = 508
+    let prefixInRange3digits = start3digitsNotCobranded = 508
 
-    let prefixNotCobranded = prefixInRange2digits || prefixInRange3digits
+    let prefixNotCobranded =
+        prefixInRange2digits || prefixInRange3digits
 
     let prefixCobranded =
-        start3digitsCobranded = 353 || start3digitsCobranded = 356 || prefixNotCobranded
+        start3digitsCobranded = 353
+        || start3digitsCobranded = 356
+        || prefixNotCobranded
 
     prefixNotCobranded |> should be True
     prefixCobranded |> should be True
@@ -156,11 +171,13 @@ let ``Should generate valid RuPay`` () =
 [<InlineData(DinersClubInternationalLengthOptions.Eightteen, 18)>]
 [<InlineData(DinersClubInternationalLengthOptions.Nineteen, 19)>]
 let ``Should generate valid DinersClubInternational`` length expectedLength =
-    let card = Cardizer.NextDinersClubInternational length
-    card |> should startWith "36" 
+    let card =
+        Cardizer.NextDinersClubInternational length
+
+    card |> should startWith "36"
     card |> should haveLength expectedLength
     card |> luhn |> should be LuhnCheck
- 
+
 [<Theory>]
 [<InlineData(From12To19.Twelve, 12)>]
 [<InlineData(From12To19.Thirteen, 13)>]
@@ -172,12 +189,18 @@ let ``Should generate valid DinersClubInternational`` length expectedLength =
 [<InlineData(From12To19.Nineteen, 19)>]
 let ``Should generate valid Maestro`` length expectedLength =
     let card = Cardizer.NextMaestro length
-    [ card.[0] ] |> should  be (subsetOf ['5';'6']) 
+    [ card.[0] ] |> should be (subsetOf [ '5'; '6' ])
     let start = card.Substring(0, 4) |> int
 
     let prefixInRange =
-        start = 5018 || start = 5020 || start = 5038 || start = 5893
-        || start = 6304 || start = 6759 || start = 6761 || start = 6762
+        start = 5018
+        || start = 5020
+        || start = 5038
+        || start = 5893
+        || start = 6304
+        || start = 6759
+        || start = 6761
+        || start = 6762
         || start = 6763
 
     prefixInRange |> should be True
@@ -185,7 +208,7 @@ let ``Should generate valid Maestro`` length expectedLength =
     card |> luhn |> should be LuhnCheck
 
 [<Fact>]
-let ``Should generate valid DinersClubUsAndCanada``  =
+let ``Should generate valid DinersClubUsAndCanada`` =
     let card = Cardizer.NextDinersClubUsAndCanada()
     card |> should startWith "54"
     card |> should haveLength 16
@@ -193,10 +216,10 @@ let ``Should generate valid DinersClubUsAndCanada``  =
 
 
 [<Fact>]
-let ``Should generate valid Diners``  =
+let ``Should generate valid Diners`` =
     let card = Cardizer.NextDinersClub()
     let start = card.Substring(0, 2)
-    let prefixInRange = start = "36" || start = "54" 
+    let prefixInRange = start = "36" || start = "54"
     prefixInRange |> should be True
 
 let ``Should generate valid Dankort`` () =
@@ -263,11 +286,14 @@ let ``Should generate valid Laser`` length expectedLength =
     let start = card.Substring(0, 4) |> int
 
     let prefixInRange =
-        start = 6304 || start = 6706 || start = 6771 || start = 6709
+        start = 6304
+        || start = 6706
+        || start = 6771
+        || start = 6709
 
-    prefixInRange   |> should be True
-    card            |> should haveLength expectedLength 
-    card            |> luhn |> should be LuhnCheck
+    prefixInRange |> should be True
+    card |> should haveLength expectedLength
+    card |> luhn |> should be LuhnCheck
 
 [<Fact>]
 let ``Should generate valid InstaPayment`` () =
@@ -278,6 +304,6 @@ let ``Should generate valid InstaPayment`` () =
     let prefixInRange =
         start = 637 || start = 638 || start = 639
 
-    prefixInRange   |> should be True
-    card            |> should haveLength 16
-    card            |> luhn |> should be LuhnCheck
+    prefixInRange |> should be True
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
