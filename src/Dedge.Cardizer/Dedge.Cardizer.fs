@@ -32,6 +32,15 @@ type From16To19 =
     | Eightteen = 18
     | Nineteen = 19
 
+type DinersClubInternationalLengthOptions =
+    | Random = 0
+    | Fourteen = 14
+    | Fifteen = 15
+    | Sixteen = 16
+    | Seventeen = 17
+    | Eightteen = 18
+    | Nineteen = 19
+
 type Cardizer =
 
     // original snippet by @tpetricek
@@ -283,6 +292,55 @@ type Cardizer =
     /// </example>
     static member NextUatp () =
         Cardizer.GenerateCard [1] 15
+
+    /// <summary>Returns a random DinersClubInternational number.</summary>
+    /// <returns>Random DinersClubInternational number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextDinersClubInternational"/> method.
+    /// <code>
+    /// void PrintDinersClubInternational()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextDinersClubInternational());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextDinersClubInternational([<Optional; DefaultParameterValue(DinersClubInternationalLengthOptions.Random)>] dinersLengthOption) =
+        let length =
+            match dinersLengthOption with
+            | DinersClubInternationalLengthOptions.Random -> Cardizer.NextInRange 14 19
+            | _ -> int dinersLengthOption
+        Cardizer.GenerateCard [ 3;6 ] length        
+
+    /// <summary>Returns a random DinersClubUsAndCanada number.</summary>
+    /// <returns>Random DinersClubUsAndCanada number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextDDinersClubUsAndCanada"/> method.
+    /// <code>
+    /// void PrintDinersClubUsAndCanada()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextDinersClubUsAndCanada());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextDinersClubUsAndCanada () =
+        Cardizer.GenerateCard [5;4] 16
+
+
+    /// <summary>Returns a random DinersClubInternational or DinersClubUsAndCanada number.</summary>
+    /// <returns>Random DinersClubInternational or DinersClubUsAndCanada number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextDinersClub"/> method.
+    /// <code>
+    /// void PrintDinersClub()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextDinersClub());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextDinersClub() =
+        let dinersClubUsAndCanadaCard = Cardizer.NextDinersClubUsAndCanada
+        let dinersClubInternationalCard = Cardizer.NextDinersClubInternational 
+        if Cardizer.next 2 = 0 then dinersClubUsAndCanadaCard() else dinersClubInternationalCard()
 
     /// <summary>Returns a random Maestro number.</summary>
     /// <returns>Random Maestro number</returns>
