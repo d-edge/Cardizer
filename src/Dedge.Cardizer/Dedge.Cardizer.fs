@@ -38,12 +38,6 @@ type From16To19Skip17 =
     | Eighteen = 18
     | Nineteen = 19
 
-type From16To19Skip17 =
-    | Random = 0
-    | Sixteen = 16
-    | Eighteen = 18
-    | Nineteen = 19
-
 type DinersClubInternationalLengthOptions =
     | Random = 0
     | Fourteen = 14
