@@ -94,7 +94,7 @@ let ``Should generate valid Amex`` () =
 [<Theory>]
 [<InlineData(From16To19.Sixteen, 16)>]
 [<InlineData(From16To19.Seventeen, 17)>]
-[<InlineData(From16To19.Eightteen, 18)>]
+[<InlineData(From16To19.Eighteen, 18)>]
 [<InlineData(From16To19.Nineteen, 19)>]
 let ``Should generate valid Discover`` length expectedLength =
     let card = Cardizer.NextDiscover length
@@ -168,7 +168,7 @@ let ``Should generate valid RuPay`` () =
 [<InlineData(DinersClubInternationalLengthOptions.Fifteen, 15)>]
 [<InlineData(DinersClubInternationalLengthOptions.Sixteen, 16)>]
 [<InlineData(DinersClubInternationalLengthOptions.Seventeen, 17)>]
-[<InlineData(DinersClubInternationalLengthOptions.Eightteen, 18)>]
+[<InlineData(DinersClubInternationalLengthOptions.Eighteen, 18)>]
 [<InlineData(DinersClubInternationalLengthOptions.Nineteen, 19)>]
 let ``Should generate valid DinersClubInternational`` length expectedLength =
     let card =
@@ -185,7 +185,7 @@ let ``Should generate valid DinersClubInternational`` length expectedLength =
 [<InlineData(From12To19.Fifteen, 15)>]
 [<InlineData(From12To19.Sixteen, 16)>]
 [<InlineData(From12To19.Seventeen, 17)>]
-[<InlineData(From12To19.Eightteen, 18)>]
+[<InlineData(From12To19.Eighteen, 18)>]
 [<InlineData(From12To19.Nineteen, 19)>]
 let ``Should generate valid Maestro`` length expectedLength =
     let card = Cardizer.NextMaestro length
@@ -240,7 +240,7 @@ let ``Should generate valid Dankort`` () =
 [<Theory>]
 [<InlineData(From16To19.Sixteen, 16)>]
 [<InlineData(From16To19.Seventeen, 17)>]
-[<InlineData(From16To19.Eightteen, 18)>]
+[<InlineData(From16To19.Eighteen, 18)>]
 [<InlineData(From16To19.Nineteen, 19)>]
 let ``Should generate valid InterPayment`` length expectedLength =
     let card = Cardizer.NextInterPayment length
@@ -251,7 +251,7 @@ let ``Should generate valid InterPayment`` length expectedLength =
 [<Theory>]
 [<InlineData(From16To19.Sixteen, 16)>]
 [<InlineData(From16To19.Seventeen, 17)>]
-[<InlineData(From16To19.Eightteen, 18)>]
+[<InlineData(From16To19.Eighteen, 18)>]
 [<InlineData(From16To19.Nineteen, 19)>]
 let ``Should generate valid UnionPay`` length expectedLength =
     let card = Cardizer.NextUnionPay length
@@ -278,7 +278,7 @@ let ``Should generate valid LankaPay`` () =
 [<Theory>]
 [<InlineData(From16To19.Sixteen, 16)>]
 [<InlineData(From16To19.Seventeen, 17)>]
-[<InlineData(From16To19.Eightteen, 18)>]
+[<InlineData(From16To19.Eighteen, 18)>]
 [<InlineData(From16To19.Nineteen, 19)>]
 let ``Should generate valid Laser`` length expectedLength =
     let card = Cardizer.NextLaser length
