@@ -32,6 +32,12 @@ type From16To19 =
     | Eightteen = 18
     | Nineteen = 19
 
+type From16To19Skip17 =
+    | Random = 0
+    | Sixteen = 16
+    | Eighteen = 18
+    | Nineteen = 19
+
 type DinersClubInternationalLengthOptions =
     | Random = 0
     | Fourteen = 14
@@ -566,13 +572,16 @@ type Cardizer =
     /// void PrintSwitch()
     /// {
     ///    Console.WriteLine(Cardizer.NextSwitch());
+    ///    Console.WriteLine(Cardizer.NextSwitch()); // randomized between 16, 18 or 19
+    ///    Console.WriteLine(Cardizer.NextSwitch(From16To19Skip17.Random)); // randomized between 16, 18 or 19
+    ///    Console.WriteLine(Cardizer.NextSwitch(From16To19Skip17.Sixteen));
     /// }
     /// </code>
     /// </example>
-    static member NextSwitch([<Optional; DefaultParameterValue(From16To19.Random)>] switchLengthOption) =
+    static member NextSwitch([<Optional; DefaultParameterValue(From16To19Skip17.Random)>] switchLengthOption) =
         let length =
             match switchLengthOption with
-            | From16To19.Random -> Cardizer.NextInRange 16 19
+            | From16To19Skip17.Random -> [ 16; 18; 19 ].[Cardizer.next 3]
             | _ -> int switchLengthOption
 
         let prefix =

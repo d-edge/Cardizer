@@ -310,7 +310,6 @@ let ``Should generate valid InstaPayment`` () =
 
 [<Theory>]
 [<InlineData(From16To19.Sixteen, 16)>]
-[<InlineData(From16To19.Seventeen, 17)>]
 [<InlineData(From16To19.Eightteen, 18)>]
 [<InlineData(From16To19.Nineteen, 19)>]
 let ``Should generate valid Switch`` length expectedLength =
