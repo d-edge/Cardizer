@@ -557,3 +557,21 @@ type Cardizer =
               [ 6; 3; 9 ] ].[Cardizer.next 3]
 
         Cardizer.GenerateCard prefix 16
+
+    /// <summary>Returns a random Troy number.</summary>
+    /// <returns>Random Troy number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextTroy"/> method.
+    /// <code>
+    /// void PrintTroy()
+    /// {
+    ///     Console.WriteLine(Cardizer.NextTroy());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextTroy() =
+        let prefix =
+            [ [ 6; 5 ]
+              [ 9; 7; 9; 2 ] ].[Cardizer.next 2]
+
+        Cardizer.GenerateCard prefix 16
