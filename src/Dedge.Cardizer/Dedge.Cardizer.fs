@@ -31,6 +31,12 @@ type From16To19 =
     | Seventeen = 17
     | Eightteen = 18
     | Nineteen = 19
+    
+type From16To19Skip17 =
+    | Random = 0
+    | Sixteen = 16
+    | Eighteen = 18
+    | Nineteen = 19
 
 type From16To19Skip17 =
     | Random = 0
@@ -635,3 +641,28 @@ type Cardizer =
               [ 9; 7; 9; 2 ] ].[Cardizer.next 2]
 
         Cardizer.GenerateCard prefix 16
+
+    /// <summary>Returns a random Solo number.</summary>
+    /// <returns>Random Solo number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextSolo"/> method.
+    /// <code>
+    /// void PrintSolo()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextSolo()); // randomized between 16, 18 or 19
+    ///    Console.WriteLine(Cardizer.NextSolo(From16To19Skip17.Random)); // randomized between 16, 18 or 19
+    ///    Console.WriteLine(Cardizer.NextSolo(From16To19Skip17.Sixteen));
+    /// }
+    /// </code>
+    /// </example>
+    static member NextSolo([<Optional; DefaultParameterValue(From16To19Skip17.Random)>] soloLengthOption) =
+        let length =
+            match soloLengthOption with
+            | From16To19Skip17.Random -> [ 16; 18; 19 ].[Cardizer.next 3]
+            | _ -> int soloLengthOption
+
+        let prefix =
+            [ [ 6; 3; 3; 4 ]
+              [ 6; 7; 6; 7 ] ].[Cardizer.next 2]
+
+        Cardizer.GenerateCard prefix length
