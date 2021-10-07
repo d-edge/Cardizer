@@ -324,10 +324,9 @@ let ``Should generate valid Troy`` () =
     card |> luhn |> should be LuhnCheck
 
 [<Theory>]
-[<InlineData(From16To19.Sixteen, 16)>]
-[<InlineData(From16To19.Seventeen, 17)>]
-[<InlineData(From16To19.Eightteen, 18)>]
-[<InlineData(From16To19.Nineteen, 19)>]
+[<InlineData(From16To19Skip17.Sixteen, 16)>]
+[<InlineData(From16To19Skip17.Eightteen, 18)>]
+[<InlineData(From16To19Skip17.Nineteen, 19)>]
 let ``Should generate valid Solo`` length expectedLength =
     let card = Cardizer.NextSolo length
 
