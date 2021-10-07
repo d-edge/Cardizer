@@ -557,3 +557,25 @@ type Cardizer =
               [ 6; 3; 9 ] ].[Cardizer.next 3]
 
         Cardizer.GenerateCard prefix 16
+
+    /// <summary>Returns a random Visa Electron number.</summary>
+    /// <returns>Random Visa Electron number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextVisaElectron"/> method.
+    /// <code>
+    /// void PrintVisaElectron()
+    /// {
+    ///     Console.WriteLine(Cardizer.NextVisaElectron());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextVisaElectron() =
+        let prefix =
+            [ [ 4; 0; 2; 6 ]
+              [ 4; 1; 7; 5; 0; 0; ]
+              [ 4; 5; 0; 8 ]
+              [ 4; 8; 4; 4 ]
+              [ 4; 9; 1; 3 ]
+              [ 4; 9; 1; 7 ] ].[Cardizer.next 6]
+
+        Cardizer.GenerateCard prefix 16

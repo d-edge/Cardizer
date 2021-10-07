@@ -307,3 +307,22 @@ let ``Should generate valid InstaPayment`` () =
     prefixInRange |> should be True
     card |> should haveLength 16
     card |> luhn |> should be LuhnCheck
+
+[<Fact>]
+let ``Should generate valid Visa Electron`` () =
+    let card = Cardizer.NextVisaElectron()
+
+    let shortPrefix = card.Substring(0, 4) |> int
+    let longPrefix = card.Substring(0, 6) |> int
+
+    let prefixInRange = 
+        longPrefix = 417500
+        || shortPrefix = 4026  
+        || shortPrefix = 4508
+        || shortPrefix = 4844
+        || shortPrefix = 4913
+        || shortPrefix = 4917
+
+    prefixInRange |> should be True
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
