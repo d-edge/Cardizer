@@ -325,7 +325,7 @@ let ``Should generate valid Troy`` () =
 
 [<Theory>]
 [<InlineData(From16To19Skip17.Sixteen, 16)>]
-[<InlineData(From16To19Skip17.Eightteen, 18)>]
+[<InlineData(From16To19Skip17.Eighteen, 18)>]
 [<InlineData(From16To19Skip17.Nineteen, 19)>]
 let ``Should generate valid Solo`` length expectedLength =
     let card = Cardizer.NextSolo length
