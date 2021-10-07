@@ -322,6 +322,21 @@ let ``Should generate valid Visa Electron`` () =
         || shortPrefix = 4844
         || shortPrefix = 4913
         || shortPrefix = 4917
+        
+    prefixInRange |> should be True
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
+
+[<Fact>]
+let ``Should generate valid Troy`` () =
+    let card = Cardizer.NextTroy()
+
+    let shortPrefix = card.Substring(0, 2) |> int
+    let longPrefix = card.Substring(0, 4) |> int
+
+    let prefixInRange =
+        shortPrefix = 65 
+        || longPrefix = 9792
 
     prefixInRange |> should be True
     card |> should haveLength 16

@@ -5,6 +5,7 @@
 </p>
 
 <p align="center">
+        <a href="https://github.com/d-edge/Cardizer/actions" title="actions"><img src="https://github.com/d-edge/cardizer/actions/workflows/build.yml/badge.svg?branch=main" alt="actions build" /></a>
     <a href="https://www.nuget.org/packages/Dedge.Cardizer/" title="nuget"><img src="https://img.shields.io/nuget/vpre/Dedge.Cardizer" alt="version" /></a>
     <a href="https://www.nuget.org/stats/packages/Dedge.Cardizer?groupby=Version" title="stats"><img src="https://img.shields.io/nuget/dt/Dedge.Cardizer" alt="download" /></a> 
     <a href="https://raw.githubusercontent.com/d-edge/cardizer/main/LICENSE" title="license"><img src="https://img.shields.io/github/license/d-edge/Cardizer" alt="license" /></a>
