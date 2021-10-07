@@ -575,3 +575,26 @@ type Cardizer =
               [ 9; 7; 9; 2 ] ].[Cardizer.next 2]
 
         Cardizer.GenerateCard prefix 16
+
+    /// <summary>Returns a random Laser number.</summary>
+    /// <returns>Random Laser number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextLaser"/> method.
+    /// <code>
+    /// void PrintLaser()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextLaser());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextSolo([<Optional; DefaultParameterValue(From16To19.Random)>] soloLengthOption) =
+        let length =
+            match soloLengthOption with
+            | From16To19.Random -> Cardizer.NextInRange 16 19
+            | _ -> int soloLengthOption
+
+        let prefix =
+            [ [ 6; 3; 3; 4 ]
+              [ 6; 7; 6; 7 ] ].[Cardizer.next 2]
+
+        Cardizer.GenerateCard prefix length

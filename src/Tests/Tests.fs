@@ -322,3 +322,21 @@ let ``Should generate valid Troy`` () =
     prefixInRange |> should be True
     card |> should haveLength 16
     card |> luhn |> should be LuhnCheck
+
+[<Theory>]
+[<InlineData(From16To19.Sixteen, 16)>]
+[<InlineData(From16To19.Seventeen, 17)>]
+[<InlineData(From16To19.Eightteen, 18)>]
+[<InlineData(From16To19.Nineteen, 19)>]
+let ``Should generate valid Solo`` length expectedLength =
+    let card = Cardizer.NextSolo length
+
+    let start = card.Substring(0, 4) |> int
+
+    let prefixInRange =
+        start = 6334
+        || start = 6767
+
+    prefixInRange |> should be True
+    card |> should haveLength expectedLength
+    card |> luhn |> should be LuhnCheck
