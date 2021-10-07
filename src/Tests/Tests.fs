@@ -58,7 +58,7 @@ let ``Should generate valid Verve`` length expectedLength =
 [<Theory>]
 [<InlineData(From16To19.Sixteen, 16)>]
 [<InlineData(From16To19.Seventeen, 17)>]
-[<InlineData(From16To19.Eightteen, 18)>]
+[<InlineData(From16To19.Eighteen, 18)>]
 [<InlineData(From16To19.Nineteen, 19)>]
 let ``Should generate valid Mir`` length expectedLength =
     let card = Cardizer.NextMir length
@@ -71,7 +71,7 @@ let ``Should generate valid Mir`` length expectedLength =
 [<Theory>]
 [<InlineData(From16To19.Sixteen, 16)>]
 [<InlineData(From16To19.Seventeen, 17)>]
-[<InlineData(From16To19.Eightteen, 18)>]
+[<InlineData(From16To19.Eighteen, 18)>]
 [<InlineData(From16To19.Nineteen, 19)>]
 let ``Should generate valid Jcb`` length expectedLength =
     let card = Cardizer.NextJcb length
