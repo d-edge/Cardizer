@@ -309,9 +309,9 @@ let ``Should generate valid InstaPayment`` () =
     card |> luhn |> should be LuhnCheck
 
 [<Theory>]
-[<InlineData(From16To19.Sixteen, 16)>]
-[<InlineData(From16To19.Eightteen, 18)>]
-[<InlineData(From16To19.Nineteen, 19)>]
+[<InlineData(From16To19Skip17.Sixteen, 16)>]
+[<InlineData(From16To19Skip17.Eighteen, 18)>]
+[<InlineData(From16To19Skip17.Nineteen, 19)>]
 let ``Should generate valid Switch`` length expectedLength =
     let card = Cardizer.NextSwitch length
 
