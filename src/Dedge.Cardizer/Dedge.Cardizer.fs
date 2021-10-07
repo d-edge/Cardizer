@@ -557,3 +557,32 @@ type Cardizer =
               [ 6; 3; 9 ] ].[Cardizer.next 3]
 
         Cardizer.GenerateCard prefix 16
+
+    /// <summary>Returns a random Switch number.</summary>
+    /// <returns>Random Switch number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextSwitch"/> method.
+    /// <code>
+    /// void PrintSwitch()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextSwitch());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextSwitch([<Optional; DefaultParameterValue(From16To19.Random)>] switchLengthOption) =
+        let length =
+            match switchLengthOption with
+            | From16To19.Random -> Cardizer.NextInRange 16 19
+            | _ -> int switchLengthOption
+
+        let prefix =
+            [ [ 4; 9; 0; 3 ]
+              [ 4; 9; 0; 5 ]
+              [ 4; 9; 1; 1 ]
+              [ 4; 9; 3; 6 ]
+              [ 5; 6; 4; 1; 8; 2 ]
+              [ 6; 3; 3; 1; 1; 0 ]
+              [ 6; 3; 3; 3 ]
+              [ 6; 7; 5; 9 ] ].[Cardizer.next 8]
+
+        Cardizer.GenerateCard prefix length
