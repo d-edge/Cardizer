@@ -22,14 +22,14 @@ type From12To19 =
     | Fifteen = 15
     | Sixteen = 16
     | Seventeen = 17
-    | Eightteen = 18
+    | Eighteen = 18
     | Nineteen = 19
 
 type From16To19 =
     | Random = 0
     | Sixteen = 16
     | Seventeen = 17
-    | Eightteen = 18
+    | Eighteen = 18
     | Nineteen = 19
     
 type From16To19Skip17 =
@@ -44,7 +44,7 @@ type DinersClubInternationalLengthOptions =
     | Fifteen = 15
     | Sixteen = 16
     | Seventeen = 17
-    | Eightteen = 18
+    | Eighteen = 18
     | Nineteen = 19
 
 type Cardizer =
