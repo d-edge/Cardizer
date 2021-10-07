@@ -308,6 +308,30 @@ let ``Should generate valid InstaPayment`` () =
     card |> should haveLength 16
     card |> luhn |> should be LuhnCheck
 
+[<Theory>]
+[<InlineData(From16To19Skip17.Sixteen, 16)>]
+[<InlineData(From16To19Skip17.Eighteen, 18)>]
+[<InlineData(From16To19Skip17.Nineteen, 19)>]
+let ``Should generate valid Switch`` length expectedLength =
+    let card = Cardizer.NextSwitch length
+
+    let shortPrefix = card.Substring(0, 4) |> int
+    let longPrefix = card.Substring(0, 6) |> int
+
+    let prefixInRange =
+        shortPrefix = 4903
+        || shortPrefix = 4905
+        || shortPrefix = 4911
+        || shortPrefix = 4936
+        || shortPrefix = 6333
+        || shortPrefix = 6759
+        || longPrefix = 564182
+        || longPrefix = 633110
+
+    prefixInRange |> should be True
+    card |> should haveLength expectedLength
+    card |> luhn |> should be LuhnCheck
+
 [<Fact>]
 let ``Should generate valid Visa Electron`` () =
     let card = Cardizer.NextVisaElectron()

@@ -32,6 +32,12 @@ type From16To19 =
     | Eightteen = 18
     | Nineteen = 19
 
+type From16To19Skip17 =
+    | Random = 0
+    | Sixteen = 16
+    | Eighteen = 18
+    | Nineteen = 19
+
 type DinersClubInternationalLengthOptions =
     | Random = 0
     | Fourteen = 14
@@ -557,6 +563,38 @@ type Cardizer =
               [ 6; 3; 9 ] ].[Cardizer.next 3]
 
         Cardizer.GenerateCard prefix 16
+
+    /// <summary>Returns a random Switch number.</summary>
+    /// <returns>Random Switch number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextSwitch"/> method.
+    /// <code>
+    /// void PrintSwitch()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextSwitch());
+    ///    Console.WriteLine(Cardizer.NextSwitch()); // randomized between 16, 18 or 19
+    ///    Console.WriteLine(Cardizer.NextSwitch(From16To19Skip17.Random)); // randomized between 16, 18 or 19
+    ///    Console.WriteLine(Cardizer.NextSwitch(From16To19Skip17.Sixteen));
+    /// }
+    /// </code>
+    /// </example>
+    static member NextSwitch([<Optional; DefaultParameterValue(From16To19Skip17.Random)>] switchLengthOption) =
+        let length =
+            match switchLengthOption with
+            | From16To19Skip17.Random -> [ 16; 18; 19 ].[Cardizer.next 3]
+            | _ -> int switchLengthOption
+
+        let prefix =
+            [ [ 4; 9; 0; 3 ]
+              [ 4; 9; 0; 5 ]
+              [ 4; 9; 1; 1 ]
+              [ 4; 9; 3; 6 ]
+              [ 5; 6; 4; 1; 8; 2 ]
+              [ 6; 3; 3; 1; 1; 0 ]
+              [ 6; 3; 3; 3 ]
+              [ 6; 7; 5; 9 ] ].[Cardizer.next 8]
+
+        Cardizer.GenerateCard prefix length
 
     /// <summary>Returns a random Visa Electron number.</summary>
     /// <returns>Random Visa Electron number</returns>
