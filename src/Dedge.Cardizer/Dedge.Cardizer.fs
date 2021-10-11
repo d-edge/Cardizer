@@ -675,3 +675,18 @@ type Cardizer =
     static member NextUzCard() =
         let prefix = [ 8; 6; 0; 0 ]
         Cardizer.GenerateCard prefix 16
+
+    /// <summary>Returns a random Humo number.</summary>
+    /// <returns>Random Humo number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextHumo"/> method.
+    /// <code>
+    /// void PrintHumo()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextHumo());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextHumo() =
+        let prefix = [ 9; 8; 6; 0 ]
+        Cardizer.GenerateCard prefix 16
