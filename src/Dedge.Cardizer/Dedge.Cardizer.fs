@@ -660,3 +660,18 @@ type Cardizer =
               [ 6; 7; 6; 7 ] ].[Cardizer.next 2]
 
         Cardizer.GenerateCard prefix length
+
+    /// <summary>Returns a random UzCard number.</summary>
+    /// <returns>Random UzCard number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextUzCard"/> method.
+    /// <code>
+    /// void PrintUzCard()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextUzCard());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextUzCard() =
+        let prefix = [ 8; 6; 0; 0 ]
+        Cardizer.GenerateCard prefix 16

@@ -382,3 +382,11 @@ let ``Should generate valid Solo`` length expectedLength =
     prefixInRange |> should be True
     card |> should haveLength expectedLength
     card |> luhn |> should be LuhnCheck
+
+[<Fact>]
+let ``Should generate valid UzCard`` () =
+    let card = Cardizer.NextUzCard()
+
+    card |> should startWith "8600"
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
