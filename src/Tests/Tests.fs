@@ -390,3 +390,11 @@ let ``Should generate valid UzCard`` () =
     card |> should startWith "8600"
     card |> should haveLength 16
     card |> luhn |> should be LuhnCheck
+
+[<Fact>]
+let ``Should generate valid Humo`` () =
+    let card = Cardizer.NextHumo()
+
+    card |> should startWith "9860"
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
