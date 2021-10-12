@@ -398,3 +398,15 @@ let ``Should generate valid Humo`` () =
     card |> should startWith "9860"
     card |> should haveLength 16
     card |> luhn |> should be LuhnCheck
+
+[<Fact>]
+let ``Should generate valid NPSPridnestrovie`` () =
+    let card = Cardizer.NextNPSPridnestrovie()
+    let start = card.Substring(0, 7) |> int
+
+    let prefixInRange =
+        (start >= 6054740 && start <= 6054744)
+    
+    prefixInRange |> should be True
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck

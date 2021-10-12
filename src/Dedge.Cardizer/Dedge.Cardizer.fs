@@ -690,3 +690,18 @@ type Cardizer =
     static member NextHumo() =
         let prefix = [ 9; 8; 6; 0 ]
         Cardizer.GenerateCard prefix 16
+
+    // <summary>Returns a random NPS Pridnestrovie number.</summary>
+    /// <returns>Random NPS Pridnestrovie number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextNPSPridnestrovie"/> method.
+    /// <code>
+    /// void PrintNPSPridnestrovie()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextNPSPridnestrovie()); 
+    /// }
+    /// </code>
+    /// </example>
+    static member NextNPSPridnestrovie() =
+        let prefix = Cardizer.NextSeqInRange 6054740 6054744
+        Cardizer.GenerateCard prefix 16
