@@ -705,27 +705,3 @@ type Cardizer =
     static member NextNPSPridnestrovie() =
         let prefix = Cardizer.NextSeqInRange 6054740 6054744
         Cardizer.GenerateCard prefix 16
-
-    /// <summary>Returns a random Maestro UK number.</summary>
-    /// <returns>Random Maestro UK number</returns>
-    /// <example>
-    /// This sample shows how to call the <see cref="NextMaestroUK"/> method.
-    /// <code>
-    /// void PrintMaestroUK()
-    /// {
-    ///    Console.WriteLine(Cardizer.NextMaestroUK()); 
-    /// }
-    /// </code>
-    /// </example>
-    static member NextMaestroUK([<Optional; DefaultParameterValue(From12To19.Random)>] maestroUKLengthOption) =
-        let length =
-            match maestroUKLengthOption with
-            | From12To19.Random -> Cardizer.NextInRange 12 19
-            | _ -> int maestroUKLengthOption
-
-        let prefix =
-            [ [ 6; 7; 5; 9 ]
-              [ 6; 7; 6; 7; 7; 0 ]
-              [ 6; 7; 6; 7; 7; 4 ] ].[Cardizer.next 3]
-
-        Cardizer.GenerateCard prefix length

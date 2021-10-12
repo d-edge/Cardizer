@@ -410,27 +410,3 @@ let ``Should generate valid NPSPridnestrovie`` () =
     prefixInRange |> should be True
     card |> should haveLength 16
     card |> luhn |> should be LuhnCheck
-
-[<Theory>]
-[<InlineData(From12To19.Twelve, 12)>]
-[<InlineData(From12To19.Thirteen, 13)>]
-[<InlineData(From12To19.Fourteen, 14)>]
-[<InlineData(From12To19.Fifteen, 15)>]
-[<InlineData(From12To19.Sixteen, 16)>]
-[<InlineData(From12To19.Seventeen, 17)>]
-[<InlineData(From12To19.Eighteen, 18)>]
-[<InlineData(From12To19.Nineteen, 19)>]
-let ``Should generate valid Maestro UK`` length expectedLength =
-    let card = Cardizer.NextMaestroUK length
-    let shortPrefix = card.Substring(0, 4) |> int
-    let longPrefix = card.Substring(0, 6) |> int
-
-
-    let prefixInRange =
-        shortPrefix = 6759
-        || longPrefix = 676770
-        || longPrefix = 676774
-
-    prefixInRange |> should be True
-    card |> should haveLength expectedLength
-    card |> luhn |> should be LuhnCheck
