@@ -729,3 +729,24 @@ type Cardizer =
               [ 6; 7; 6; 7; 7; 4 ] ].[Cardizer.next 3]
 
         Cardizer.GenerateCard prefix length 
+
+    /// <summary>Returns a random UkrCard number.</summary>
+    /// <returns>Random UkrCard number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextUkrCard"/> method.
+    /// <code>
+    /// void PrintUkrCard()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextUkrCard()); 
+    /// }
+    /// </code>
+    /// </example>
+    static member NextUkrCard([<Optional; DefaultParameterValue(From16To19.Random)>] ukrCardLengthOption) =
+        let length =
+            match ukrCardLengthOption with
+            | From16To19.Random -> Cardizer.NextInRange 16 19
+            | _ -> int ukrCardLengthOption
+
+        let prefix = Cardizer.NextSeqInRange 60400100 60420099
+
+        Cardizer.GenerateCard prefix length
