@@ -451,3 +451,17 @@ let ``Should generate valid UkrCard`` length expectedLength =
     prefixInRange |> should be True
     card |> should haveLength expectedLength
     card |> luhn |> should be LuhnCheck
+
+[<Fact>]
+let ``Should generate valid Bankcard`` () =
+    let card = Cardizer.NextBankcard()
+    let prefix = card.Substring(0, 6)
+    let start = int prefix
+
+    let prefixInRange =
+        prefix.StartsWith "5610"
+        || (start >= 560221 && start <= 560225)
+
+    prefixInRange |> should be True
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck

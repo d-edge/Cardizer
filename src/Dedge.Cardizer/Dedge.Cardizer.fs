@@ -750,3 +750,25 @@ type Cardizer =
         let prefix = Cardizer.NextSeqInRange 60400100 60420099
 
         Cardizer.GenerateCard prefix length
+
+    /// <summary>Returns a random Bankcard number.</summary>
+    /// <returns>Random Bankcard number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextBankcard"/> method.
+    /// <code>
+    /// void PrintBankcard()
+    /// {
+    ///    Console.WriteLine(Cardizer.NextBankcard());
+    /// }
+    /// </code>
+    /// </example>
+    static member NextBankcard() =
+        let roll = Cardizer.next 2
+
+        let prefix =
+            if roll = 0 then
+                [ 5; 6; 1; 0 ]
+            else
+                Cardizer.NextSeqInRange 560221 560225
+
+        Cardizer.GenerateCard prefix 16
