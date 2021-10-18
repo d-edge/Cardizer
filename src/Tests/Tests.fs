@@ -434,3 +434,20 @@ let ``Should generate valid Maestro UK`` length expectedLength =
     prefixInRange |> should be True
     card |> should haveLength expectedLength
     card |> luhn |> should be LuhnCheck 
+
+[<Theory>]
+[<InlineData(From16To19.Sixteen, 16)>]
+[<InlineData(From16To19.Seventeen, 17)>]
+[<InlineData(From16To19.Eighteen, 18)>]
+[<InlineData(From16To19.Nineteen, 19)>]
+let ``Should generate valid UkrCard`` length expectedLength =
+    let card = Cardizer.NextUkrCard length
+
+    let start = card.Substring(0, 8) |> int
+
+    let prefixInRange =
+        (start >= 60400100 && start <= 60420099)
+
+    prefixInRange |> should be True
+    card |> should haveLength expectedLength
+    card |> luhn |> should be LuhnCheck
