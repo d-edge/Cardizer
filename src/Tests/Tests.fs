@@ -97,19 +97,30 @@ let ``Should generate valid Amex`` () =
 [<InlineData(From16To19.Eighteen, 18)>]
 [<InlineData(From16To19.Nineteen, 19)>]
 let ``Should generate valid Discover`` length expectedLength =
-    let card = Cardizer.NextDiscover length
-    let prefix = card.Substring(0, 6)
-    let start = int prefix
+    let cardNotCobranded = Cardizer.NextDiscover(length, false)
+    let cardCobranded = Cardizer.NextDiscover(length, true)
+    let start2digits = cardNotCobranded.Substring(0, 2) |> int
+    let start4digitsNotCobranded = cardNotCobranded.Substring(0, 4) |> int
+    let start3digitsNotCobranded = cardNotCobranded.Substring(0, 3) |> int
+    let start6digitsCobranded = cardCobranded.Substring(0, 6) |> int
 
-    let prefixInRange =
-        prefix.StartsWith "6011"
-        || prefix.StartsWith "65"
-        || (start >= 622126 && start <= 622925)
-        || (start >= 644000 && start <= 649999)
+    let prefixInRange2digits = start2digits = 65
 
-    prefixInRange |> should be True
-    card |> should haveLength expectedLength
-    card |> luhn |> should be LuhnCheck
+    let prefixInRange3digits = (start3digitsNotCobranded >=  644 && start3digitsNotCobranded <= 649)
+
+    let prefixInRange4digits = start4digitsNotCobranded = 6011
+
+    let prefixNotCobranded =
+        prefixInRange2digits || prefixInRange3digits || prefixInRange4digits
+
+    let prefixCobranded = (start6digitsCobranded >=  622126 && start6digitsCobranded <= 622925)
+        
+    prefixNotCobranded |> should be True
+    prefixCobranded |> should be True
+    cardNotCobranded |> should haveLength expectedLength
+    cardNotCobranded |> luhn |> should be LuhnCheck
+    cardCobranded |> should haveLength expectedLength
+    cardCobranded |> luhn |> should be LuhnCheck
 
 [<Fact>]
 let ``Should generate valid MasterCard`` () =
