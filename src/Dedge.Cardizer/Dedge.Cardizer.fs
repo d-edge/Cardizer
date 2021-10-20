@@ -249,38 +249,31 @@ type Cardizer =
         let second = if Cardizer.next 2 = 0 then 4 else 7
         Cardizer.GenerateCard [ 3; second ] 15
 
-    /// <summary>Returns a random Discover number that is of the given available length.</summary>
-    /// <param name="discoverLengthOption">Credit card's length (default is randomized between 16 and 19)</param>
+    /// <summary>Returns a random Discover number.</summary>
     /// <returns>Random Discover number</returns>
     /// <example>
     /// This sample shows how to call the <see cref="NextDiscover"/> method.
     /// <code>
     /// void PrintDiscover()
     /// {
-    ///    Console.WriteLine(Cardizer.NextDiscover()); // randomized between 16 and 19
-    ///    Console.WriteLine(Cardizer.NextDiscover(DiscoverLengthOptions.Random)); // randomized between 16 and 19
-    ///    Console.WriteLine(Cardizer.NextDiscover(DiscoverLengthOptions.Sixteen));
+    ///    Console.WriteLine(Cardizer.NextDiscover());
     /// }
     /// </code>
     /// </example>
-    static member NextDiscover([<Optional; DefaultParameterValue(From16To19.Random)>] discoverLengthOption) =
+    static member NextDiscover([<Optional; DefaultParameterValue(From16To19.Random)>] discoverLengthOption, [<Optional; DefaultParameterValue(true)>] acceptCoBranded: bool) =
         let length =
             match discoverLengthOption with
             | From16To19.Random -> Cardizer.NextInRange 16 19
             | _ -> int discoverLengthOption
 
-        let roll = Cardizer.next 4
-
+        let roll = Cardizer.next (if acceptCoBranded then 4 else 3)
         let prefix =
-            if roll = 0 then
-                [ 6; 0; 1; 1 ]
-            elif roll = 1 then
-                Cardizer.NextSeqInRange 622126 622925
-            elif roll = 2 then
-                Cardizer.NextSeqInRange 644 649
-            else
-                [ 6; 5 ]
-
+            match roll with
+            | 0 -> [ 6; 0; 1; 1 ]
+            | 1 -> [ 6; 5 ]
+            | 2 -> Cardizer.NextSeqInRange 644 649
+            | _ -> Cardizer.NextSeqInRange 622126 622925
+        
         Cardizer.GenerateCard prefix length
 
     /// <summary>Returns a random MasterCard number.</summary>
@@ -342,7 +335,7 @@ type Cardizer =
             let merge =
                 [ prefixRuPay
                   prefixRuPayAndJcbCobranded ].[Cardizer.next 2]
-
+  
             if merge.Length = 2 then
                 Cardizer.GenerateCard merge.[Cardizer.next 2] 16
             else
