@@ -97,30 +97,26 @@ let ``Should generate valid Amex`` () =
 [<InlineData(From16To19.Eighteen, 18)>]
 [<InlineData(From16To19.Nineteen, 19)>]
 let ``Should generate valid Discover`` length expectedLength =
-    let cardNotCobranded = Cardizer.NextDiscover(length, false)
-    let cardCobranded = Cardizer.NextDiscover(length, true)
-    let start2digits = cardNotCobranded.Substring(0, 2) |> int
-    let start4digitsNotCobranded = cardNotCobranded.Substring(0, 4) |> int
-    let start3digitsNotCobranded = cardNotCobranded.Substring(0, 3) |> int
-    let start6digitsCobranded = cardCobranded.Substring(0, 6) |> int
+   let cardNotCobranded = Cardizer.NextDiscover(length, false)
+   let cardCobranded = Cardizer.NextDiscover(length, true)
 
-    let prefixInRange2digits = start2digits = 65
+   let isPrefixValid (card: string) = 
+       let head = card.Substring(0, 3) |> int
 
-    let prefixInRange3digits = (start3digitsNotCobranded >=  644 && start3digitsNotCobranded <= 649)
+       card.Substring(0, 2) = "65" ||
+       card.Substring(0, 4) = "6011" ||
+       (head >=  644 && head <= 649)
 
-    let prefixInRange4digits = start4digitsNotCobranded = 6011
-
-    let prefixNotCobranded =
-        prefixInRange2digits || prefixInRange3digits || prefixInRange4digits
-
-    let prefixCobranded = (start6digitsCobranded >=  622126 && start6digitsCobranded <= 622925)
-        
-    prefixNotCobranded |> should be True
-    prefixCobranded |> should be True
-    cardNotCobranded |> should haveLength expectedLength
-    cardNotCobranded |> luhn |> should be LuhnCheck
-    cardCobranded |> should haveLength expectedLength
-    cardCobranded |> luhn |> should be LuhnCheck
+   let headCobranded = cardCobranded.Substring(0, 6) |> int
+   let prefixCobranded = isPrefixValid cardCobranded || (headCobranded >=  622126 && headCobranded <= 622925)
+   let prefixNotCobranded = isPrefixValid cardNotCobranded 
+       
+   prefixCobranded |> should be True
+   prefixNotCobranded |> should be True
+   cardNotCobranded |> should haveLength expectedLength
+   cardNotCobranded |> luhn |> should be LuhnCheck
+   cardCobranded |> should haveLength expectedLength
+   cardCobranded |> luhn |> should be LuhnCheck
 
 [<Fact>]
 let ``Should generate valid MasterCard`` () =

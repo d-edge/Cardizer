@@ -266,29 +266,15 @@ type Cardizer =
             | From16To19.Random -> Cardizer.NextInRange 16 19
             | _ -> int discoverLengthOption
 
-        let roll = Cardizer.next 3
-
+        let roll = Cardizer.next (if acceptCoBranded then 4 else 3)
         let prefix =
-            if roll = 0 then
-                [ 6; 0; 1; 1 ]
-            elif roll = 1 then
-                Cardizer.NextSeqInRange 644 649
-            else
-                [ 6; 5 ]
-
-        let prefixChinaUnionPayCobranded = Cardizer.NextSeqInRange 622126 622925
-
-        if acceptCoBranded then
-            let merge =
-                [ prefix
-                  prefixChinaUnionPayCobranded ].[Cardizer.next 2]
-
-            if merge.Length = 2 then
-                Cardizer.GenerateCard prefix length
-            else
-                Cardizer.GenerateCard prefixChinaUnionPayCobranded length
-        else
-            Cardizer.GenerateCard prefix length
+            match roll with
+            | 0 -> [ 6; 0; 1; 1 ]
+            | 1 -> [ 6; 5 ]
+            | 2 -> Cardizer.NextSeqInRange 644 649
+            | _ -> Cardizer.NextSeqInRange 622126 622925
+        
+        Cardizer.GenerateCard prefix length
 
     /// <summary>Returns a random MasterCard number.</summary>
     /// <returns>Random MasterCard number</returns>
@@ -349,7 +335,7 @@ type Cardizer =
             let merge =
                 [ prefixRuPay
                   prefixRuPayAndJcbCobranded ].[Cardizer.next 2]
-
+  
             if merge.Length = 2 then
                 Cardizer.GenerateCard merge.[Cardizer.next 2] 16
             else
