@@ -37,6 +37,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="ThreadLocalRandom.fs" />
     <None Include="../../cardizer-64x64.png">
       <Pack>true</Pack>
       <PackagePath>$(PackageIconUrl)</PackagePath>

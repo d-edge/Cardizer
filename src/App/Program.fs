@@ -2,11 +2,12 @@ open Dedge
 
 [<EntryPoint>]
 let main _ =
-    Cardizer.NextAmex () |> printfn "Amex:\t\t%s"
-    Cardizer.NextDiscover () |> printfn "Discover:\t%s"
-    Cardizer.NextJcb () |> printfn "Jcb:\t\t%s"
-    Cardizer.NextMasterCard () |> printfn "MasterCard:\t%s"
-    Cardizer.NextMir () |> printfn "Mir:\t\t%s"
-    Cardizer.NextVerve () |> printfn "Verve:\t\t%s"
-    Cardizer.NextVisa () |> printfn "Visa:\t\t%s"
+    let cardizer = new Cardizer()
+    cardizer.NextAmex () |> printfn "Amex:\t\t%s"
+    cardizer.NextDiscover () |> printfn "Discover:\t%s"
+    cardizer.NextJcb () |> printfn "Jcb:\t\t%s"
+    cardizer.NextMasterCard () |> printfn "MasterCard:\t%s"
+    cardizer.NextMir () |> printfn "Mir:\t\t%s"
+    cardizer.NextVerve () |> printfn "Verve:\t\t%s"
+    cardizer.NextVisa () |> printfn "Visa:\t\t%s"
     0

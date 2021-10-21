@@ -30,6 +30,8 @@ let LuhnCheck: NHamcrest.IMatcher<obj> =
 
     matcher.DescribedAs $"Fail the Luhn check."
 
+let Cardizer = new Cardizer()
+
 [<Theory>]
 [<InlineData(VisaLengthOptions.Thirteen, 13)>]
 [<InlineData(VisaLengthOptions.Sixteen, 16)>]
@@ -472,3 +474,18 @@ let ``Should generate valid Bankcard`` () =
     prefixInRange |> should be True
     card |> should haveLength 16
     card |> luhn |> should be LuhnCheck
+
+
+[<Theory>]
+[<InlineData(12, "4547729151676")>]
+[<InlineData(15, "4442867292591")>]
+[<InlineData(0, "4944058597281103")>]
+[<InlineData(1, "4846767274261")>]
+let ``Should generate the same card when cardizer is seeded`` (seed: int) expectedCard =
+    let seededCardizer = new Cardizer(seed)
+
+    let visa = seededCardizer.NextVisa()
+
+    visa |> should equal expectedCard
+
+
