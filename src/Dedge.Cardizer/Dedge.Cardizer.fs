@@ -1,7 +1,6 @@
 ﻿namespace Dedge
 
 open System
-open System.Threading
 open System.Runtime.InteropServices
 
 type VisaLengthOptions =
@@ -47,33 +46,23 @@ type DinersClubInternationalLengthOptions =
     | Eighteen = 18
     | Nineteen = 19
 
-type Cardizer =
+type Cardizer(random:IRandom) =
+    new() =
+        Cardizer(ThreadLocalRandom())
 
-    // original snippet by @tpetricek
-    // https://stackoverflow.com/a/7792667/1248177
-    static member private next =
-        let seedGenerator = Random()
-
-        let localGenerator =
-            new ThreadLocal<Random>(fun _ ->
-                lock
-                    seedGenerator
-                    (fun _ ->
-                        let seed = seedGenerator.Next()
-                        Random(seed)))
-
-        fun n -> localGenerator.Value.Next(n)
+    new(seed: int) =
+        Cardizer(ThreadLocalRandom(seed))
 
     /// <summary>Returns a random integer within a given range.</summary>
     /// <param name="low">The (inclusive) low value of the range</param>
     /// <param name="high">The (inclusive) high value of the range</param>
     /// <returns>Random integer within a given range</returns>
-    static member private NextInRange low high = Cardizer.next (high - low + 1) + low
+    member private this.NextInRange low high = random.Next (high - low + 1) + low
 
     /// <summary>Returns a sequence of each digit of a given number.</summary>
     /// <param name="number">The number to enumerate</param>
     /// <returns>A sequence of each digit of a given number</returns>
-    static member private NumberToSeq number =
+    member private _.NumberToSeq number =
         let rec loop n list =
             if n <= 0 then
                 list
@@ -86,47 +75,47 @@ type Cardizer =
     /// <param name="low">The (inclusive) low value of the range</param>
     /// <param name="high">The (inclusive) high value of the range</param>
     /// <returns>Random integer enumerate as sequence within a given range</returns>
-    static member private NextSeqInRange low high =
-        Cardizer.NextInRange low high
-        |> Cardizer.NumberToSeq
+    member private this.NextSeqInRange low high =
+        this.NextInRange low high
+        |> this.NumberToSeq
 
-    static member private GetNumber n =
+    member private _.GetNumber n =
         let n2 = n * 2
         if n2 > 9 then n2 - 9 else n2
 
-    static member inline private CheckDigit sum = ((sum / 10 + 1) * 10 - sum) % 10
+    member inline private _.CheckDigit sum = ((sum / 10 + 1) * 10 - sum) % 10
 
-    static member private NextUniquePersonalIdentifiers n =
-        { 1 .. n } |> Seq.map (fun _ -> Cardizer.next 10)
+    member private this.NextUniquePersonalIdentifiers n =
+        { 1 .. n } |> Seq.map (fun _ -> random.Next 10)
 
-    static member private ReverseSum(digits: seq<int>) : int =
+    member private this.ReverseSum(digits: seq<int>) : int =
         digits
         |> Seq.rev
         |> Seq.mapi (fun i n -> i % 2 = 0, n)
         |> Seq.sumBy
             (fun (isEven, n) ->
                 if isEven then
-                    Cardizer.GetNumber n
+                    this.GetNumber n
                 else
                     n)
-        |> Cardizer.CheckDigit
+        |> this.CheckDigit
 
-    static member private AppendSum digits =
+    member private this.AppendSum digits =
         seq {
             yield! digits
-            yield Cardizer.ReverseSum digits
+            yield this.ReverseSum digits
         }
 
-    static member private GenerateCard (prefixes: seq<int>) cardLen =
+    member private this.GenerateCard (prefixes: seq<int>) cardLen =
         let checksumLen = 1
         let prefixesLen = Seq.length prefixes
         let generateLen = cardLen - prefixesLen - checksumLen
 
         generateLen
-        |> Cardizer.NextUniquePersonalIdentifiers
+        |> this.NextUniquePersonalIdentifiers
         |> Seq.toList
         |> Seq.append prefixes
-        |> Cardizer.AppendSum
+        |> this.AppendSum
         |> String.Concat
 
     /// <summary>Returns a random Visa number that is of the given available length.</summary>
@@ -137,20 +126,20 @@ type Cardizer =
     /// <code>
     /// void PrintVisa()
     /// {
-    ///    Console.WriteLine(Cardizer.NextVisa()); // randomized between 13 or 16
-    ///    Console.WriteLine(Cardizer.NextVisa(VisaLengthOptions.Random)); // randomized between 13 or 16
-    ///    Console.WriteLine(Cardizer.NextVisa(VisaLengthOptions.Sixteen));
+    ///    Console.WriteLine(this.NextVisa()); // randomized between 13 or 16
+    ///    Console.WriteLine(this.NextVisa(VisaLengthOptions.Random)); // randomized between 13 or 16
+    ///    Console.WriteLine(this.NextVisa(VisaLengthOptions.Sixteen));
     /// }
     /// </code>
     /// </example>
-    static member NextVisa([<Optional; DefaultParameterValue(VisaLengthOptions.Random)>] visaLengthOption) =
+    member this.NextVisa([<Optional; DefaultParameterValue(VisaLengthOptions.Random)>] visaLengthOption) =
         let length =
             match visaLengthOption with
-            | VisaLengthOptions.Random -> if Cardizer.next 2 = 0 then 13 else 16
+            | VisaLengthOptions.Random -> if random.Next 2 = 0 then 13 else 16
             | _ -> int visaLengthOption
 
 
-        Cardizer.GenerateCard [ 4 ] length
+        this.GenerateCard [ 4 ] length
 
     /// <summary>Returns a random Verve number that is of the given available length.</summary>
     /// <param name="verveLengthOption">Credit card's length (default is randomized between 16 or 19)</param>
@@ -160,27 +149,27 @@ type Cardizer =
     /// <code>
     /// void PrintVerve()
     /// {
-    ///    Console.WriteLine(Cardizer.NextVerve()); // randomized between 16 or 19
-    ///    Console.WriteLine(Cardizer.NextVerve(VerveLengthOptions.Random)); // randomized between 16 or 19
-    ///    Console.WriteLine(Cardizer.NextVerve(VerveLengthOptions.Sixteen));
+    ///    Console.WriteLine(this.NextVerve()); // randomized between 16 or 19
+    ///    Console.WriteLine(this.NextVerve(VerveLengthOptions.Random)); // randomized between 16 or 19
+    ///    Console.WriteLine(this.NextVerve(VerveLengthOptions.Sixteen));
     /// }
     /// </code>
     /// </example>
-    static member NextVerve([<Optional; DefaultParameterValue(VerveLengthOptions.Random)>] verveLengthOption) =
+    member this.NextVerve([<Optional; DefaultParameterValue(VerveLengthOptions.Random)>] verveLengthOption) =
         let length =
             match verveLengthOption with
-            | VerveLengthOptions.Random -> 16 + 3 * Cardizer.next 2
+            | VerveLengthOptions.Random -> 16 + 3 * random.Next 2
             | _ -> int verveLengthOption
 
         let prefix =
             [ [ 506099; 506198 ]
-              [ 650002; 650027 ] ].[Cardizer.next 2]
+              [ 650002; 650027 ] ].[random.Next 2]
 
         let prefixes =
-            Cardizer.NextInRange prefix.[0] prefix.[1]
-            |> Cardizer.NumberToSeq
+            this.NextInRange prefix.[0] prefix.[1]
+            |> this.NumberToSeq
 
-        Cardizer.GenerateCard prefixes length
+        this.GenerateCard prefixes length
 
     /// <summary>Returns a random Mir number that is of the given available length.</summary>
     /// <param name="mirLengthOption">Credit card's length (default is randomized between 16 and 19)</param>
@@ -190,21 +179,21 @@ type Cardizer =
     /// <code>
     /// void PrintMir()
     /// {
-    ///    Console.WriteLine(Cardizer.NextMir()); // randomized between 16 and 19
-    ///    Console.WriteLine(Cardizer.NextMir(MirLengthOptions.Random)); // randomized between 16 and 19
-    ///    Console.WriteLine(Cardizer.NextMir(MirLengthOptions.Sixteen));
+    ///    Console.WriteLine(this.NextMir()); // randomized between 16 and 19
+    ///    Console.WriteLine(this.NextMir(MirLengthOptions.Random)); // randomized between 16 and 19
+    ///    Console.WriteLine(this.NextMir(MirLengthOptions.Sixteen));
     /// }
     /// </code>
     /// </example>
-    static member NextMir([<Optional; DefaultParameterValue(From16To19.Random)>] mirLengthOption) =
+    member this.NextMir([<Optional; DefaultParameterValue(From16To19.Random)>] mirLengthOption) =
         let length =
             match mirLengthOption with
-            | From16To19.Random -> Cardizer.NextInRange 16 19
+            | From16To19.Random -> this.NextInRange 16 19
             | _ -> int mirLengthOption
 
-        let prefixes = [ 2; 2; 0; Cardizer.next 5 ]
+        let prefixes = [ 2; 2; 0; random.Next 5 ]
 
-        Cardizer.GenerateCard prefixes length
+        this.GenerateCard prefixes length
 
     /// <summary>Returns a random Jcb number that is of the given available length.</summary>
     /// <param name="jcbLengthOption">Credit card's length (default is randomized between 16 and 19)</param>
@@ -214,25 +203,25 @@ type Cardizer =
     /// <code>
     /// void PrintJcb()
     /// {
-    ///    Console.WriteLine(Cardizer.NextJcb()); // randomized between 16 and 19
-    ///    Console.WriteLine(Cardizer.NextJcb(JcbLengthOptions.Random)); // randomized between 16 and 19
-    ///    Console.WriteLine(Cardizer.NextJcb(JcbLengthOptions.Sixteen));
+    ///    Console.WriteLine(this.NextJcb()); // randomized between 16 and 19
+    ///    Console.WriteLine(this.NextJcb(JcbLengthOptions.Random)); // randomized between 16 and 19
+    ///    Console.WriteLine(this.NextJcb(JcbLengthOptions.Sixteen));
     /// }
     /// </code>
     /// </example>
-    static member NextJcb([<Optional; DefaultParameterValue(From16To19.Random)>] jcbLengthOption) =
+    member this.NextJcb([<Optional; DefaultParameterValue(From16To19.Random)>] jcbLengthOption) =
         let length =
             match jcbLengthOption with
-            | From16To19.Random -> Cardizer.NextInRange 16 19
+            | From16To19.Random -> this.NextInRange 16 19
             | _ -> int jcbLengthOption
 
         let prefixes =
             [ 3
               5
-              Cardizer.NextInRange 2 8
-              Cardizer.NextInRange 8 9 ]
+              this.NextInRange 2 8
+              this.NextInRange 8 9 ]
 
-        Cardizer.GenerateCard prefixes length
+        this.GenerateCard prefixes length
 
     /// <summary>Returns a random Amex number.</summary>
     /// <returns>Random Amex number</returns>
@@ -241,13 +230,13 @@ type Cardizer =
     /// <code>
     /// void PrintAmex()
     /// {
-    ///    Console.WriteLine(Cardizer.NextAmex());
+    ///    Console.WriteLine(this.NextAmex());
     /// }
     /// </code>
     /// </example>
-    static member NextAmex() =
-        let second = if Cardizer.next 2 = 0 then 4 else 7
-        Cardizer.GenerateCard [ 3; second ] 15
+    member this.NextAmex() =
+        let second = if random.Next 2 = 0 then 4 else 7
+        this.GenerateCard [ 3; second ] 15
 
     /// <summary>Returns a random Discover number.</summary>
     /// <returns>Random Discover number</returns>
@@ -256,25 +245,25 @@ type Cardizer =
     /// <code>
     /// void PrintDiscover()
     /// {
-    ///    Console.WriteLine(Cardizer.NextDiscover());
+    ///    Console.WriteLine(this.NextDiscover());
     /// }
     /// </code>
     /// </example>
-    static member NextDiscover([<Optional; DefaultParameterValue(From16To19.Random)>] discoverLengthOption, [<Optional; DefaultParameterValue(true)>] acceptCoBranded: bool) =
+    member this.NextDiscover([<Optional; DefaultParameterValue(From16To19.Random)>] discoverLengthOption, [<Optional; DefaultParameterValue(true)>] acceptCoBranded: bool) =
         let length =
             match discoverLengthOption with
-            | From16To19.Random -> Cardizer.NextInRange 16 19
+            | From16To19.Random -> this.NextInRange 16 19
             | _ -> int discoverLengthOption
 
-        let roll = Cardizer.next (if acceptCoBranded then 4 else 3)
+        let roll = random.Next (if acceptCoBranded then 4 else 3)
         let prefix =
             match roll with
             | 0 -> [ 6; 0; 1; 1 ]
             | 1 -> [ 6; 5 ]
-            | 2 -> Cardizer.NextSeqInRange 644 649
-            | _ -> Cardizer.NextSeqInRange 622126 622925
+            | 2 -> this.NextSeqInRange 644 649
+            | _ -> this.NextSeqInRange 622126 622925
         
-        Cardizer.GenerateCard prefix length
+        this.GenerateCard prefix length
 
     /// <summary>Returns a random MasterCard number.</summary>
     /// <returns>Random MasterCard number</returns>
@@ -283,18 +272,18 @@ type Cardizer =
     /// <code>
     /// void PrintMasterCard()
     /// {
-    ///    Console.WriteLine(Cardizer.NextMasterCard());
+    ///    Console.WriteLine(this.NextMasterCard());
     /// }
     /// </code>
     /// </example>
-    static member NextMasterCard() =
+    member this.NextMasterCard() =
         let prefixes =
-            if Cardizer.next 2 = 0 then
-                Cardizer.NextSeqInRange 51 55
+            if random.Next 2 = 0 then
+                this.NextSeqInRange 51 55
             else
-                Cardizer.NextSeqInRange 2221 2720
+                this.NextSeqInRange 2221 2720
 
-        Cardizer.GenerateCard prefixes 16
+        this.GenerateCard prefixes 16
 
 
     /// <summary>Returns a random Uatp number.</summary>
@@ -304,11 +293,11 @@ type Cardizer =
     /// <code>
     /// void PrintUatp()
     /// {
-    ///    Console.WriteLine(Cardizer.NextUatp());
+    ///    Console.WriteLine(this.NextUatp());
     /// }
     /// </code>
     /// </example>
-    static member NextUatp() = Cardizer.GenerateCard [ 1 ] 15
+    member this.NextUatp() = this.GenerateCard [ 1 ] 15
 
     /// <summary>Returns a random RuPay number.</summary>
     /// <returns>Random RuPay number</returns>
@@ -317,11 +306,11 @@ type Cardizer =
     /// <code>
     /// void PrintRuPay()
     /// {
-    ///    Console.WriteLine(Cardizer.NextRuPay());
+    ///    Console.WriteLine(this.NextRuPay());
     /// }
     /// </code>
     /// </example>
-    static member NextRuPay([<Optional; DefaultParameterValue(true)>] acceptCoBranded: bool) =
+    member this.NextRuPay([<Optional; DefaultParameterValue(true)>] acceptCoBranded: bool) =
         let prefixRuPay =
             [ [ 6; 0 ]
               [ 6; 5 ]
@@ -334,14 +323,14 @@ type Cardizer =
         if acceptCoBranded then
             let merge =
                 [ prefixRuPay
-                  prefixRuPayAndJcbCobranded ].[Cardizer.next 2]
+                  prefixRuPayAndJcbCobranded ].[random.Next 2]
   
             if merge.Length = 2 then
-                Cardizer.GenerateCard merge.[Cardizer.next 2] 16
+                this.GenerateCard merge.[random.Next 2] 16
             else
-                Cardizer.GenerateCard merge.[Cardizer.next 5] 16
+                this.GenerateCard merge.[random.Next 5] 16
         else
-            Cardizer.GenerateCard prefixRuPay.[Cardizer.next 5] 16
+            this.GenerateCard prefixRuPay.[random.Next 5] 16
 
     /// <summary>Returns a random DinersClubInternational number.</summary>
     /// <returns>Random DinersClubInternational number</returns>
@@ -350,19 +339,19 @@ type Cardizer =
     /// <code>
     /// void PrintDinersClubInternational()
     /// {
-    ///    Console.WriteLine(Cardizer.NextDinersClubInternational());
+    ///    Console.WriteLine(this.NextDinersClubInternational());
     /// }
     /// </code>
     /// </example>
-    static member NextDinersClubInternational
+    member this.NextDinersClubInternational
         ([<Optional; DefaultParameterValue(DinersClubInternationalLengthOptions.Random)>] dinersLengthOption)
         =
         let length =
             match dinersLengthOption with
-            | DinersClubInternationalLengthOptions.Random -> Cardizer.NextInRange 14 19
+            | DinersClubInternationalLengthOptions.Random -> this.NextInRange 14 19
             | _ -> int dinersLengthOption
 
-        Cardizer.GenerateCard [ 3; 6 ] length
+        this.GenerateCard [ 3; 6 ] length
 
     /// <summary>Returns a random DinersClubUsAndCanada number.</summary>
     /// <returns>Random DinersClubUsAndCanada number</returns>
@@ -371,11 +360,11 @@ type Cardizer =
     /// <code>
     /// void PrintDinersClubUsAndCanada()
     /// {
-    ///    Console.WriteLine(Cardizer.NextDinersClubUsAndCanada());
+    ///    Console.WriteLine(this.NextDinersClubUsAndCanada());
     /// }
     /// </code>
     /// </example>
-    static member NextDinersClubUsAndCanada() = Cardizer.GenerateCard [ 5; 4 ] 16
+    member this.NextDinersClubUsAndCanada() = this.GenerateCard [ 5; 4 ] 16
 
     /// <summary>Returns a random DinersClubInternational or DinersClubUsAndCanada number.</summary>
     /// <returns>Random DinersClubInternational or DinersClubUsAndCanada number</returns>
@@ -384,15 +373,15 @@ type Cardizer =
     /// <code>
     /// void PrintDinersClub()
     /// {
-    ///    Console.WriteLine(Cardizer.NextDinersClub());
+    ///    Console.WriteLine(this.NextDinersClub());
     /// }
     /// </code>
     /// </example>
-    static member NextDinersClub() =
-        if Cardizer.next 2 = 0 then
-            Cardizer.NextDinersClubUsAndCanada()
+    member this.NextDinersClub() =
+        if random.Next 2 = 0 then
+            this.NextDinersClubUsAndCanada()
         else
-            Cardizer.NextDinersClubInternational()
+            this.NextDinersClubInternational()
 
     /// <summary>Returns a random Maestro number.</summary>
     /// <returns>Random Maestro number</returns>
@@ -401,14 +390,14 @@ type Cardizer =
     /// <code>
     /// void PrintMaestro()
     /// {
-    ///    Console.WriteLine(Cardizer.NextMaestro());
+    ///    Console.WriteLine(this.NextMaestro());
     /// }
     /// </code>
     /// </example>
-    static member NextMaestro([<Optional; DefaultParameterValue(From12To19.Random)>] maestroLengthOption) =
+    member this.NextMaestro([<Optional; DefaultParameterValue(From12To19.Random)>] maestroLengthOption) =
         let length =
             match maestroLengthOption with
-            | From12To19.Random -> Cardizer.NextInRange 12 19
+            | From12To19.Random -> this.NextInRange 12 19
             | _ -> int maestroLengthOption
 
         let prefix =
@@ -420,9 +409,9 @@ type Cardizer =
               [ 6; 7; 5; 9 ]
               [ 6; 7; 6; 1 ]
               [ 6; 7; 6; 2 ]
-              [ 6; 7; 6; 3 ] ].[Cardizer.next 9]
+              [ 6; 7; 6; 3 ] ].[random.Next 9]
 
-        Cardizer.GenerateCard prefix length
+        this.GenerateCard prefix length
 
     /// <summary>Returns a random Dankort number.</summary>
     /// <returns>Random Dankort number</returns>
@@ -431,21 +420,21 @@ type Cardizer =
     /// <code>
     /// void PrintDankort()
     /// {
-    ///    Console.WriteLine(Cardizer.NextDankort());
+    ///    Console.WriteLine(this.NextDankort());
     /// }
     /// </code>
     /// </example>
-    static member NextDankort([<Optional; DefaultParameterValue(true)>] acceptCoBranded: bool) =
+    member this.NextDankort([<Optional; DefaultParameterValue(true)>] acceptCoBranded: bool) =
         let prefixDankort = [ 5; 0; 1; 9 ]
         let prefixVisaCobranded = [ 4; 5; 7; 1 ]
 
         let prefix =
             if acceptCoBranded then
-                [ prefixDankort; prefixVisaCobranded ].[Cardizer.next 2]
+                [ prefixDankort; prefixVisaCobranded ].[random.Next 2]
             else
                 prefixDankort
 
-        Cardizer.GenerateCard prefix 16
+        this.GenerateCard prefix 16
 
     /// <summary>Returns a random InterPayment number.</summary>
     /// <returns>Random InterPayment number</returns>
@@ -454,17 +443,17 @@ type Cardizer =
     /// <code>
     /// void PrintInterPayment()
     /// {
-    ///    Console.WriteLine(Cardizer.NextInterPayment());
+    ///    Console.WriteLine(this.NextInterPayment());
     /// }
     /// </code>
     /// </example>
-    static member NextInterPayment([<Optional; DefaultParameterValue(From16To19.Random)>] interPaymentLengthOption) =
+    member this.NextInterPayment([<Optional; DefaultParameterValue(From16To19.Random)>] interPaymentLengthOption) =
         let length =
             match interPaymentLengthOption with
-            | From16To19.Random -> Cardizer.NextInRange 16 19
+            | From16To19.Random -> this.NextInRange 16 19
             | _ -> int interPaymentLengthOption
 
-        Cardizer.GenerateCard [ 6; 3; 6 ] length
+        this.GenerateCard [ 6; 3; 6 ] length
 
     /// <summary>Returns a random UnionPay number.</summary>
     /// <returns>Random UnionPay number</returns>
@@ -473,17 +462,17 @@ type Cardizer =
     /// <code>
     /// void PrintUnionPay()
     /// {
-    ///    Console.WriteLine(Cardizer.NextUnionPay());
+    ///    Console.WriteLine(this.NextUnionPay());
     /// }
     /// </code>
     /// </example>
-    static member NextUnionPay([<Optional; DefaultParameterValue(From16To19.Random)>] unionPayLengthOption) =
+    member this.NextUnionPay([<Optional; DefaultParameterValue(From16To19.Random)>] unionPayLengthOption) =
         let length =
             match unionPayLengthOption with
-            | From16To19.Random -> Cardizer.NextInRange 16 19
+            | From16To19.Random -> this.NextInRange 16 19
             | _ -> int unionPayLengthOption
 
-        Cardizer.GenerateCard [ 6; 2 ] length
+        this.GenerateCard [ 6; 2 ] length
 
     /// <summary>Returns a random Tunion number.</summary>
     /// <returns>Random Tunion number</returns>
@@ -492,11 +481,11 @@ type Cardizer =
     /// <code>
     /// void PrintTunion()
     /// {
-    ///    Console.WriteLine(Cardizer.NextTunion());
+    ///    Console.WriteLine(this.NextTunion());
     /// }
     /// </code>
     /// </example>
-    static member NextTunion() = Cardizer.GenerateCard [ 3; 1 ] 19
+    member this.NextTunion() = this.GenerateCard [ 3; 1 ] 19
 
     /// <summary>Returns a random LankaPay number.</summary>
     /// <returns>Random LankaPay number</returns>
@@ -505,13 +494,13 @@ type Cardizer =
     /// <code>
     /// void PrintLankaPay()
     /// {
-    ///    Console.WriteLine(Cardizer.NextLankaPay());
+    ///    Console.WriteLine(this.NextLankaPay());
     /// }
     /// </code>
     /// </example>
-    static member NextLankaPay() =
+    member this.NextLankaPay() =
         let prefix = [ 3; 5; 7; 1; 1; 1 ]
-        Cardizer.GenerateCard prefix 16
+        this.GenerateCard prefix 16
 
     /// <summary>Returns a random Laser number.</summary>
     /// <returns>Random Laser number</returns>
@@ -520,23 +509,23 @@ type Cardizer =
     /// <code>
     /// void PrintLaser()
     /// {
-    ///    Console.WriteLine(Cardizer.NextLaser());
+    ///    Console.WriteLine(this.NextLaser());
     /// }
     /// </code>
     /// </example>
-    static member NextLaser([<Optional; DefaultParameterValue(From16To19.Random)>] laserLengthOption) =
+    member this.NextLaser([<Optional; DefaultParameterValue(From16To19.Random)>] laserLengthOption) =
         let length =
             match laserLengthOption with
-            | From16To19.Random -> Cardizer.NextInRange 16 19
+            | From16To19.Random -> this.NextInRange 16 19
             | _ -> int laserLengthOption
 
         let prefix =
             [ [ 6; 3; 0; 4 ]
               [ 6; 7; 0; 6 ]
               [ 6; 7; 7; 1 ]
-              [ 6; 7; 0; 9 ] ].[Cardizer.next 4]
+              [ 6; 7; 0; 9 ] ].[random.Next 4]
 
-        Cardizer.GenerateCard prefix length
+        this.GenerateCard prefix length
 
     /// <summary>Returns a random InstaPayment number.</summary>
     /// <returns>Random InstaPayment number</returns>
@@ -545,17 +534,17 @@ type Cardizer =
     /// <code>
     /// void PrintInstaPayment()
     /// {
-    ///     Console.WriteLine(Cardizer.NextInstaPayment());
+    ///     Console.WriteLine(this.NextInstaPayment());
     /// }
     /// </code>
     /// </example>
-    static member NextInstaPayment() =
+    member this.NextInstaPayment() =
         let prefix =
             [ [ 6; 3; 7 ]
               [ 6; 3; 8 ]
-              [ 6; 3; 9 ] ].[Cardizer.next 3]
+              [ 6; 3; 9 ] ].[random.Next 3]
 
-        Cardizer.GenerateCard prefix 16
+        this.GenerateCard prefix 16
 
     /// <summary>Returns a random Switch number.</summary>
     /// <returns>Random Switch number</returns>
@@ -564,17 +553,17 @@ type Cardizer =
     /// <code>
     /// void PrintSwitch()
     /// {
-    ///    Console.WriteLine(Cardizer.NextSwitch());
-    ///    Console.WriteLine(Cardizer.NextSwitch()); // randomized between 16, 18 or 19
-    ///    Console.WriteLine(Cardizer.NextSwitch(From16To19Skip17.Random)); // randomized between 16, 18 or 19
-    ///    Console.WriteLine(Cardizer.NextSwitch(From16To19Skip17.Sixteen));
+    ///    Console.WriteLine(this.NextSwitch());
+    ///    Console.WriteLine(this.NextSwitch()); // randomized between 16, 18 or 19
+    ///    Console.WriteLine(this.NextSwitch(From16To19Skip17.Random)); // randomized between 16, 18 or 19
+    ///    Console.WriteLine(this.NextSwitch(From16To19Skip17.Sixteen));
     /// }
     /// </code>
     /// </example>
-    static member NextSwitch([<Optional; DefaultParameterValue(From16To19Skip17.Random)>] switchLengthOption) =
+    member this.NextSwitch([<Optional; DefaultParameterValue(From16To19Skip17.Random)>] switchLengthOption) =
         let length =
             match switchLengthOption with
-            | From16To19Skip17.Random -> [ 16; 18; 19 ].[Cardizer.next 3]
+            | From16To19Skip17.Random -> [ 16; 18; 19 ].[random.Next 3]
             | _ -> int switchLengthOption
 
         let prefix =
@@ -585,9 +574,9 @@ type Cardizer =
               [ 5; 6; 4; 1; 8; 2 ]
               [ 6; 3; 3; 1; 1; 0 ]
               [ 6; 3; 3; 3 ]
-              [ 6; 7; 5; 9 ] ].[Cardizer.next 8]
+              [ 6; 7; 5; 9 ] ].[random.Next 8]
 
-        Cardizer.GenerateCard prefix length
+        this.GenerateCard prefix length
 
     /// <summary>Returns a random Visa Electron number.</summary>
     /// <returns>Random Visa Electron number</returns>
@@ -596,20 +585,20 @@ type Cardizer =
     /// <code>
     /// void PrintVisaElectron()
     /// {
-    ///     Console.WriteLine(Cardizer.NextVisaElectron());
+    ///     Console.WriteLine(this.NextVisaElectron());
     /// }
     /// </code>
     /// </example>
-    static member NextVisaElectron() =
+    member this.NextVisaElectron() =
         let prefix =
             [ [ 4; 0; 2; 6 ]
               [ 4; 1; 7; 5; 0; 0; ]
               [ 4; 5; 0; 8 ]
               [ 4; 8; 4; 4 ]
               [ 4; 9; 1; 3 ]
-              [ 4; 9; 1; 7 ] ].[Cardizer.next 6]
+              [ 4; 9; 1; 7 ] ].[random.Next 6]
 
-        Cardizer.GenerateCard prefix 16
+        this.GenerateCard prefix 16
  
     /// <summary>Returns a random Troy number.</summary>
     /// <returns>Random Troy number</returns>
@@ -618,16 +607,16 @@ type Cardizer =
     /// <code>
     /// void PrintTroy()
     /// {
-    ///     Console.WriteLine(Cardizer.NextTroy());
+    ///     Console.WriteLine(this.NextTroy());
     /// }
     /// </code>
     /// </example>
-    static member NextTroy() =
+    member this.NextTroy() =
         let prefix =
             [ [ 6; 5 ]
-              [ 9; 7; 9; 2 ] ].[Cardizer.next 2]
+              [ 9; 7; 9; 2 ] ].[random.Next 2]
 
-        Cardizer.GenerateCard prefix 16
+        this.GenerateCard prefix 16
 
     /// <summary>Returns a random Solo number.</summary>
     /// <returns>Random Solo number</returns>
@@ -636,23 +625,23 @@ type Cardizer =
     /// <code>
     /// void PrintSolo()
     /// {
-    ///    Console.WriteLine(Cardizer.NextSolo()); // randomized between 16, 18 or 19
-    ///    Console.WriteLine(Cardizer.NextSolo(From16To19Skip17.Random)); // randomized between 16, 18 or 19
-    ///    Console.WriteLine(Cardizer.NextSolo(From16To19Skip17.Sixteen));
+    ///    Console.WriteLine(this.NextSolo()); // randomized between 16, 18 or 19
+    ///    Console.WriteLine(this.NextSolo(From16To19Skip17.Random)); // randomized between 16, 18 or 19
+    ///    Console.WriteLine(this.NextSolo(From16To19Skip17.Sixteen));
     /// }
     /// </code>
     /// </example>
-    static member NextSolo([<Optional; DefaultParameterValue(From16To19Skip17.Random)>] soloLengthOption) =
+    member this.NextSolo([<Optional; DefaultParameterValue(From16To19Skip17.Random)>] soloLengthOption) =
         let length =
             match soloLengthOption with
-            | From16To19Skip17.Random -> [ 16; 18; 19 ].[Cardizer.next 3]
+            | From16To19Skip17.Random -> [ 16; 18; 19 ].[random.Next 3]
             | _ -> int soloLengthOption
 
         let prefix =
             [ [ 6; 3; 3; 4 ]
-              [ 6; 7; 6; 7 ] ].[Cardizer.next 2]
+              [ 6; 7; 6; 7 ] ].[random.Next 2]
 
-        Cardizer.GenerateCard prefix length
+        this.GenerateCard prefix length
 
     /// <summary>Returns a random UzCard number.</summary>
     /// <returns>Random UzCard number</returns>
@@ -661,13 +650,13 @@ type Cardizer =
     /// <code>
     /// void PrintUzCard()
     /// {
-    ///    Console.WriteLine(Cardizer.NextUzCard());
+    ///    Console.WriteLine(this.NextUzCard());
     /// }
     /// </code>
     /// </example>
-    static member NextUzCard() =
+    member this.NextUzCard() =
         let prefix = [ 8; 6; 0; 0 ]
-        Cardizer.GenerateCard prefix 16
+        this.GenerateCard prefix 16
 
     /// <summary>Returns a random Humo number.</summary>
     /// <returns>Random Humo number</returns>
@@ -676,13 +665,13 @@ type Cardizer =
     /// <code>
     /// void PrintHumo()
     /// {
-    ///    Console.WriteLine(Cardizer.NextHumo());
+    ///    Console.WriteLine(this.NextHumo());
     /// }
     /// </code>
     /// </example>
-    static member NextHumo() =
+    member this.NextHumo() =
         let prefix = [ 9; 8; 6; 0 ]
-        Cardizer.GenerateCard prefix 16
+        this.GenerateCard prefix 16
 
     // <summary>Returns a random NPS Pridnestrovie number.</summary>
     /// <returns>Random NPS Pridnestrovie number</returns>
@@ -691,13 +680,13 @@ type Cardizer =
     /// <code>
     /// void PrintNPSPridnestrovie()
     /// {
-    ///    Console.WriteLine(Cardizer.NextNPSPridnestrovie()); 
+    ///    Console.WriteLine(this.NextNPSPridnestrovie()); 
     /// }
     /// </code>
     /// </example>
-    static member NextNPSPridnestrovie() =
-        let prefix = Cardizer.NextSeqInRange 6054740 6054744
-        Cardizer.GenerateCard prefix 16
+    member this.NextNPSPridnestrovie() =
+        let prefix = this.NextSeqInRange 6054740 6054744
+        this.GenerateCard prefix 16
 
     /// <summary>Returns a random Maestro UK number.</summary>
     /// <returns>Random Maestro UK number</returns>
@@ -706,22 +695,22 @@ type Cardizer =
     /// <code>
     /// void PrintMaestroUK()
     /// {
-    ///    Console.WriteLine(Cardizer.NextMaestroUK()); 
+    ///    Console.WriteLine(this.NextMaestroUK()); 
     /// }
     /// </code>
     /// </example>
-    static member NextMaestroUK([<Optional; DefaultParameterValue(From12To19.Random)>] maestroUKLengthOption) =
+    member this.NextMaestroUK([<Optional; DefaultParameterValue(From12To19.Random)>] maestroUKLengthOption) =
         let length =
             match maestroUKLengthOption with
-            | From12To19.Random -> Cardizer.NextInRange 12 19
+            | From12To19.Random -> this.NextInRange 12 19
             | _ -> int maestroUKLengthOption
 
         let prefix =
             [ [ 6; 7; 5; 9 ]
               [ 6; 7; 6; 7; 7; 0 ]
-              [ 6; 7; 6; 7; 7; 4 ] ].[Cardizer.next 3]
+              [ 6; 7; 6; 7; 7; 4 ] ].[random.Next 3]
 
-        Cardizer.GenerateCard prefix length 
+        this.GenerateCard prefix length 
 
     /// <summary>Returns a random UkrCard number.</summary>
     /// <returns>Random UkrCard number</returns>
@@ -730,19 +719,19 @@ type Cardizer =
     /// <code>
     /// void PrintUkrCard()
     /// {
-    ///    Console.WriteLine(Cardizer.NextUkrCard()); 
+    ///    Console.WriteLine(this.NextUkrCard()); 
     /// }
     /// </code>
     /// </example>
-    static member NextUkrCard([<Optional; DefaultParameterValue(From16To19.Random)>] ukrCardLengthOption) =
+    member this.NextUkrCard([<Optional; DefaultParameterValue(From16To19.Random)>] ukrCardLengthOption) =
         let length =
             match ukrCardLengthOption with
-            | From16To19.Random -> Cardizer.NextInRange 16 19
+            | From16To19.Random -> this.NextInRange 16 19
             | _ -> int ukrCardLengthOption
 
-        let prefix = Cardizer.NextSeqInRange 60400100 60420099
+        let prefix = this.NextSeqInRange 60400100 60420099
 
-        Cardizer.GenerateCard prefix length
+        this.GenerateCard prefix length
 
     /// <summary>Returns a random Bankcard number.</summary>
     /// <returns>Random Bankcard number</returns>
@@ -751,17 +740,17 @@ type Cardizer =
     /// <code>
     /// void PrintBankcard()
     /// {
-    ///    Console.WriteLine(Cardizer.NextBankcard());
+    ///    Console.WriteLine(this.NextBankcard());
     /// }
     /// </code>
     /// </example>
-    static member NextBankcard() =
-        let roll = Cardizer.next 2
+    member this.NextBankcard() =
+        let roll = random.Next 2
 
         let prefix =
             if roll = 0 then
                 [ 5; 6; 1; 0 ]
             else
-                Cardizer.NextSeqInRange 560221 560225
+                this.NextSeqInRange 560221 560225
 
-        Cardizer.GenerateCard prefix 16
+        this.GenerateCard prefix 16
