@@ -53,6 +53,9 @@ type Cardizer(random:IRandom) =
     new(seed: int) =
         Cardizer(ThreadLocalRandom(seed))
 
+    new(random: Random) =
+        Cardizer(ThreadLocalRandom(random))
+
     /// <summary>Returns a random integer within a given range.</summary>
     /// <param name="low">The (inclusive) low value of the range</param>
     /// <param name="high">The (inclusive) high value of the range</param>

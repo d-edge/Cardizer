@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <WarnOn>3390;$(WarnOn)</WarnOn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="FuzzerExtension.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Diverse" Version="0.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\Dedge.Cardizer\Dedge.Cardizer.fsproj" />
+  </ItemGroup>
+
+</Project>
