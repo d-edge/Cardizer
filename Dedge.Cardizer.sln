@@ -13,9 +13,9 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Tests", "src\Tests\Tests.fs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppCs", "src\AppCs\AppCs.csproj", "{42D8A78C-5EAF-4B7D-9989-E13FE1CE34D8}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Dedge.Cardizer.Diverse", "Dedge.Cardizer.Diverse\Dedge.Cardizer.Diverse.fsproj", "{C8593FE6-9B2C-46B9-BAA8-7F9BD717924A}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Dedge.Cardizer.Diverse", "src\Dedge.Cardizer.Diverse\Dedge.Cardizer.Diverse.fsproj", "{C8593FE6-9B2C-46B9-BAA8-7F9BD717924A}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Dedge.Cardizer.Diverse.Tests", "Dedge.Cardizer.Diverse.Tests\Dedge.Cardizer.Diverse.Tests.fsproj", "{1A769807-52A9-4AEC-A621-EB087966CC6B}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Dedge.Cardizer.Diverse.Tests", "src\Dedge.Cardizer.Diverse.Tests\Dedge.Cardizer.Diverse.Tests.fsproj", "{1A769807-52A9-4AEC-A621-EB087966CC6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
