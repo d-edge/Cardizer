@@ -38,6 +38,11 @@ jobs:
         run: dotnet build -c Release --no-restore
       - name: Test
         run: dotnet test -c Release
+      - name: Strip HTML from README
+        uses: d-edge/strip-markdown-html@v0.1
+        with:
+          input-path: README.md
+          output-path: src/Dedge.Cardizer/README.md
       - name: Pack
         if: matrix.os == 'ubuntu-latest'
         run: dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=$GITHUB_RUN_ID src/$PROJECT_NAME/$PROJECT_NAME.*proj
