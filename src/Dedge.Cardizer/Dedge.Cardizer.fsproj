@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-     <!-- General -->
+    <!-- General -->
     <AssemblyName>Dedge.Cardizer</AssemblyName>
     <Description>A functional minimalist credit card randomizer to test application.</Description>
     <Copyright>Copyright 2021 D-EDGE</Copyright>
@@ -34,6 +34,8 @@
 
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <NoWarn>FS2003;FS0044</NoWarn>
+
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,6 +44,8 @@
       <Pack>true</Pack>
       <PackagePath>$(PackageIconUrl)</PackagePath>
     </None>
+
+    <None Include="README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>
