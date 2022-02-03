@@ -432,10 +432,9 @@ type Cardizer(random:IRandom) =
         let prefixVisaCobranded = [ 4; 5; 7; 1 ]
 
         let prefix =
-            if acceptCoBranded then
-                [ prefixDankort; prefixVisaCobranded ].[random.Next 2]
-            else
-                prefixDankort
+            if acceptCoBranded then [ prefixDankort; prefixVisaCobranded ].[random.Next 2] else
+                
+            prefixDankort
 
         this.GenerateCard prefix 16
 
