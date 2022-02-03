@@ -13,7 +13,7 @@
 
 <br />
 
-Cardizer is a credit card randomizer to test application.
+Cardizer is a credit card randomizer to test application. Maintained by folks at [D-EDGE](https://www.d-edge.com/).
 
 Keep in mind that all credit card numbers generated with Cardizer are completely random and do not hold any real life value.
 
