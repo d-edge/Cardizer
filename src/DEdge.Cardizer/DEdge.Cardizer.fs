@@ -1,4 +1,4 @@
-﻿namespace Dedge
+﻿namespace DEdge
 
 open System
 open System.Runtime.InteropServices

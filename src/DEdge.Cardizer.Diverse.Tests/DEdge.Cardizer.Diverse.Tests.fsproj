@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Dedge.Cardizer.Diverse\Dedge.Cardizer.Diverse.fsproj" />
+    <ProjectReference Include="..\DEdge.Cardizer.Diverse\DEdge.Cardizer.Diverse.fsproj" />
   </ItemGroup>
 
 </Project>

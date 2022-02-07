@@ -1,7 +1,7 @@
-﻿namespace Dedge.Cardizer.Diverse
+﻿namespace DEdge.Cardizer.Diverse
 
 open Diverse
-open Dedge
+open DEdge
 
 
 [<System.Runtime.CompilerServices.Extension>]

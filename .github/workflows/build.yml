@@ -11,7 +11,7 @@ env:
   # Disable sending usage data to Microsoft
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   # Project name to pack and publish
-  PROJECT_NAME: Dedge.Cardizer
+  PROJECT_NAME: DEdge.Cardizer
   # GitHub Packages Feed settings
   GITHUB_FEED: https://nuget.pkg.github.com/d-edge/
   GITHUB_USER: aloisdg
@@ -42,7 +42,7 @@ jobs:
         uses: d-edge/strip-markdown-html@v0.1
         with:
           input-path: README.md
-          output-path: src/Dedge.Cardizer/README.md
+          output-path: src/DEdge.Cardizer/README.md
       - name: Pack
         if: matrix.os == 'ubuntu-latest'
         run: |

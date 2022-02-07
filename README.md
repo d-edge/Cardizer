@@ -6,8 +6,8 @@
 
 <p align="center">
         <a href="https://github.com/d-edge/Cardizer/actions" title="actions"><img src="https://github.com/d-edge/cardizer/actions/workflows/build.yml/badge.svg?branch=main" alt="actions build" /></a>
-    <a href="https://www.nuget.org/packages/Dedge.Cardizer/" title="nuget"><img src="https://img.shields.io/nuget/vpre/Dedge.Cardizer" alt="version" /></a>
-    <a href="https://www.nuget.org/stats/packages/Dedge.Cardizer?groupby=Version" title="stats"><img src="https://img.shields.io/nuget/dt/Dedge.Cardizer" alt="download" /></a> 
+    <a href="https://www.nuget.org/packages/DEdge.Cardizer/" title="nuget"><img src="https://img.shields.io/nuget/vpre/DEdge.Cardizer" alt="version" /></a>
+    <a href="https://www.nuget.org/stats/packages/DEdge.Cardizer?groupby=Version" title="stats"><img src="https://img.shields.io/nuget/dt/DEdge.Cardizer" alt="download" /></a> 
     <a href="https://raw.githubusercontent.com/d-edge/cardizer/main/LICENSE" title="license"><img src="https://img.shields.io/github/license/d-edge/Cardizer" alt="license" /></a>
 </p>
 
@@ -31,22 +31,22 @@ Keep in mind that all credit card numbers generated with Cardizer are completely
 
 ## Getting Started
 
-Install the [Dedge.Cardizer](https://www.nuget.org/packages/Dedge.Cardizer) NuGet package:
+Install the [DEdge.Cardizer](https://www.nuget.org/packages/DEdge.Cardizer) NuGet package:
 
-    PM> Install-Package Dedge.Cardizer
+    PM> Install-Package DEdge.Cardizer
 
 Alternatively you can also use the .NET CLI to add the packages:
 
-    dotnet add package Dedge.Cardizer
+    dotnet add package DEdge.Cardizer
 
-Next create a .net application and use Dedge.Cardizer:
+Next create a .net application and use DEdge.Cardizer:
 
 ```fsharp
 open System
 
 [<EntryPoint>]
 let main _ =
-    Dedge.Cardizer.NextVisa () |> printfn "Visa: %s"
+    DEdge.Cardizer.NextVisa () |> printfn "Visa: %s"
     0
 ```
 
@@ -55,7 +55,7 @@ or in C#:
 ```csharp
 static void Main(string[] args)
 {
-    var card = Dedge.Cardizer.NextVisa();
+    var card = DEdge.Cardizer.NextVisa();
     Console.WriteLine(card);
 }
 ```

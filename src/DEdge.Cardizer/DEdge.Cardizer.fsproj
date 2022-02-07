@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!-- General -->
-    <AssemblyName>Dedge.Cardizer</AssemblyName>
+    <AssemblyName>DEdge.Cardizer</AssemblyName>
     <Description>A functional minimalist credit card randomizer to test application.</Description>
     <Copyright>Copyright 2021 D-EDGE</Copyright>
     <Authors>D-EDGE and contributors</Authors>
@@ -18,8 +18,8 @@
     <IncludeSymbols>true</IncludeSymbols>
 
     <!-- NuGet settings -->
-    <PackageId>Dedge.Cardizer</PackageId>
-    <PackageTags>Dedge;Cardizer;Credit;Payment;Card;Number;Visa;Generator;Randomizer;Random;Test</PackageTags>
+    <PackageId>DEdge.Cardizer</PackageId>
+    <PackageTags>DEdge;Cardizer;Credit;Payment;Card;Number;Visa;Generator;Randomizer;Random;Test</PackageTags>
     <PackageReleaseNotes>https://github.com/d-edge/Cardizer/releases/</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/d-edge/cardizer</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -49,7 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Dedge.Cardizer.fs" />
+    <Compile Include="DEdge.Cardizer.fs" />
   </ItemGroup>
 
 </Project>

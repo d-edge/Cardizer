@@ -26,7 +26,7 @@ In a library like Cardizer, one of the main way to contribute is by adding a new
 - Clone the project and checkout the `develop` branch
 - From `develop` create a new branch named `feature/addXxx`
 - Write a card generator for Xxx
-  - Open `src/Dedge.Cardizer/Dedge.Cardizer.fs`
+  - Open `src/DEdge.Cardizer/DEdge.Cardizer.fs`
   - Add a function for your card:
 
 ```fsharp
