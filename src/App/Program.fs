@@ -1,4 +1,4 @@
-open Dedge
+open DEdge
 
 [<EntryPoint>]
 let main _ =

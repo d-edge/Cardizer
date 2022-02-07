@@ -2,7 +2,7 @@ module Tests
 
 open System
 open Diverse
-open Dedge.Cardizer.Diverse
+open DEdge.Cardizer.Diverse
 open Xunit
 open FsUnit.Xunit
 

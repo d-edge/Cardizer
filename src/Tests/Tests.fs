@@ -1,9 +1,8 @@
 module Tests
 
 open Xunit
-// note: we may want to move to expecto instead
 open FsUnit.Xunit
-open Dedge
+open DEdge
 
 let inline charToInt c = int c - 48
 
