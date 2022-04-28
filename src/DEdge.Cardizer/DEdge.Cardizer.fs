@@ -1,4 +1,4 @@
-﻿namespace DEdge
+namespace DEdge
 
 open System
 open System.Runtime.InteropServices
@@ -7,11 +7,6 @@ type VisaLengthOptions =
     | Random = 0
     | Thirteen = 13
     | Sixteen = 16
-
-type VerveLengthOptions =
-    | Random = 0
-    | Sixteen = 16
-    | Nineteen = 19
 
 type From12To19 =
     | Random = 0
@@ -82,6 +77,15 @@ type Cardizer(random:IRandom) =
         this.NextInRange low high
         |> this.NumberToSeq
 
+    member private getEnumValues<'T> () = (System.Enum.GetValues(typeof<'T>) :?> (int [])) |> Array.toList
+
+    member private filterPositive l = l |> List.filter(fun x -> x > 0)
+
+    member private nextEnumValue<'T> () =
+        let values = getEnumValues<'T>() |> filterNonZero
+        let length = List.length values
+        values.[random.Next(length)]
+
     member private _.GetNumber n =
         let n2 = n * 2
         if n2 > 9 then n2 - 9 else n2
@@ -145,28 +149,29 @@ type Cardizer(random:IRandom) =
         this.GenerateCard [ 4 ] length
 
     /// <summary>Returns a random Verve number that is of the given available length.</summary>
-    /// <param name="verveLengthOption">Credit card's length (default is randomized between 16 or 19)</param>
+    /// <param name="From16To19Skip17">Credit card's length (default is randomized between 16, 18 or 19)</param>
     /// <returns>Random Verve number</returns>
     /// <example>
     /// This sample shows how to call the <see cref="NextVerve"/> method.
     /// <code>
     /// void PrintVerve()
     /// {
-    ///    Console.WriteLine(this.NextVerve()); // randomized between 16 or 19
-    ///    Console.WriteLine(this.NextVerve(VerveLengthOptions.Random)); // randomized between 16 or 19
-    ///    Console.WriteLine(this.NextVerve(VerveLengthOptions.Sixteen));
+    ///    Console.WriteLine(this.NextVerve()); // randomized between 16, 18 or 19
+    ///    Console.WriteLine(this.NextVerve(From16To19Skip17.Random)); // randomized between 16, 18 or 19
+    ///    Console.WriteLine(this.NextVerve(From16To19Skip17.Sixteen));
     /// }
     /// </code>
     /// </example>
-    member this.NextVerve([<Optional; DefaultParameterValue(VerveLengthOptions.Random)>] verveLengthOption) =
+    member this.NextVerve([<Optional; DefaultParameterValue(From16To19Skip17.Random)>] verveLengthOption) =
         let length =
             match verveLengthOption with
-            | VerveLengthOptions.Random -> 16 + 3 * random.Next 2
+            | From16To19Skip17.Random -> nextEnumValue<From16To19Skip17>()
             | _ -> int verveLengthOption
 
         let prefix =
             [ [ 506099; 506198 ]
-              [ 650002; 650027 ] ].[random.Next 2]
+              [ 650002; 650027 ]
+              [ 507865; 507964 ] ].[random.Next 3]
 
         let prefixes =
             this.NextInRange prefix.[0] prefix.[1]
