@@ -77,12 +77,16 @@ type Cardizer(random:IRandom) =
         this.NextInRange low high
         |> this.NumberToSeq
 
+    /// <summary>Returns an array of the values of the constants in a specified enumeration type.</summary>
+    /// <remarks>Note that `:?>` is the downcasing operator.</remarks>
+    /// <returns>Integers of a given enumeration type</returns>
     member private this.GetEnumValues<'T> () = (System.Enum.GetValues(typeof<'T>) :?> (int [])) |> Array.toList
 
-    member private this.FilterPositive l = l |> List.filter(fun x -> x > 0)
-
+    /// <summary>Returns a random integer in a specified enumeration type.</summary>
+    /// <remarks>Zero values are filtered because they match the Random value.</remarks>
+    /// <returns>Random integer in a specified enumeration type.</returns>
     member private this.NextEnumValue<'T> () =
-        let values = this.GetEnumValues<'T>() |> this.FilterNonZero
+        let values = this.GetEnumValues<'T>() |> List.filter(fun x -> x > 0)
         let length = List.length values
         values.[random.Next(length)]
 
