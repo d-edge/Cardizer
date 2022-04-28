@@ -42,8 +42,9 @@ let ``Should generate valid Visa`` length expectedLength =
     card |> luhn |> should be LuhnCheck
 
 [<Theory>]
-[<InlineData(VerveLengthOptions.Sixteen, 16)>]
-[<InlineData(VerveLengthOptions.Nineteen, 19)>]
+[<InlineData(From16To19Skip17.Sixteen, 16)>]
+[<InlineData(From16To19Skip17.Nineteen, 18)>]
+[<InlineData(From16To19Skip17.Nineteen, 19)>]
 let ``Should generate valid Verve`` length expectedLength =
     let card = Cardizer.NextVerve length
     let start = card.Substring(0, 6) |> int
@@ -51,9 +52,10 @@ let ``Should generate valid Verve`` length expectedLength =
     let prefixInRange =
         start >= 506099 && start <= 506198
         || start >= 650002 && start <= 650027
+        || start >= 507865 && start <= 507964
 
     prefixInRange |> should be True
-    card |> should haveLength expectedLength // (subsetOf [ 16; 19 ]) // note: is there a better way for a is b or c?
+    card |> should haveLength expectedLength
     card |> luhn |> should be LuhnCheck
 
 [<Theory>]
