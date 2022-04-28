@@ -77,11 +77,11 @@ type Cardizer(random:IRandom) =
         this.NextInRange low high
         |> this.NumberToSeq
 
-    member private getEnumValues<'T> () = (System.Enum.GetValues(typeof<'T>) :?> (int [])) |> Array.toList
+    member private this.GetEnumValues<'T> () = (System.Enum.GetValues(typeof<'T>) :?> (int [])) |> Array.toList
 
-    member private filterPositive l = l |> List.filter(fun x -> x > 0)
+    member private this.FilterPositive l = l |> List.filter(fun x -> x > 0)
 
-    member private nextEnumValue<'T> () =
+    member private this.NextEnumValue<'T> () =
         let values = getEnumValues<'T>() |> filterNonZero
         let length = List.length values
         values.[random.Next(length)]
@@ -165,7 +165,7 @@ type Cardizer(random:IRandom) =
     member this.NextVerve([<Optional; DefaultParameterValue(From16To19Skip17.Random)>] verveLengthOption) =
         let length =
             match verveLengthOption with
-            | From16To19Skip17.Random -> nextEnumValue<From16To19Skip17>()
+            | From16To19Skip17.Random -> this.NextEnumValue<From16To19Skip17>()
             | _ -> int verveLengthOption
 
         let prefix =
