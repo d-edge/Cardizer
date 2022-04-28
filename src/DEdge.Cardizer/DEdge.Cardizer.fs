@@ -82,7 +82,7 @@ type Cardizer(random:IRandom) =
     member private this.FilterPositive l = l |> List.filter(fun x -> x > 0)
 
     member private this.NextEnumValue<'T> () =
-        let values = getEnumValues<'T>() |> filterNonZero
+        let values = this.GetEnumValues<'T>() |> this.FilterNonZero
         let length = List.length values
         values.[random.Next(length)]
 
