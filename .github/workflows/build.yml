@@ -54,8 +54,8 @@ jobs:
             echo Clean Version: $VERSION
           else
             echo "LATEST_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
-            echo "${{ env.LATEST_TAG }}"
-            VERSION=${{ format('{0}-beta{1}', env.LATEST_TAG, env.GITHUB_RUN_ID) }}
+            echo "latest tag: ${{ env.LATEST_TAG }}"
+            echo '${{ env.Latest_TAG }}-beta${{ env.GITHUB_RUN_ID }} >> $VERSION
             echo Non-release version: $VERSION
           fi
           dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=$VERSION src/$PROJECT_NAME/$PROJECT_NAME.*proj
