@@ -53,9 +53,11 @@ jobs:
             VERSION="${VERSION//v}"
             echo Clean Version: $VERSION
           else
-            latestTag=$(git describe --tags --abbrev=0)
+            readlink -f $(which sh)           
+            latestTag=if [ "$(git tag -l | wc -l)" -gt 0 ]; then git describe --tags --abbrev=0; else echo v0.1.0; fi)
             echo latest tag: $latestTag
-            VERSION="${latestTag}-beta${$GITHUB_RUN_ID}"
+            runId=$GITHUB_RUN_ID
+            VERSION="${latestTag}-beta${runId}"
             echo Non-release version: $VERSION
           fi
           dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=$VERSION src/$PROJECT_NAME/$PROJECT_NAME.*proj
