@@ -54,7 +54,7 @@ jobs:
             echo Clean Version: $VERSION
           else
             readlink -f $(which sh)           
-            latestTag=$(if [ "$(git tag -l | wc -l)" -gt 0 ]; then git describe --tags --abbrev=0; else echo v0.1.0; fi)
+            latestTag=$(if [ "$(git tag -l | wc -l)" -gt 0 ]; then git describe --tags --abbrev=0; else echo 0.0.1; fi)
             echo latest tag: $latestTag
             runId=$GITHUB_RUN_ID
             VERSION="${latestTag}-beta${runId}"
