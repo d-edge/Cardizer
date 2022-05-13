@@ -53,7 +53,7 @@ jobs:
             VERSION="${VERSION//v}"
             echo Clean Version: $VERSION
           else
-            readlink -f $(which sh)           
+            git fetch --prune --unshallow --tags
             latestTag=$(if [ "$(git tag -l | wc -l)" -gt 0 ]; then git describe --tags --abbrev=0; else echo 0.0.1; fi)
             echo latest tag: $latestTag
             runId=$GITHUB_RUN_ID
