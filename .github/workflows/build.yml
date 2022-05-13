@@ -58,7 +58,6 @@ jobs:
             noVTag="${latestTag//v}"
             countDot=$(echo -n $latestTag | sed -e 's/\(.\)/\1\n/g' | grep "\." | wc -l)
             longTag=$(case $countDot in "0") echo "$noVTag.0.0" ;; "1") echo "$noVTag.0" ;; *) echo "$noVTag";; esac;)
-            echo long tag: $longTag
             runId=$GITHUB_RUN_ID
             VERSION="${longTag}-beta${runId}"
             echo Non-release version: $VERSION
