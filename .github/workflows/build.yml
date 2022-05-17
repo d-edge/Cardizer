@@ -55,9 +55,7 @@ jobs:
           else
             git fetch --prune --unshallow --tags --quiet
             latestTag=$(if [ "$(git tag -l | wc -l)" -gt 0 ]; then git describe --tags --abbrev=0; else echo 0.0.1; fi)
-            noVTag="${latestTag//v}"
-            runId=$GITHUB_RUN_ID
-            version="${noVTag}-build${runId}"
+            version="${latestTag//v}-build.${$GITHUB_RUN_ID}"
             echo Non-release version: $version
           fi
           dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=$version src/$PROJECT_NAME/$PROJECT_NAME.*proj
