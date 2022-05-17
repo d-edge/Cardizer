@@ -48,21 +48,19 @@ jobs:
         run: |
           if [ "$GITHUB_REF_TYPE" = "tag" ]; then
             arrTag=(${GITHUB_REF//\// })
-            VERSION="${arrTag[2]}"
-            echo Version: $VERSION
-            VERSION="${VERSION//v}"
-            echo Clean Version: $VERSION
+            version="${arrTag[2]}"
+            echo Version: $version
+            version="${version//v}"
+            echo Clean Version: $version
           else
             git fetch --prune --unshallow --tags --quiet
             latestTag=$(if [ "$(git tag -l | wc -l)" -gt 0 ]; then git describe --tags --abbrev=0; else echo 0.0.1; fi)
-            # noVTag="${latestTag//v}"
-            # countDot=$(echo -n $latestTag | sed -e 's/\(.\)/\1\n/g' | grep "\." | wc -l)
-            # longTag=$(case $countDot in "0") echo "$noVTag.0.0" ;; "1") echo "$noVTag.0" ;; *) echo "$noVTag";; esac;)
+            noVTag="${latestTag//v}"
             runId=$GITHUB_RUN_ID
-            VERSION="${latestTag}-build${runId}"
-            echo Non-release version: $VERSION
+            version="${noVTag}-build${runId}"
+            echo Non-release version: $version
           fi
-          dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=$VERSION src/$PROJECT_NAME/$PROJECT_NAME.*proj
+          dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=$version src/$PROJECT_NAME/$PROJECT_NAME.*proj
       - name: Upload Artifact
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v2
