@@ -54,7 +54,7 @@ jobs:
             echo Clean Version: $version
           else
             git fetch --prune --unshallow --tags --quiet
-            latestTag=$(if [ "$(git tag -l | wc -l)" -gt 0 ]; then git describe --tags --abbrev=0; else echo 0.0.1; fi)
+            latestTag=$(git describe --tags --abbrev=0 2>/dev/null || echo 0.0.1)
             runId=$GITHUB_RUN_ID
             version="${latestTag//v}-build.${runId}"
             echo Non-release version: $version
