@@ -482,7 +482,6 @@ let ``Should generate valid BORICA`` () =
     card |> should haveLength 16
     card |> luhn |> should be LuhnCheck
 
-
 [<Theory>]
 [<InlineData(12, "4547729151676")>]
 [<InlineData(15, "4442867292591")>]
