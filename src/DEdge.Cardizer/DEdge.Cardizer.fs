@@ -758,8 +758,8 @@ type Cardizer(random:IRandom) =
 
         this.GenerateCard prefix 16
 
-    /// <summary>Returns a random Borica (Bulgarian national payment system) number.</summary>
-    /// <returns>Random Borica number</returns>
+    /// <summary>Returns a random BORICA (Bulgarian national payment system) number.</summary>
+    /// <returns>Random BORICA number</returns>
     /// <example>
     /// This sample shows how to call the <see cref="NextBorica"/> method.
     /// <code>

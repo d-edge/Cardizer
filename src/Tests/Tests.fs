@@ -475,7 +475,7 @@ let ``Should generate valid Bankcard`` () =
     card |> luhn |> should be LuhnCheck
 
 [<Fact>]
-let ``Should generate valid Borica`` () =
+let ``Should generate valid BORICA`` () =
     let card = Cardizer.NextBorica()
 
     card |> should startWith "2205"
