@@ -477,12 +477,17 @@ let ``Should generate valid Bankcard`` () =
 [<Fact>]
 let ``Should generate valid GPN`` () =
     let card = Cardizer.NextGPN()
-
     let start = card.Substring(0, 1) |> int
-
     let prefixInRange = List.contains start [1; 2; 6; 7; 8; 9]
 
     prefixInRange |> should be True
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
+
+let ``Should generate valid BORICA`` () =
+    let card = Cardizer.NextBorica()
+
+    card |> should startWith "2205"
     card |> should haveLength 16
     card |> luhn |> should be LuhnCheck
 

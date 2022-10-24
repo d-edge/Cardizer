@@ -777,5 +777,19 @@ type Cardizer(random:IRandom) =
               [ 7; ] 
               [ 8; ] 
               [ 9; ] ].[random.Next 6]
+        this.GenerateCard prefix 16
 
+    /// <summary>Returns a random BORICA (Bulgarian national payment system) number.</summary>
+    /// <returns>Random BORICA number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextBorica"/> method.
+    /// <code>
+    /// void PrintBorica()
+    /// {
+    ///    Console.WriteLine(this.NextBorica());
+    /// }
+    /// </code>
+    /// </example>
+    member this.NextBorica() =
+        let prefix = [ 2; 2; 0; 5 ]
         this.GenerateCard prefix 16

@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 <!-- Replace Dankort with the card you want -->
-<!--Fill the table as per the wiki link or any other valid soure-->
+<!--Fill the table as per the wiki link or any other valid source-->
 
 Hello,
 
