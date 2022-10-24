@@ -758,6 +758,27 @@ type Cardizer(random:IRandom) =
 
         this.GenerateCard prefix 16
 
+    /// <summary>Returns a random GPN number.</summary>
+    /// <returns>Random GPN number</returns>
+    /// <example>
+    /// This sample shows how to call the <see cref="NextGPN"/> method.
+    /// <code>
+    /// void PrintGPN()
+    /// {
+    ///    Console.WriteLine(this.NextGPN());
+    /// }
+    /// </code>
+    /// </example>
+    member this.NextGPN() =
+        let prefix =
+            [ [ 1; ]
+              [ 2; ]
+              [ 6; ] 
+              [ 7; ] 
+              [ 8; ] 
+              [ 9; ] ].[random.Next 6]
+        this.GenerateCard prefix 16
+
     /// <summary>Returns a random BORICA (Bulgarian national payment system) number.</summary>
     /// <returns>Random BORICA number</returns>
     /// <example>
