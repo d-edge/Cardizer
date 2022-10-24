@@ -474,6 +474,13 @@ let ``Should generate valid Bankcard`` () =
     card |> should haveLength 16
     card |> luhn |> should be LuhnCheck
 
+[<Fact>]
+let ``Should generate valid BORICA`` () =
+    let card = Cardizer.NextBorica()
+
+    card |> should startWith "2205"
+    card |> should haveLength 16
+    card |> luhn |> should be LuhnCheck
 
 [<Theory>]
 [<InlineData(12, "4547729151676")>]
