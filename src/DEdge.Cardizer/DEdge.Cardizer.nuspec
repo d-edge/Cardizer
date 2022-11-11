@@ -7,8 +7,8 @@
 				<dependency id="FSharp.Core" version="4.7.2" />
 			</group>
 
-			<group targetFramework="net60">
-				<dependency id="FSharp.Core" version="6.0.0" />
+			<group targetFramework="net70">
+				<dependency id="FSharp.Core" version="7.0.0" />
 			</group>
 
 		</dependencies>
