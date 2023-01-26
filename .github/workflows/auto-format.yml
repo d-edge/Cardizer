@@ -1,0 +1,33 @@
+name: auto-format
+on: pull_request
+jobs:
+  format:
+    # Check if the PR is not from a fork
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '7.0'
+      - name: Restore
+        run: |
+            dotnet restore
+            dotnet tool restore
+      - name: Execute Fantomas
+        run: |
+          find ./src -type f -name "*.fs" -not -path "*obj*" | xargs dotnet fantomas
+      - name: Check for modified files
+        id: git-check
+        run: echo "modified=$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)" >> $GITHUB_OUTPUT
+      - name: Push changes
+        if: steps.git-check.outputs.modified == 'true'
+        run: |
+          git config user.name "d-edge automation"
+          git config user.email "<>"
+          git commit -am "Automated changes"
+          git push
