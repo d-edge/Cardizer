@@ -2,6 +2,12 @@ name: auto-format
 on: 
   push:
   pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   format:
     # Check if the PR is not from a fork
