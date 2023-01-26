@@ -1,6 +1,5 @@
 name: .NET Core
 on:
-  push:
   workflow_run:
     workflows: ["auto-format"]
     types:

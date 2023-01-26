@@ -1,5 +1,7 @@
 name: auto-format
-on: pull_request
+on: 
+  push:
+  pull_request:
 jobs:
   format:
     # Check if the PR is not from a fork
