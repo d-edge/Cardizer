@@ -17,12 +17,6 @@ let luhn (s: string) =
 
     (g 0 0 s.Length) % 10 = 0
 
-// let TrueWithMessage (message: string) : NHamcrest.IMatcher<obj> =
-//     let matcher =
-//         new NHamcrest.Core.IsEqualMatcher<obj>(true)
-
-//     matcher.DescribedAs(message)
-
 let LuhnCheck: NHamcrest.IMatcher<obj> =
     let matcher =
         new NHamcrest.Core.IsEqualMatcher<obj>(true)
