@@ -24,8 +24,7 @@ let luhn (s: string) =
 //     matcher.DescribedAs(message)
 
 let LuhnCheck: NHamcrest.IMatcher<obj> =
-    let matcher =
-        new NHamcrest.Core.IsEqualMatcher<obj>(true)
+    let matcher = new NHamcrest.Core.IsEqualMatcher<obj>(true)
 
     matcher.DescribedAs $"Fail the Luhn check."
 
@@ -100,26 +99,30 @@ let ``Should generate valid Amex`` () =
 [<InlineData(From16To19.Eighteen, 18)>]
 [<InlineData(From16To19.Nineteen, 19)>]
 let ``Should generate valid Discover`` length expectedLength =
-   let cardNotCobranded = Cardizer.NextDiscover(length, false)
-   let cardCobranded = Cardizer.NextDiscover(length, true)
+    let cardNotCobranded = Cardizer.NextDiscover(length, false)
+    let cardCobranded = Cardizer.NextDiscover(length, true)
 
-   let isPrefixValid (card: string) = 
-       let head = card.Substring(0, 3) |> int
+    let isPrefixValid (card: string) =
+        let head = card.Substring(0, 3) |> int
 
-       card.Substring(0, 2) = "65" ||
-       card.Substring(0, 4) = "6011" ||
-       (head >=  644 && head <= 649)
+        card.Substring(0, 2) = "65"
+        || card.Substring(0, 4) = "6011"
+        || (head >= 644 && head <= 649)
 
-   let headCobranded = cardCobranded.Substring(0, 6) |> int
-   let prefixCobranded = isPrefixValid cardCobranded || (headCobranded >=  622126 && headCobranded <= 622925)
-   let prefixNotCobranded = isPrefixValid cardNotCobranded 
-       
-   prefixCobranded |> should be True
-   prefixNotCobranded |> should be True
-   cardNotCobranded |> should haveLength expectedLength
-   cardNotCobranded |> luhn |> should be LuhnCheck
-   cardCobranded |> should haveLength expectedLength
-   cardCobranded |> luhn |> should be LuhnCheck
+    let headCobranded = cardCobranded.Substring(0, 6) |> int
+
+    let prefixCobranded =
+        isPrefixValid cardCobranded
+        || (headCobranded >= 622126 && headCobranded <= 622925)
+
+    let prefixNotCobranded = isPrefixValid cardNotCobranded
+
+    prefixCobranded |> should be True
+    prefixNotCobranded |> should be True
+    cardNotCobranded |> should haveLength expectedLength
+    cardNotCobranded |> luhn |> should be LuhnCheck
+    cardCobranded |> should haveLength expectedLength
+    cardCobranded |> luhn |> should be LuhnCheck
 
 [<Fact>]
 let ``Should generate valid MasterCard`` () =
@@ -127,8 +130,7 @@ let ``Should generate valid MasterCard`` () =
     let start = card.Substring(0, 4) |> int
 
     let prefixInRange =
-        (start >= 2221 && start <= 2720)
-        || (start >= 5100 && start <= 5599)
+        (start >= 2221 && start <= 2720) || (start >= 5100 && start <= 5599)
 
     prefixInRange |> should be True
     card |> should haveLength 16
@@ -151,20 +153,14 @@ let ``Should generate valid RuPay`` () =
     let start3digitsCobranded = cardCobranded.Substring(0, 3) |> int
 
     let prefixInRange2digits =
-        start2digits = 60
-        || start2digits = 65
-        || start2digits = 81
-        || start2digits = 82
+        start2digits = 60 || start2digits = 65 || start2digits = 81 || start2digits = 82
 
     let prefixInRange3digits = start3digitsNotCobranded = 508
 
-    let prefixNotCobranded =
-        prefixInRange2digits || prefixInRange3digits
+    let prefixNotCobranded = prefixInRange2digits || prefixInRange3digits
 
     let prefixCobranded =
-        start3digitsCobranded = 353
-        || start3digitsCobranded = 356
-        || prefixNotCobranded
+        start3digitsCobranded = 353 || start3digitsCobranded = 356 || prefixNotCobranded
 
     prefixNotCobranded |> should be True
     prefixCobranded |> should be True
@@ -181,8 +177,7 @@ let ``Should generate valid RuPay`` () =
 [<InlineData(DinersClubInternationalLengthOptions.Eighteen, 18)>]
 [<InlineData(DinersClubInternationalLengthOptions.Nineteen, 19)>]
 let ``Should generate valid DinersClubInternational`` length expectedLength =
-    let card =
-        Cardizer.NextDinersClubInternational length
+    let card = Cardizer.NextDinersClubInternational length
 
     card |> should startWith "36"
     card |> should haveLength expectedLength
@@ -295,11 +290,7 @@ let ``Should generate valid Laser`` length expectedLength =
 
     let start = card.Substring(0, 4) |> int
 
-    let prefixInRange =
-        start = 6304
-        || start = 6706
-        || start = 6771
-        || start = 6709
+    let prefixInRange = start = 6304 || start = 6706 || start = 6771 || start = 6709
 
     prefixInRange |> should be True
     card |> should haveLength expectedLength
@@ -311,8 +302,7 @@ let ``Should generate valid InstaPayment`` () =
 
     let start = card.Substring(0, 3) |> int
 
-    let prefixInRange =
-        start = 637 || start = 638 || start = 639
+    let prefixInRange = start = 637 || start = 638 || start = 639
 
     prefixInRange |> should be True
     card |> should haveLength 16
@@ -349,14 +339,14 @@ let ``Should generate valid Visa Electron`` () =
     let shortPrefix = card.Substring(0, 4) |> int
     let longPrefix = card.Substring(0, 6) |> int
 
-    let prefixInRange = 
+    let prefixInRange =
         longPrefix = 417500
-        || shortPrefix = 4026  
+        || shortPrefix = 4026
         || shortPrefix = 4508
         || shortPrefix = 4844
         || shortPrefix = 4913
         || shortPrefix = 4917
-        
+
     prefixInRange |> should be True
     card |> should haveLength 16
     card |> luhn |> should be LuhnCheck
@@ -368,9 +358,7 @@ let ``Should generate valid Troy`` () =
     let shortPrefix = card.Substring(0, 2) |> int
     let longPrefix = card.Substring(0, 4) |> int
 
-    let prefixInRange =
-        shortPrefix = 65 
-        || longPrefix = 9792
+    let prefixInRange = shortPrefix = 65 || longPrefix = 9792
 
     prefixInRange |> should be True
     card |> should haveLength 16
@@ -385,9 +373,7 @@ let ``Should generate valid Solo`` length expectedLength =
 
     let start = card.Substring(0, 4) |> int
 
-    let prefixInRange =
-        start = 6334
-        || start = 6767
+    let prefixInRange = start = 6334 || start = 6767
 
     prefixInRange |> should be True
     card |> should haveLength expectedLength
@@ -414,9 +400,8 @@ let ``Should generate valid NPSPridnestrovie`` () =
     let card = Cardizer.NextNPSPridnestrovie()
     let start = card.Substring(0, 7) |> int
 
-    let prefixInRange =
-        (start >= 6054740 && start <= 6054744)
-    
+    let prefixInRange = (start >= 6054740 && start <= 6054744)
+
     prefixInRange |> should be True
     card |> should haveLength 16
     card |> luhn |> should be LuhnCheck
@@ -436,14 +421,11 @@ let ``Should generate valid Maestro UK`` length expectedLength =
     let longPrefix = card.Substring(0, 6) |> int
 
 
-    let prefixInRange =
-        shortPrefix = 6759
-        || longPrefix = 676770
-        || longPrefix = 676774
+    let prefixInRange = shortPrefix = 6759 || longPrefix = 676770 || longPrefix = 676774
 
     prefixInRange |> should be True
     card |> should haveLength expectedLength
-    card |> luhn |> should be LuhnCheck 
+    card |> luhn |> should be LuhnCheck
 
 [<Theory>]
 [<InlineData(From16To19.Sixteen, 16)>]
@@ -455,8 +437,7 @@ let ``Should generate valid UkrCard`` length expectedLength =
 
     let start = card.Substring(0, 8) |> int
 
-    let prefixInRange =
-        (start >= 60400100 && start <= 60420099)
+    let prefixInRange = (start >= 60400100 && start <= 60420099)
 
     prefixInRange |> should be True
     card |> should haveLength expectedLength
@@ -468,9 +449,7 @@ let ``Should generate valid Bankcard`` () =
     let prefix = card.Substring(0, 6)
     let start = int prefix
 
-    let prefixInRange =
-        prefix.StartsWith "5610"
-        || (start >= 560221 && start <= 560225)
+    let prefixInRange = prefix.StartsWith "5610" || (start >= 560221 && start <= 560225)
 
     prefixInRange |> should be True
     card |> should haveLength 16
@@ -480,7 +459,7 @@ let ``Should generate valid Bankcard`` () =
 let ``Should generate valid GPN`` () =
     let card = Cardizer.NextGPN()
     let start = card.Substring(0, 1) |> int
-    let prefixInRange = List.contains start [1; 2; 6; 7; 8; 9]
+    let prefixInRange = List.contains start [ 1; 2; 6; 7; 8; 9 ]
 
     prefixInRange |> should be True
     card |> should haveLength 16
@@ -504,5 +483,3 @@ let ``Should generate the same card when cardizer is seeded`` (seed: int) expect
     let visa = seededCardizer.NextVisa()
 
     visa |> should equal expectedCard
-
-

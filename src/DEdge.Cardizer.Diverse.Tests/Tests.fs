@@ -8,16 +8,15 @@ open FsUnit.Xunit
 
 module Fixtures =
     type FuzzerExtensionsTestFixture() =
-        do
-            Fuzzer.Log <- fun log -> Console.WriteLine(log) |> ignore
+        do Fuzzer.Log <- fun log -> Console.WriteLine(log) |> ignore
+
         interface IDisposable with
-            member _.Dispose() = 
-                ()
+            member _.Dispose() = ()
 
 module Tests =
     type FuzzerExtensionTests() =
         [<Fact>]
-        member _.``Should generate a Visa from Fuzzer`` () =
+        member _.``Should generate a Visa from Fuzzer``() =
             let fuzzer = new Fuzzer(12)
             let card = fuzzer.GenerateVisa()
             card |> should equal "4547729151676"
