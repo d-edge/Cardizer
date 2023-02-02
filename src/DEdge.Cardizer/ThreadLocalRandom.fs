@@ -8,25 +8,19 @@ open System.Runtime.InteropServices
 type IRandom =
     abstract Next: maxValue: int -> int
 
-type ThreadLocalRandom(seedGenerator: Random) = 
+type ThreadLocalRandom(seedGenerator: Random) =
 
     // original snippet by @tpetricek
     // https://stackoverflow.com/a/7792667/1248177
     let localGenerator =
         new ThreadLocal<Random>(fun _ ->
-            lock
-                seedGenerator
-                (fun _ ->
-                    let seed = seedGenerator.Next()
-                    Random(seed)))
-    
-    new() =
-        ThreadLocalRandom(Random())
+            lock seedGenerator (fun _ ->
+                let seed = seedGenerator.Next()
+                Random(seed)))
 
-    new(seed: int) =
-        ThreadLocalRandom(Random(seed))
+    new() = ThreadLocalRandom(Random())
 
-    interface IRandom with 
-        member this.Next(maxValue) = 
-            localGenerator.Value.Next(maxValue)
+    new(seed: int) = ThreadLocalRandom(Random(seed))
 
+    interface IRandom with
+        member this.Next(maxValue) = localGenerator.Value.Next(maxValue)

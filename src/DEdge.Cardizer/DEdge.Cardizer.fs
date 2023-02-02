@@ -25,7 +25,7 @@ type From16To19 =
     | Seventeen = 17
     | Eighteen = 18
     | Nineteen = 19
-    
+
 type From16To19Skip17 =
     | Random = 0
     | Sixteen = 16
@@ -41,31 +41,25 @@ type DinersClubInternationalLengthOptions =
     | Eighteen = 18
     | Nineteen = 19
 
-type Cardizer(random:IRandom) =
-    new() =
-        Cardizer(ThreadLocalRandom())
+type Cardizer(random: IRandom) =
+    new() = Cardizer(ThreadLocalRandom())
 
-    new(seed: int) =
-        Cardizer(ThreadLocalRandom(seed))
+    new(seed: int) = Cardizer(ThreadLocalRandom(seed))
 
-    new(random: Random) =
-        Cardizer(ThreadLocalRandom(random))
+    new(random: Random) = Cardizer(ThreadLocalRandom(random))
 
     /// <summary>Returns a random integer within a given range.</summary>
     /// <param name="low">The (inclusive) low value of the range</param>
     /// <param name="high">The (inclusive) high value of the range</param>
     /// <returns>Random integer within a given range</returns>
-    member private this.NextInRange low high = random.Next (high - low + 1) + low
+    member private this.NextInRange low high = random.Next(high - low + 1) + low
 
     /// <summary>Returns a sequence of each digit of a given number.</summary>
     /// <param name="number">The number to enumerate</param>
     /// <returns>A sequence of each digit of a given number</returns>
     member private _.NumberToSeq number =
         let rec loop n list =
-            if n <= 0 then
-                list
-            else
-                loop (n / 10) (n % 10 :: list)
+            if n <= 0 then list else loop (n / 10) (n % 10 :: list)
 
         loop number []
 
@@ -74,19 +68,19 @@ type Cardizer(random:IRandom) =
     /// <param name="high">The (inclusive) high value of the range</param>
     /// <returns>Random integer enumerate as sequence within a given range</returns>
     member private this.NextSeqInRange low high =
-        this.NextInRange low high
-        |> this.NumberToSeq
+        this.NextInRange low high |> this.NumberToSeq
 
     /// <summary>Returns an array of the values of the constants in a specified enumeration type.</summary>
     /// <remarks>Note that `:?>` is the downcasing operator.</remarks>
     /// <returns>Integers of a given enumeration type</returns>
-    member private this.GetEnumValues<'T> () = (System.Enum.GetValues(typeof<'T>) :?> (int [])) |> Array.toList
+    member private this.GetEnumValues<'T>() =
+        (System.Enum.GetValues(typeof<'T>) :?> (int[])) |> Array.toList
 
     /// <summary>Returns a random integer in a specified enumeration type.</summary>
     /// <remarks>Zero values are filtered because they match the Random value.</remarks>
     /// <returns>Random integer in a specified enumeration type.</returns>
-    member private this.NextEnumValue<'T> () =
-        let values = this.GetEnumValues<'T>() |> List.filter(fun x -> x > 0)
+    member private this.NextEnumValue<'T>() =
+        let values = this.GetEnumValues<'T>() |> List.filter (fun x -> x > 0)
         let length = List.length values
         values.[random.Next(length)]
 
@@ -97,18 +91,13 @@ type Cardizer(random:IRandom) =
     member inline private _.CheckDigit sum = ((sum / 10 + 1) * 10 - sum) % 10
 
     member private this.NextUniquePersonalIdentifiers n =
-        { 1 .. n } |> Seq.map (fun _ -> random.Next 10)
+        { 1..n } |> Seq.map (fun _ -> random.Next 10)
 
     member private this.ReverseSum(digits: seq<int>) : int =
         digits
         |> Seq.rev
         |> Seq.mapi (fun i n -> i % 2 = 0, n)
-        |> Seq.sumBy
-            (fun (isEven, n) ->
-                if isEven then
-                    this.GetNumber n
-                else
-                    n)
+        |> Seq.sumBy (fun (isEven, n) -> if isEven then this.GetNumber n else n)
         |> this.CheckDigit
 
     member private this.AppendSum digits =
@@ -173,13 +162,9 @@ type Cardizer(random:IRandom) =
             | _ -> int verveLengthOption
 
         let prefix =
-            [ [ 506099; 506198 ]
-              [ 650002; 650027 ]
-              [ 507865; 507964 ] ].[random.Next 3]
+            [ [ 506099; 506198 ]; [ 650002; 650027 ]; [ 507865; 507964 ] ].[random.Next 3]
 
-        let prefixes =
-            this.NextInRange prefix.[0] prefix.[1]
-            |> this.NumberToSeq
+        let prefixes = this.NextInRange prefix.[0] prefix.[1] |> this.NumberToSeq
 
         this.GenerateCard prefixes length
 
@@ -227,11 +212,7 @@ type Cardizer(random:IRandom) =
             | From16To19.Random -> this.NextInRange 16 19
             | _ -> int jcbLengthOption
 
-        let prefixes =
-            [ 3
-              5
-              this.NextInRange 2 8
-              this.NextInRange 8 9 ]
+        let prefixes = [ 3; 5; this.NextInRange 2 8; this.NextInRange 8 9 ]
 
         this.GenerateCard prefixes length
 
@@ -261,20 +242,25 @@ type Cardizer(random:IRandom) =
     /// }
     /// </code>
     /// </example>
-    member this.NextDiscover([<Optional; DefaultParameterValue(From16To19.Random)>] discoverLengthOption, [<Optional; DefaultParameterValue(true)>] acceptCoBranded: bool) =
+    member this.NextDiscover
+        (
+            [<Optional; DefaultParameterValue(From16To19.Random)>] discoverLengthOption,
+            [<Optional; DefaultParameterValue(true)>] acceptCoBranded: bool
+        ) =
         let length =
             match discoverLengthOption with
             | From16To19.Random -> this.NextInRange 16 19
             | _ -> int discoverLengthOption
 
-        let roll = random.Next (if acceptCoBranded then 4 else 3)
+        let roll = random.Next(if acceptCoBranded then 4 else 3)
+
         let prefix =
             match roll with
             | 0 -> [ 6; 0; 1; 1 ]
             | 1 -> [ 6; 5 ]
             | 2 -> this.NextSeqInRange 644 649
             | _ -> this.NextSeqInRange 622126 622925
-        
+
         this.GenerateCard prefix length
 
     /// <summary>Returns a random MasterCard number.</summary>
@@ -323,20 +309,13 @@ type Cardizer(random:IRandom) =
     /// </code>
     /// </example>
     member this.NextRuPay([<Optional; DefaultParameterValue(true)>] acceptCoBranded: bool) =
-        let prefixRuPay =
-            [ [ 6; 0 ]
-              [ 6; 5 ]
-              [ 8; 1 ]
-              [ 8; 2 ]
-              [ 5; 0; 8 ] ]
+        let prefixRuPay = [ [ 6; 0 ]; [ 6; 5 ]; [ 8; 1 ]; [ 8; 2 ]; [ 5; 0; 8 ] ]
 
         let prefixRuPayAndJcbCobranded = [ [ 3; 5; 3 ]; [ 3; 5; 6 ] ]
 
         if acceptCoBranded then
-            let merge =
-                [ prefixRuPay
-                  prefixRuPayAndJcbCobranded ].[random.Next 2]
-  
+            let merge = [ prefixRuPay; prefixRuPayAndJcbCobranded ].[random.Next 2]
+
             if merge.Length = 2 then
                 this.GenerateCard merge.[random.Next 2] 16
             else
@@ -532,10 +511,7 @@ type Cardizer(random:IRandom) =
             | _ -> int laserLengthOption
 
         let prefix =
-            [ [ 6; 3; 0; 4 ]
-              [ 6; 7; 0; 6 ]
-              [ 6; 7; 7; 1 ]
-              [ 6; 7; 0; 9 ] ].[random.Next 4]
+            [ [ 6; 3; 0; 4 ]; [ 6; 7; 0; 6 ]; [ 6; 7; 7; 1 ]; [ 6; 7; 0; 9 ] ].[random.Next 4]
 
         this.GenerateCard prefix length
 
@@ -551,10 +527,7 @@ type Cardizer(random:IRandom) =
     /// </code>
     /// </example>
     member this.NextInstaPayment() =
-        let prefix =
-            [ [ 6; 3; 7 ]
-              [ 6; 3; 8 ]
-              [ 6; 3; 9 ] ].[random.Next 3]
+        let prefix = [ [ 6; 3; 7 ]; [ 6; 3; 8 ]; [ 6; 3; 9 ] ].[random.Next 3]
 
         this.GenerateCard prefix 16
 
@@ -604,14 +577,14 @@ type Cardizer(random:IRandom) =
     member this.NextVisaElectron() =
         let prefix =
             [ [ 4; 0; 2; 6 ]
-              [ 4; 1; 7; 5; 0; 0; ]
+              [ 4; 1; 7; 5; 0; 0 ]
               [ 4; 5; 0; 8 ]
               [ 4; 8; 4; 4 ]
               [ 4; 9; 1; 3 ]
               [ 4; 9; 1; 7 ] ].[random.Next 6]
 
         this.GenerateCard prefix 16
- 
+
     /// <summary>Returns a random Troy number.</summary>
     /// <returns>Random Troy number</returns>
     /// <example>
@@ -624,9 +597,7 @@ type Cardizer(random:IRandom) =
     /// </code>
     /// </example>
     member this.NextTroy() =
-        let prefix =
-            [ [ 6; 5 ]
-              [ 9; 7; 9; 2 ] ].[random.Next 2]
+        let prefix = [ [ 6; 5 ]; [ 9; 7; 9; 2 ] ].[random.Next 2]
 
         this.GenerateCard prefix 16
 
@@ -649,9 +620,7 @@ type Cardizer(random:IRandom) =
             | From16To19Skip17.Random -> [ 16; 18; 19 ].[random.Next 3]
             | _ -> int soloLengthOption
 
-        let prefix =
-            [ [ 6; 3; 3; 4 ]
-              [ 6; 7; 6; 7 ] ].[random.Next 2]
+        let prefix = [ [ 6; 3; 3; 4 ]; [ 6; 7; 6; 7 ] ].[random.Next 2]
 
         this.GenerateCard prefix length
 
@@ -692,7 +661,7 @@ type Cardizer(random:IRandom) =
     /// <code>
     /// void PrintNPSPridnestrovie()
     /// {
-    ///    Console.WriteLine(this.NextNPSPridnestrovie()); 
+    ///    Console.WriteLine(this.NextNPSPridnestrovie());
     /// }
     /// </code>
     /// </example>
@@ -707,7 +676,7 @@ type Cardizer(random:IRandom) =
     /// <code>
     /// void PrintMaestroUK()
     /// {
-    ///    Console.WriteLine(this.NextMaestroUK()); 
+    ///    Console.WriteLine(this.NextMaestroUK());
     /// }
     /// </code>
     /// </example>
@@ -718,11 +687,9 @@ type Cardizer(random:IRandom) =
             | _ -> int maestroUKLengthOption
 
         let prefix =
-            [ [ 6; 7; 5; 9 ]
-              [ 6; 7; 6; 7; 7; 0 ]
-              [ 6; 7; 6; 7; 7; 4 ] ].[random.Next 3]
+            [ [ 6; 7; 5; 9 ]; [ 6; 7; 6; 7; 7; 0 ]; [ 6; 7; 6; 7; 7; 4 ] ].[random.Next 3]
 
-        this.GenerateCard prefix length 
+        this.GenerateCard prefix length
 
     /// <summary>Returns a random UkrCard number.</summary>
     /// <returns>Random UkrCard number</returns>
@@ -731,7 +698,7 @@ type Cardizer(random:IRandom) =
     /// <code>
     /// void PrintUkrCard()
     /// {
-    ///    Console.WriteLine(this.NextUkrCard()); 
+    ///    Console.WriteLine(this.NextUkrCard());
     /// }
     /// </code>
     /// </example>
@@ -779,13 +746,7 @@ type Cardizer(random:IRandom) =
     /// </code>
     /// </example>
     member this.NextGPN() =
-        let prefix =
-            [ [ 1; ]
-              [ 2; ]
-              [ 6; ] 
-              [ 7; ] 
-              [ 8; ] 
-              [ 9; ] ].[random.Next 6]
+        let prefix = [ [ 1 ]; [ 2 ]; [ 6 ]; [ 7 ]; [ 8 ]; [ 9 ] ].[random.Next 6]
         this.GenerateCard prefix 16
 
     /// <summary>Returns a random BORICA (Bulgarian national payment system) number.</summary>
